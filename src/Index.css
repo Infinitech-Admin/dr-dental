@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
+@layer base {
+  :root {
+    --background: 220 20% 2%;
+    --foreground: 150 20% 98%;
+
+    --card: 150 30% 6%;
+    --card-foreground: 150 20% 98%;
+
+    --popover: 150 30% 6%;
+    --popover-foreground: 150 20% 98%;
+
+    /* MAIN GREEN */
+    --primary: 145 80% 42%;
+    --primary-foreground: 150 30% 5%;
+
+    --secondary: 150 25% 17%;
+    --secondary-foreground: 150 20% 98%;
+
+    --muted: 150 25% 17%;
+    --muted-foreground: 150 15% 65%;
+
+    /* ACCENT GREEN */
+    --accent: 155 70% 40%;
+    --accent-foreground: 150 20% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 150 25% 17%;
+    --input: 150 25% 17%;
+
+    --ring: 145 80% 42%;
+
+    /* CHART COLORS → ALL GREEN SHADES */
+    --chart-1: 145 80% 42%;
+    --chart-2: 155 70% 40%;
+    --chart-3: 165 60% 45%;
+    --chart-4: 135 65% 38%;
+    --chart-5: 120 55% 40%;
+
+    --radius: 0.5rem;
+
+    --font-serif: "DM Serif Display", serif;
+    --font-sans: "Inter", sans-serif;
+
+    --sidebar-background: 150 30% 6%;
+    --sidebar-foreground: 150 20% 98%;
+
+    --sidebar-primary: 145 80% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-accent: 150 25% 17%;
+    --sidebar-accent-foreground: 150 20% 98%;
+
+    --sidebar-border: 150 25% 17%;
+    --sidebar-ring: 145 80% 42%;
+  }
+
+  .dark {
+    --background: 220 20% 2%;
+    --foreground: 150 20% 98%;
+
+    --card: 150 30% 6%;
+    --card-foreground: 150 20% 98%;
+
+    --popover: 150 30% 6%;
+    --popover-foreground: 150 20% 98%;
+
+    --primary: 145 80% 42%;
+    --primary-foreground: 150 30% 5%;
+
+    --secondary: 150 25% 17%;
+    --secondary-foreground: 150 20% 98%;
+
+    --muted: 150 25% 17%;
+    --muted-foreground: 150 15% 65%;
+
+    --accent: 155 70% 40%;
+    --accent-foreground: 150 20% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 150 25% 17%;
+    --input: 150 25% 17%;
+
+    --ring: 145 80% 42%;
+
+    /* ALL GREEN SHADES */
+    --chart-1: 145 80% 42%;
+    --chart-2: 155 70% 40%;
+    --chart-3: 165 60% 45%;
+    --chart-4: 135 65% 38%;
+    --chart-5: 120 55% 40%;
+
+    --sidebar-background: 150 30% 6%;
+    --sidebar-foreground: 150 20% 98%;
+
+    --sidebar-primary: 145 80% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+
+    --sidebar-accent: 150 25% 17%;
+    --sidebar-accent-foreground: 150 20% 98%;
+
+    --sidebar-border: 150 25% 17%;
+    --sidebar-ring: 145 80% 42%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
