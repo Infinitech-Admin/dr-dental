@@ -58,17 +58,13 @@ export default function ProtectedNav({ userRole = "user" }: ProtectedNavProps) {
           icon: CalendarPlus,
           label: "Appointments",
         },
-        { path: "/admin/inquiry", icon: MessageSquare, label: "Inquiry" },
       ],
     },
     {
       title: "CMS",
       items: [
         { path: "/admin/services", icon: ClipboardList, label: "Services" },
-        { path: "/admin/cases", icon: ClipboardList, label: "Cases" },
         { path: "/admin/testimonials", icon: Star, label: "Testimonials" },
-        { path: "/admin/about", icon: Star, label: "About Section" },
-        { path: "/admin/facilities", icon: Building2, label: "Facilities" },
       ],
     },
     {
@@ -87,7 +83,7 @@ export default function ProtectedNav({ userRole = "user" }: ProtectedNavProps) {
   const mobileAdminItems = [
     { path: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { path: "/admin/appointments", icon: CalendarPlus, label: "Appointments" },
-    { path: "/admin/inquiry", icon: Bell, label: "Inquiry" },
+    { path: "/admin/services", icon: ClipboardList, label: "Services" },
     { path: "/admin/profile", icon: User, label: "Profile" },
   ]
 

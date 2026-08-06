@@ -186,16 +186,12 @@ export default function TestimonialsAdmin() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen w-full bg-gradient-to-br from-slate-50 via-emerald-50 to-white">
-        <ProtectedNav userRole="admin" />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4 bg-white border border-emerald-100 shadow-xl px-8 py-8 rounded-2xl">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-            <p className="text-slate-800 font-semibold">Loading Testimonials</p>
-            <p className="text-sm text-slate-500">
-              Preparing your dashboard...
-            </p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-400 border-t-transparent" />
+          <span className="text-sm font-medium tracking-wide text-green-700">
+            Loading...
+          </span>
         </div>
       </div>
     )

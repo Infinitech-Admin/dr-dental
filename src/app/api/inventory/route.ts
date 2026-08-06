@@ -14,10 +14,6 @@ export async function GET(req: NextRequest) {
   }
 
   const token = getAuthToken(req);
-  console.log(
-    "[inventory GET] token:",
-    token ?? "null — check cookie name in DevTools",
-  );
 
   try {
     const res = await fetch(`${API_URL}/api/inventories`, {
@@ -30,7 +26,6 @@ export async function GET(req: NextRequest) {
     });
 
     const text = await res.text();
-    console.log(`[inventory GET] backend ${res.status}:`, text.slice(0, 300));
 
     if (!res.ok) {
       return NextResponse.json(
@@ -61,7 +56,6 @@ export async function POST(req: NextRequest) {
   }
 
   const token = getAuthToken(req);
-  console.log("[inventory POST] token:", token ?? "null");
 
   let body: unknown;
   try {
@@ -100,7 +94,6 @@ export async function POST(req: NextRequest) {
     });
 
     const text = await res.text();
-    console.log(`[inventory POST] backend ${res.status}:`, text.slice(0, 300));
 
     let data: unknown;
     try {

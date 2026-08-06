@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import {
   CalendarDays,
   Users,
@@ -9,130 +9,142 @@ import {
   ArrowRight,
   Loader2,
   ChevronDown,
-} from "lucide-react";
+} from "lucide-react"
 
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/store/authStore"
+import Link from "next/link"
 
 interface User {
-  id: string;
-  name: string;
-  email: string;
-  role?: string;
+  id: string
+  name: string
+  email: string
+  role?: string
 }
 
 interface AdminDashboardProps {
-  user: User;
+  user: User
 }
 
 // Shape returned by DashboardController@index
 interface RecentBooking {
-  name: string | null;
-  service: string | null;
-  booking_date: string | null; // e.g. "2026-07-15"
-  booking_time: string | null; // e.g. "14:30:00"
-  status: string | null;
+  name: string | null
+  service: string | null
+  booking_date: string | null // e.g. "2026-07-15"
+  booking_time: string | null // e.g. "14:30:00"
+  status: string | null
 }
 
 interface DashboardData {
-  todays_bookings: number;
-  active_patients: number;
-  monthly_revenue: number | string;
-  pending_appointments: number;
-  recent_bookings: RecentBooking[];
+  todays_bookings: number
+  active_patients: number
+  monthly_revenue: number | string
+  pending_appointments: number
+  recent_bookings: RecentBooking[]
 }
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]
 
 function formatRevenue(amount: number): string {
-  if (amount >= 1_000_000) return `₱${(amount / 1_000_000).toFixed(2)}M`;
-  if (amount >= 1_000) return `₱${(amount / 1_000).toFixed(1)}K`;
-  return `₱${amount.toLocaleString("en-PH")}`;
+  if (amount >= 1_000_000) return `₱${(amount / 1_000_000).toFixed(2)}M`
+  if (amount >= 1_000) return `₱${(amount / 1_000).toFixed(1)}K`
+  return `₱${amount.toLocaleString("en-PH")}`
 }
 
 function getAvatar(name: string | null): string {
-  const safe = name || "Unknown";
+  const safe = name || "Unknown"
   return safe
     .split(" ")
     .slice(0, 2)
     .map((n) => n[0]?.toUpperCase() || "")
-    .join("");
+    .join("")
 }
 
 function formatDate(raw: string | null): string {
-  if (!raw) return "—";
-  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (!match) return raw;
-  const d = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  if (!raw) return "—"
+  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/)
+  if (!match) return raw
+  const d = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
   return d.toLocaleDateString("en-PH", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  });
+  })
 }
 
 function formatTime(raw: string | null): string {
-  if (!raw) return "—";
-  const match = raw.match(/^(\d{2}):(\d{2})/);
-  if (!match) return raw;
-  const hour = Number(match[1]);
-  const minute = Number(match[2]);
-  const ampm = hour >= 12 ? "PM" : "AM";
-  const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-  return `${displayHour}:${String(minute).padStart(2, "0")} ${ampm}`;
+  if (!raw) return "—"
+  const match = raw.match(/^(\d{2}):(\d{2})/)
+  if (!match) return raw
+  const hour = Number(match[1])
+  const minute = Number(match[2])
+  const ampm = hour >= 12 ? "PM" : "AM"
+  const displayHour = hour % 12 === 0 ? 12 : hour % 12
+  return `${displayHour}:${String(minute).padStart(2, "0")} ${ampm}`
 }
 
 function getStatus(status: string | null): string {
-  const s = status || "pending";
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  const s = status || "pending"
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
 }
 
 export default function AdminDashboard({ user }: AdminDashboardProps) {
-  const { token, _hasHydrated } = useAuthStore();
+  const { token, _hasHydrated } = useAuthStore()
 
-  const now = new Date();
-  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1); // 1-12
-  const [selectedYear, setSelectedYear] = useState(now.getFullYear());
+  const now = new Date()
+  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1) // 1-12
+  const [selectedYear, setSelectedYear] = useState(now.getFullYear())
 
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const years = Array.from({ length: 2 }, (_, i) => now.getFullYear() - i);
+  const years = Array.from({ length: 2 }, (_, i) => now.getFullYear() - i)
 
   async function fetchDashboard() {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
       const params = new URLSearchParams({
         month: String(selectedMonth),
         year: String(selectedYear),
-      });
+      })
       const res = await fetch(`/api/dashboard?${params.toString()}`, {
         headers: {
           Accept: "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json?.message || "Failed to fetch dashboard data");
-      setData(json as DashboardData);
+      })
+      const json = await res.json()
+      if (!res.ok)
+        throw new Error(json?.message || "Failed to fetch dashboard data")
+      setData(json as DashboardData)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+      setError(err instanceof Error ? err.message : "Unknown error")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   useEffect(() => {
-    if (!_hasHydrated) return;
-    fetchDashboard();
+    if (!_hasHydrated) return
+    fetchDashboard()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, _hasHydrated, selectedMonth, selectedYear]);
+  }, [token, _hasHydrated, selectedMonth, selectedYear])
 
-  const revenueNumber = Number(data?.monthly_revenue ?? 0);
+  const revenueNumber = Number(data?.monthly_revenue ?? 0)
 
   const statCards = [
     {
@@ -155,20 +167,20 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       value: loading || !data ? "—" : String(data.pending_appointments),
       icon: FileText,
     },
-  ];
+  ]
 
   const statusColor = (status: string) => {
-    const s = status.toLowerCase();
+    const s = status.toLowerCase()
     if (s === "confirmed" || s === "approved")
-      return "bg-emerald-50 text-emerald-600 border border-emerald-100";
+      return "bg-emerald-50 text-emerald-600 border border-emerald-100"
     if (s === "in progress" || s === "ongoing")
-      return "bg-emerald-50 text-emerald-600 border border-emerald-100";
+      return "bg-emerald-50 text-emerald-600 border border-emerald-100"
     if (s === "cancelled" || s === "rejected")
-      return "bg-red-50 text-red-600 border border-red-100";
-    return "bg-amber-50 text-amber-600 border border-amber-100";
-  };
+      return "bg-red-50 text-red-600 border border-red-100"
+    return "bg-amber-50 text-amber-600 border border-amber-100"
+  }
 
-  const recentBookings = data?.recent_bookings ?? [];
+  const recentBookings = data?.recent_bookings ?? []
 
   return (
     <div
@@ -256,7 +268,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         {/* STATS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-5 mb-8">
           {statCards.map((stat, index) => {
-            const Icon = stat.icon;
+            const Icon = stat.icon
             return (
               <div
                 key={index}
@@ -269,7 +281,10 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                       <Icon size={22} className="text-emerald-600" />
                     </div>
                     {loading && (
-                      <Loader2 size={16} className="animate-spin text-slate-300" />
+                      <Loader2
+                        size={16}
+                        className="animate-spin text-slate-300"
+                      />
                     )}
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight break-words">
@@ -278,7 +293,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                   <p className="text-sm text-slate-500 mt-1">{stat.label}</p>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
 
@@ -297,10 +312,13 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                     : `Latest ${recentBookings.length} booking${recentBookings.length !== 1 ? "s" : ""}`}
                 </p>
               </div>
-              <button className="text-sm text-emerald-600 font-medium flex items-center gap-1 hover:gap-2 transition-all">
+              <Link
+                href="/admin/appointments"
+                className="text-sm text-emerald-600 font-medium flex items-center gap-1 hover:gap-2 transition-all"
+              >
                 View all
                 <ArrowRight size={15} />
-              </button>
+              </Link>
             </div>
 
             {loading ? (
@@ -345,7 +363,8 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                             </span>
                           </div>
                           <p className="text-xs text-slate-500 mt-3">
-                            {formatDate(b.booking_date)} · {formatTime(b.booking_time)}
+                            {formatDate(b.booking_date)} ·{" "}
+                            {formatTime(b.booking_time)}
                           </p>
                         </div>
                       </div>
@@ -418,7 +437,9 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                 </h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Today&apos;s bookings</span>
+                    <span className="text-slate-500">
+                      Today&apos;s bookings
+                    </span>
                     <span className="font-semibold text-slate-800">
                       {data.todays_bookings}
                     </span>
@@ -442,5 +463,5 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
         </div>
       </main>
     </div>
-  );
+  )
 }

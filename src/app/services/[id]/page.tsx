@@ -129,13 +129,12 @@ export default function ServiceDetail() {
 
   if (loading) {
     return (
-      <div
-        className="font-sans min-h-screen flex items-center justify-center"
-        style={{ background: "#F0FDF4" }}
-      >
-        <div className="animate-pulse text-center">
-          <div className="h-4 w-32 rounded bg-emerald-100 mx-auto mb-3" />
-          <div className="h-3 w-48 rounded bg-emerald-50 mx-auto" />
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-400 border-t-transparent" />
+          <span className="text-sm font-medium tracking-wide text-green-700">
+            Loading...
+          </span>
         </div>
       </div>
     )

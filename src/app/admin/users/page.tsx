@@ -404,27 +404,12 @@ export default function UsersAdminPage() {
 
   if (loading) {
     return (
-      <div className={`flex min-h-screen w-full bg-slate-50 ${dmSans.className}`}>
-        <ProtectedNav userRole="admin" />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4 bg-white rounded-2xl border border-emerald-100 shadow-xl px-10 py-10">
-            <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center">
-              <Loader2 className="h-7 w-7 animate-spin text-emerald-600" />
-            </div>
-            <div className="text-center">
-              <p className="text-base font-semibold text-slate-800">
-                Loading Customers
-              </p>
-              <p className="text-sm text-slate-400 mt-1">
-                Fetching customer data...
-              </p>
-            </div>
-            <div className="flex gap-1.5 mt-1">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-              <span className="w-2 h-2 bg-emerald-600 rounded-full animate-bounce" />
-            </div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-400 border-t-transparent" />
+          <span className="text-sm font-medium tracking-wide text-green-700">
+            Loading...
+          </span>
         </div>
       </div>
     )
@@ -443,7 +428,9 @@ export default function UsersAdminPage() {
                     Admin Panel
                   </span>
                 </div>
-                <h1 className={`${playfair.className} text-3xl font-bold text-slate-900`}>
+                <h1
+                  className={`${playfair.className} text-3xl font-bold text-slate-900`}
+                >
                   Customer Management
                 </h1>
                 <p className="text-slate-500 text-sm mt-1">
@@ -478,7 +465,8 @@ export default function UsersAdminPage() {
                   />
                 </div>
                 <span className="text-xs text-slate-400 shrink-0">
-                  {table.getFilteredRowModel().rows.length} of {users.length} shown
+                  {table.getFilteredRowModel().rows.length} of {users.length}{" "}
+                  shown
                 </span>
               </div>
 
@@ -491,8 +479,11 @@ export default function UsersAdminPage() {
                           <th key={header.id} className="text-left px-5 py-3">
                             {header.isPlaceholder
                               ? null
-                              : typeof header.column.columnDef.header === "function"
-                                ? header.column.columnDef.header(header.getContext())
+                              : typeof header.column.columnDef.header ===
+                                  "function"
+                                ? header.column.columnDef.header(
+                                    header.getContext(),
+                                  )
                                 : header.column.columnDef.header}
                           </th>
                         )),
@@ -523,7 +514,9 @@ export default function UsersAdminPage() {
                   <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
                     <User2 className="w-7 h-7 text-emerald-300" />
                   </div>
-                  <p className="font-semibold text-slate-600">No customers found</p>
+                  <p className="font-semibold text-slate-600">
+                    No customers found
+                  </p>
                   {globalFilter && (
                     <p className="text-sm text-slate-400 mt-1">
                       Try a different search term

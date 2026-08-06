@@ -83,29 +83,29 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#020617]/80 backdrop-blur-xl border-b border-white/5"
-          : "bg-transparent"
+          ? "bg-white/80 backdrop-blur-xl border-b border-[#C8E6C9]"
+          : "bg-[#DCEFD6]"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto h-16 sm:h-18 lg:h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
-          className="font-serif text-xl text-white tracking-wide shrink-0"
+          className="text-green-900 font-serif text-base sm:text-lg lg:text-2xl tracking-wide shrink-0 leading-tight"
         >
-          Dr. Dental Care <span className="text-emerald-400">Center</span>
+          Dr. Dental Care <span className="text-[#2F5C2F]">Center</span>
         </Link>
 
-        {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-6 lg:gap-8">
+        {/* Desktop nav links — 1024px and up only */}
+        <div className="hidden lg:flex items-center gap-8 xl:gap-10">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               className={`text-sm tracking-wide transition-colors ${
                 pathname === l.href
-                  ? "text-emerald-400"
-                  : "text-slate-300 hover:text-white"
+                  ? "text-[#2F5C2F]"
+                  : "text-[#4C6B4C] hover:text-[#1F3A1F]"
               }`}
             >
               {l.label}
@@ -113,13 +113,13 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop right */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Full desktop right panel — 1024px and up only */}
+        <div className="hidden lg:flex items-center gap-3">
           {canInstall && mounted && (
             <Button
               onClick={handleInstall}
               variant="outline"
-              className="border-emerald-400 text-emerald-400 hover:bg-emerald-400/10 text-sm px-4 flex items-center gap-2"
+              className="border-[#7BC67B] text-[#2F5C2F] hover:bg-[#7BC67B]/10 text-sm px-4 flex items-center gap-2"
             >
               <Download size={16} />
               Download App
@@ -130,39 +130,39 @@ export default function Navbar() {
             (isLoggedIn && user ? (
               <div className="flex items-center gap-3">
                 <Link href="/book">
-                  <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-300 font-medium text-sm px-5 hover:shadow-[0_0_20px_rgba(52,211,153,0.4)] transition-all flex items-center gap-2">
+                  <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium text-sm px-5 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all flex items-center gap-2">
                     <Calendar size={14} />
                     Book Now
                   </Button>
                 </Link>
 
                 <div
-                  className="relative flex items-center gap-2 pl-3 border-l border-white/10"
+                  className="relative flex items-center gap-2 pl-3 border-l border-[#C8E6C9]"
                   ref={dropdownRef}
                 >
                   <button
                     onClick={() => setDropdownOpen((v) => !v)}
                     className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                   >
-                    <div className="w-8 h-8 rounded-full bg-emerald-400/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 text-xs font-bold select-none">
+                    <div className="w-8 h-8 rounded-full bg-[#7BC67B]/25 border border-[#7BC67B]/50 flex items-center justify-center text-[#2F5C2F] text-xs font-bold select-none">
                       {initials}
                     </div>
-                    <span className="text-white text-sm font-medium max-w-[120px] truncate">
+                    <span className="text-[#1F3A1F] text-sm font-medium max-w-[120px] truncate">
                       {user.name}
                     </span>
                     <ChevronDown
                       size={13}
-                      className={`text-slate-500 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+                      className={`text-[#4C6B4C] transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
                     />
                   </button>
 
                   {dropdownOpen && (
-                    <div className="absolute right-0 top-full mt-3 w-52 bg-[#0f172a] border border-white/10 rounded-xl shadow-xl overflow-hidden">
-                      <div className="px-4 py-3 border-b border-white/10">
-                        <p className="text-white text-sm font-medium truncate">
+                    <div className="absolute right-0 top-full mt-3 w-52 bg-white border border-[#C8E6C9] rounded-xl shadow-xl overflow-hidden">
+                      <div className="px-4 py-3 border-b border-[#C8E6C9]">
+                        <p className="text-[#1F3A1F] text-sm font-medium truncate">
                           {user.name}
                         </p>
-                        <p className="text-slate-500 text-xs truncate">
+                        <p className="text-[#4C6B4C] text-xs truncate">
                           {user.email}
                         </p>
                       </div>
@@ -172,14 +172,14 @@ export default function Navbar() {
                             setDropdownOpen(false)
                             router.push("/profile")
                           }}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 text-emerald-400 hover:bg-white/5 hover:text-white text-sm transition-colors"
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-[#2F5C2F] hover:bg-[#DCEFD6]/60 hover:text-[#1F3A1F] text-sm transition-colors"
                         >
-                          <User size={14} className="text-emerald-400" />
+                          <User size={14} className="text-[#2F5C2F]" />
                           Profile & Bookings
                         </button>
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 text-slate-400 hover:bg-white/5 hover:text-red-400 text-sm transition-colors"
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-[#4C6B4C] hover:bg-[#DCEFD6]/60 hover:text-red-600 text-sm transition-colors"
                         >
                           <LogOut size={14} />
                           Sign Out
@@ -190,33 +190,50 @@ export default function Navbar() {
                 </div>
               </div>
             ) : (
-              <Link href="/login">
-                <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-300 font-medium text-sm px-6 hover:shadow-[0_0_20px_rgba(52,211,153,0.4)] transition-all">
-                  Login
-                </Button>
-              </Link>
+              <>
+                <Link href="/book">
+                  <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
+                    Book Now
+                  </Button>
+                </Link>
+
+                <Link href="/login">
+                  <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
+                    Login
+                  </Button>
+                </Link>
+              </>
             ))}
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden text-white p-1"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile + tablet toggle — anything under 1024px */}
+        <div className="flex lg:hidden items-center gap-2 sm:gap-3">
+          <Link href="/book" className="hidden sm:block">
+            <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] text-sm px-4">
+              Book
+            </Button>
+          </Link>
+
+          <button
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            className="p-2 -mr-2 text-[#1F3A1F]"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile/tablet dropdown menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-[#020617]/95 backdrop-blur-xl border-t border-white/5 px-5 pb-6 pt-2">
+        <div className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-[#C8E6C9] px-5 pb-6 pt-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={`block py-3 text-sm border-b border-white/[0.04] ${
-                pathname === l.href ? "text-emerald-400" : "text-slate-300"
+              className={`block py-3 text-sm border-b border-[#DCEFD6] ${
+                pathname === l.href ? "text-[#2F5C2F]" : "text-[#4C6B4C]"
               }`}
             >
               {l.label}
@@ -229,7 +246,7 @@ export default function Navbar() {
                 handleInstall()
                 setMobileOpen(false)
               }}
-              className="w-full mt-4 bg-emerald-400/20 text-emerald-400 hover:bg-emerald-400/30 border border-emerald-400 flex items-center justify-center gap-2"
+              className="w-full mt-4 bg-[#7BC67B]/20 text-[#2F5C2F] hover:bg-[#7BC67B]/30 border border-[#7BC67B] flex items-center justify-center gap-2"
             >
               <Download size={16} />
               Download App
@@ -239,16 +256,16 @@ export default function Navbar() {
           {mounted &&
             (isLoggedIn && user ? (
               <div className="mt-4 space-y-3">
-                <div className="flex items-center gap-3 px-1 py-2 bg-white/5 rounded-lg">
-                  <div className="w-8 h-8 rounded-full bg-emerald-400/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 text-xs font-bold">
+                <div className="flex items-center gap-3 px-1 py-2 bg-[#DCEFD6]/60 rounded-lg">
+                  <div className="w-8 h-8 rounded-full bg-[#7BC67B]/25 border border-[#7BC67B]/50 flex items-center justify-center text-[#2F5C2F] text-xs font-bold shrink-0">
                     {initials}
                   </div>
-                  <span className="text-white text-sm font-medium truncate">
+                  <span className="text-[#1F3A1F] text-sm font-medium truncate">
                     {user.name}
                   </span>
                 </div>
                 <Link href="/book" className="block">
-                  <Button className="w-full bg-emerald-400 text-slate-950 hover:bg-emerald-300 flex items-center justify-center gap-2">
+                  <Button className="w-full bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] flex items-center justify-center gap-2">
                     <Calendar size={15} />
                     Book Now
                   </Button>
@@ -256,27 +273,34 @@ export default function Navbar() {
                 <Link href="/profile" className="block">
                   <Button
                     variant="outline"
-                    className="w-full border-white/10 text-emerald-400 hover:bg-white/5 hover:text-white flex items-center justify-center gap-2"
+                    className="w-full border-[#C8E6C9] text-[#2F5C2F] hover:bg-[#DCEFD6]/60 hover:text-[#1F3A1F] flex items-center justify-center gap-2"
                   >
-                    <User size={15} className="text-emerald-400" />
+                    <User size={15} className="text-[#2F5C2F]" />
                     Profile & Bookings
                   </Button>
                 </Link>
                 <Button
                   onClick={handleLogout}
                   variant="outline"
-                  className="w-full border-red-400/30 text-red-400 hover:bg-red-400/10 flex items-center justify-center gap-2"
+                  className="w-full border-red-300 text-red-600 hover:bg-red-50 flex items-center justify-center gap-2"
                 >
                   <LogOut size={15} />
                   Sign Out
                 </Button>
               </div>
             ) : (
-              <Link href="/login">
-                <Button className="w-full mt-4 bg-emerald-400 text-slate-950 hover:bg-emerald-300">
-                  Login
-                </Button>
-              </Link>
+              <div className="space-y-3">
+                <Link href="/book" className="block">
+                  <Button className="w-full mt-4 bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B]">
+                    Book Now
+                  </Button>
+                </Link>
+                <Link href="/login" className="block">
+                  <Button className="w-full bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B]">
+                    Login
+                  </Button>
+                </Link>
+              </div>
             ))}
         </div>
       )}

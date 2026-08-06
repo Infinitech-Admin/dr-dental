@@ -50,8 +50,21 @@ type FormState = {
 /* ─────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────── */
-const CATEGORIES = ["All", "Dental Supplies", "Aesthetic Supplies", "Medications", "Equipment", "Consumables"]
-const FORM_CATEGORIES = ["Dental Supplies", "Aesthetic Supplies", "Medications", "Equipment", "Consumables"]
+const CATEGORIES = [
+  "All",
+  "Dental Supplies",
+  "Aesthetic Supplies",
+  "Medications",
+  "Equipment",
+  "Consumables",
+]
+const FORM_CATEGORIES = [
+  "Dental Supplies",
+  "Aesthetic Supplies",
+  "Medications",
+  "Equipment",
+  "Consumables",
+]
 
 const EMPTY_FORM: FormState = {
   item_name: "",
@@ -68,10 +81,19 @@ const EMPTY_FORM: FormState = {
 ───────────────────────────────────────── */
 function stockBadge(qty: number) {
   if (qty === 0)
-    return { label: "Out of Stock", cls: "bg-red-50 text-red-700 border border-red-200" }
+    return {
+      label: "Out of Stock",
+      cls: "bg-red-50 text-red-700 border border-red-200",
+    }
   if (qty <= 10)
-    return { label: "Low Stock", cls: "bg-amber-50 text-amber-700 border border-amber-200" }
-  return { label: "In Stock", cls: "bg-emerald-50 text-emerald-700 border border-emerald-200" }
+    return {
+      label: "Low Stock",
+      cls: "bg-amber-50 text-amber-700 border border-amber-200",
+    }
+  return {
+    label: "In Stock",
+    cls: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  }
 }
 
 function formatPrice(val: number | null) {
@@ -81,7 +103,11 @@ function formatPrice(val: number | null) {
 
 function formatDate(val: string | null) {
   if (!val) return "—"
-  return new Date(val).toLocaleDateString("en-PH", { year: "numeric", month: "short", day: "numeric" })
+  return new Date(val).toLocaleDateString("en-PH", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
 }
 
 function isExpiringSoon(val: string | null) {
@@ -97,12 +123,18 @@ function isExpired(val: string | null) {
 
 function categoryColor(cat: string | null) {
   switch (cat) {
-    case "Dental Supplies": return "bg-emerald-50 text-emerald-700 border-emerald-200"
-    case "Aesthetic Supplies": return "bg-purple-50 text-purple-700 border-purple-200"
-    case "Medications": return "bg-teal-50 text-teal-700 border-teal-200"
-    case "Equipment": return "bg-slate-100 text-slate-700 border-slate-200"
-    case "Consumables": return "bg-orange-50 text-orange-700 border-orange-200"
-    default: return "bg-slate-100 text-slate-600 border-slate-200"
+    case "Dental Supplies":
+      return "bg-emerald-50 text-emerald-700 border-emerald-200"
+    case "Aesthetic Supplies":
+      return "bg-purple-50 text-purple-700 border-purple-200"
+    case "Medications":
+      return "bg-teal-50 text-teal-700 border-teal-200"
+    case "Equipment":
+      return "bg-slate-100 text-slate-700 border-slate-200"
+    case "Consumables":
+      return "bg-orange-50 text-orange-700 border-orange-200"
+    default:
+      return "bg-slate-100 text-slate-600 border-slate-200"
   }
 }
 
@@ -119,7 +151,9 @@ export default function InventoryPage() {
   const [page, setPage] = useState(1)
   const PER_PAGE = 10
 
-  const [modal, setModal] = useState<"create" | "edit" | "view" | "delete" | null>(null)
+  const [modal, setModal] = useState<
+    "create" | "edit" | "view" | "delete" | null
+  >(null)
   const [selected, setSelected] = useState<InventoryItem | null>(null)
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
@@ -127,7 +161,8 @@ export default function InventoryPage() {
   /* ── filtered/paginated client-side since controller returns all ── */
   const filtered = items.filter((i) => {
     const matchSearch = i.item_name.toLowerCase().includes(search.toLowerCase())
-    const matchCat = selectedCategory === "All" || i.category === selectedCategory
+    const matchCat =
+      selectedCategory === "All" || i.category === selectedCategory
     return matchSearch && matchCat
   })
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
@@ -159,7 +194,10 @@ export default function InventoryPage() {
       })
       return false
     }
-    if (form.cost_price && (isNaN(parseFloat(form.cost_price)) || parseFloat(form.cost_price) < 0)) {
+    if (
+      form.cost_price &&
+      (isNaN(parseFloat(form.cost_price)) || parseFloat(form.cost_price) < 0)
+    ) {
       toast({
         title: "Validation Error",
         description: "Cost price must be a positive number",
@@ -167,7 +205,11 @@ export default function InventoryPage() {
       })
       return false
     }
-    if (form.selling_price && (isNaN(parseFloat(form.selling_price)) || parseFloat(form.selling_price) < 0)) {
+    if (
+      form.selling_price &&
+      (isNaN(parseFloat(form.selling_price)) ||
+        parseFloat(form.selling_price) < 0)
+    ) {
       toast({
         title: "Validation Error",
         description: "Selling price must be a positive number",
@@ -202,10 +244,14 @@ export default function InventoryPage() {
     }
   }, [toast])
 
-  useEffect(() => { fetchItems() }, [fetchItems])
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems])
 
   /* reset page on filter change */
-  useEffect(() => { setPage(1) }, [search, selectedCategory])
+  useEffect(() => {
+    setPage(1)
+  }, [search, selectedCategory])
 
   /* ── crud ── */
   const buildPayload = () => ({
@@ -244,7 +290,10 @@ export default function InventoryPage() {
       console.error("Create error:", err)
       toast({
         title: "Error",
-        description: err instanceof Error ? err.message : "Failed to create inventory item",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Failed to create inventory item",
         variant: "destructive",
       })
     } finally {
@@ -278,7 +327,10 @@ export default function InventoryPage() {
       console.error("Update error:", err)
       toast({
         title: "Error",
-        description: err instanceof Error ? err.message : "Failed to update inventory item",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Failed to update inventory item",
         variant: "destructive",
       })
     } finally {
@@ -291,7 +343,9 @@ export default function InventoryPage() {
 
     setSaving(true)
     try {
-      const res = await fetch(`/api/inventory/${selected.id}`, { method: "DELETE" })
+      const res = await fetch(`/api/inventory/${selected.id}`, {
+        method: "DELETE",
+      })
 
       if (!res.ok) {
         const error = await res.json()
@@ -308,7 +362,10 @@ export default function InventoryPage() {
       console.error("Delete error:", err)
       toast({
         title: "Error",
-        description: err instanceof Error ? err.message : "Failed to delete inventory item",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Failed to delete inventory item",
         variant: "destructive",
       })
     } finally {
@@ -317,7 +374,10 @@ export default function InventoryPage() {
   }
 
   /* ── modal helpers ── */
-  const openCreate = () => { setForm(EMPTY_FORM); setModal("create") }
+  const openCreate = () => {
+    setForm(EMPTY_FORM)
+    setModal("create")
+  }
   const openEdit = (i: InventoryItem) => {
     setSelected(i)
     setForm({
@@ -331,13 +391,25 @@ export default function InventoryPage() {
     })
     setModal("edit")
   }
-  const openView = (i: InventoryItem) => { setSelected(i); setModal("view") }
-  const openDelete = (i: InventoryItem) => { setSelected(i); setModal("delete") }
-  const closeModal = () => { setModal(null); setSelected(null); setForm(EMPTY_FORM) }
+  const openView = (i: InventoryItem) => {
+    setSelected(i)
+    setModal("view")
+  }
+  const openDelete = (i: InventoryItem) => {
+    setSelected(i)
+    setModal("delete")
+  }
+  const closeModal = () => {
+    setModal(null)
+    setSelected(null)
+    setForm(EMPTY_FORM)
+  }
 
   /* ── summary stats ── */
   const totalItems = items.length
-  const lowStock = items.filter((i) => i.quantity > 0 && i.quantity <= 10).length
+  const lowStock = items.filter(
+    (i) => i.quantity > 0 && i.quantity <= 10,
+  ).length
   const outOfStock = items.filter((i) => i.quantity === 0).length
   const expiringSoon = items.filter((i) => isExpiringSoon(i.expiry_date)).length
 
@@ -346,9 +418,7 @@ export default function InventoryPage() {
   ───────────────────────────────────────── */
   return (
     <div className="min-h-screen bg-[#f0f4ff] font-sans">
-
-      <main className="px-4 sm:px-6 lg:px-8 pt-20 lg:pt-8 pb-24">
-
+      <main className="px-4 sm:px-6 lg:px-8 lg:pt-8 pb-24">
         {/* ── Header ── */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pt-2">
           <div>
@@ -373,10 +443,30 @@ export default function InventoryPage() {
 
         {/* ── Stats ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-          <StatCard label="Total Items" value={totalItems} icon={<Package size={18} />} color="emerald" />
-          <StatCard label="Low Stock" value={lowStock} icon={<Layers size={18} />} color="amber" />
-          <StatCard label="Out of Stock" value={outOfStock} icon={<AlertTriangle size={18} />} color="red" />
-          <StatCard label="Expiring Soon" value={expiringSoon} icon={<CalendarDays size={18} />} color="orange" />
+          <StatCard
+            label="Total Items"
+            value={totalItems}
+            icon={<Package size={18} />}
+            color="emerald"
+          />
+          <StatCard
+            label="Low Stock"
+            value={lowStock}
+            icon={<Layers size={18} />}
+            color="amber"
+          />
+          <StatCard
+            label="Out of Stock"
+            value={outOfStock}
+            icon={<AlertTriangle size={18} />}
+            color="red"
+          />
+          <StatCard
+            label="Expiring Soon"
+            value={expiringSoon}
+            icon={<CalendarDays size={18} />}
+            color="orange"
+          />
         </div>
 
         {/* ── Filters ── */}
@@ -392,15 +482,16 @@ export default function InventoryPage() {
                          focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
             />
           </div>
-          <div className="flex gap-2 mt-3 flex-wrap">
+          <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
             {CATEGORIES.map((c) => (
               <button
                 key={c}
                 onClick={() => setSelectedCategory(c)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors
-                  ${selectedCategory === c
-                    ? "bg-emerald-600 text-white shadow-sm"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  ${
+                    selectedCategory === c
+                      ? "bg-emerald-600 text-white shadow-sm"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
               >
                 {c}
@@ -428,8 +519,21 @@ export default function InventoryPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-slate-100 bg-slate-50/80">
-                      {["Item", "Category", "Quantity", "Unit", "Expiry", "Cost Price", "Selling Price", "Status", ""].map((h) => (
-                        <th key={h} className="text-left px-4 py-3 font-semibold text-slate-500 uppercase tracking-wide text-xs whitespace-nowrap">
+                      {[
+                        "Item",
+                        "Category",
+                        "Quantity",
+                        "Unit",
+                        "Expiry",
+                        "Cost Price",
+                        "Selling Price",
+                        "Status",
+                        "",
+                      ].map((h) => (
+                        <th
+                          key={h}
+                          className="text-left px-4 py-3 font-semibold text-slate-500 uppercase tracking-wide text-xs whitespace-nowrap"
+                        >
                           {h}
                         </th>
                       ))}
@@ -441,43 +545,84 @@ export default function InventoryPage() {
                       const expired = isExpired(item.expiry_date)
                       const expiring = isExpiringSoon(item.expiry_date)
                       return (
-                        <tr key={item.id} className="hover:bg-emerald-50/30 transition-colors">
+                        <tr
+                          key={item.id}
+                          className="hover:bg-emerald-50/30 transition-colors"
+                        >
                           <td className="px-4 py-3.5">
                             <div className="flex items-center gap-2.5">
                               <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
-                                <FlaskConical size={14} className="text-emerald-500" />
+                                <FlaskConical
+                                  size={14}
+                                  className="text-emerald-500"
+                                />
                               </div>
-                              <span className="font-medium text-slate-900 truncate max-w-[160px]">{item.item_name}</span>
+                              <span className="font-medium text-slate-900 truncate max-w-[160px]">
+                                {item.item_name}
+                              </span>
                             </div>
                           </td>
                           <td className="px-4 py-3.5">
                             {item.category ? (
-                              <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium border ${categoryColor(item.category)}`}>
+                              <span
+                                className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium border ${categoryColor(item.category)}`}
+                              >
                                 {item.category}
                               </span>
-                            ) : <span className="text-slate-400">—</span>}
+                            ) : (
+                              <span className="text-slate-400">—</span>
+                            )}
                           </td>
-                          <td className="px-4 py-3.5 font-semibold text-slate-900">{item.quantity}</td>
-                          <td className="px-4 py-3.5 text-slate-500">{item.unit ?? "—"}</td>
+                          <td className="px-4 py-3.5 font-semibold text-slate-900">
+                            {item.quantity}
+                          </td>
+                          <td className="px-4 py-3.5 text-slate-500">
+                            {item.unit ?? "—"}
+                          </td>
                           <td className="px-4 py-3.5 whitespace-nowrap">
                             {item.expiry_date ? (
-                              <span className={`text-sm font-medium ${expired ? "text-red-600" : expiring ? "text-amber-600" : "text-slate-600"}`}>
-                                {expired && "⚠ "}{expiring && !expired && ""}{formatDate(item.expiry_date)}
+                              <span
+                                className={`text-sm font-medium ${expired ? "text-red-600" : expiring ? "text-amber-600" : "text-slate-600"}`}
+                              >
+                                {expired && "⚠ "}
+                                {expiring && !expired && ""}
+                                {formatDate(item.expiry_date)}
                               </span>
-                            ) : <span className="text-slate-400">—</span>}
+                            ) : (
+                              <span className="text-slate-400">—</span>
+                            )}
                           </td>
-                          <td className="px-4 py-3.5 text-slate-700 font-medium">{formatPrice(item.cost_price)}</td>
-                          <td className="px-4 py-3.5 text-emerald-700 font-semibold">{formatPrice(item.selling_price)}</td>
+                          <td className="px-4 py-3.5 text-slate-700 font-medium">
+                            {formatPrice(item.cost_price)}
+                          </td>
+                          <td className="px-4 py-3.5 text-emerald-700 font-semibold">
+                            {formatPrice(item.selling_price)}
+                          </td>
                           <td className="px-4 py-3.5">
-                            <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${stock.cls}`}>
+                            <span
+                              className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${stock.cls}`}
+                            >
                               {stock.label}
                             </span>
                           </td>
                           <td className="px-4 py-3.5">
                             <div className="flex items-center gap-1">
-                              <ActionBtn icon={<Eye size={15} />} label="View" onClick={() => openView(item)} />
-                              <ActionBtn icon={<Pencil size={15} />} label="Edit" onClick={() => openEdit(item)} />
-                              <ActionBtn icon={<Trash2 size={15} />} label="Delete" onClick={() => openDelete(item)} danger />
+                              <ActionBtn
+                                icon={<Eye size={15} />}
+                                label="View"
+                                onClick={() => openView(item)}
+                              />
+                              <ActionBtn
+                                icon={<Pencil size={15} />}
+                                label="Edit"
+                                onClick={() => openEdit(item)}
+                              />
+                              <ActionBtn
+                                icon={<Trash2 size={15} />}
+                                label="Delete"
+                                onClick={() => openDelete(item)}
+                                danger
+                              />
                             </div>
                           </td>
                         </tr>
@@ -495,50 +640,88 @@ export default function InventoryPage() {
                   const expiring = isExpiringSoon(item.expiry_date)
                   return (
                     <div key={item.id} className="p-4">
-                      <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
-                            <FlaskConical size={15} className="text-emerald-500" />
+                            <FlaskConical
+                              size={15}
+                              className="text-emerald-500"
+                            />
                           </div>
                           <div className="min-w-0">
-                            <p className="font-semibold text-slate-900 truncate">{item.item_name}</p>
+                            <p className="font-semibold text-slate-900 truncate">
+                              {item.item_name}
+                            </p>
                             {item.category && (
-                              <span className={`inline-flex mt-0.5 px-2 py-0.5 rounded-full text-xs font-medium border ${categoryColor(item.category)}`}>
+                              <span
+                                className={`inline-flex mt-0.5 px-2 py-0.5 rounded-full text-xs font-medium border ${categoryColor(item.category)}`}
+                              >
                                 {item.category}
                               </span>
                             )}
                           </div>
                         </div>
-                        <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium ${stock.cls}`}>
+                        <span
+                          className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-medium ${stock.cls}`}
+                        >
                           {stock.label}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-sm mb-3">
                         <div>
-                          <p className="text-xs text-slate-400 font-medium">Qty / Unit</p>
-                          <p className="font-semibold text-slate-800">{item.quantity} {item.unit ?? ""}</p>
+                          <p className="text-xs text-slate-400 font-medium">
+                            Qty / Unit
+                          </p>
+                          <p className="font-semibold text-slate-800">
+                            {item.quantity} {item.unit ?? ""}
+                          </p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-400 font-medium">Expiry</p>
-                          <p className={`font-medium ${expired ? "text-red-600" : expiring ? "text-amber-600" : "text-slate-700"}`}>
+                          <p className="text-xs text-slate-400 font-medium">
+                            Expiry
+                          </p>
+                          <p
+                            className={`font-medium ${expired ? "text-red-600" : expiring ? "text-amber-600" : "text-slate-700"}`}
+                          >
                             {formatDate(item.expiry_date)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-400 font-medium">Cost Price</p>
-                          <p className="font-medium text-slate-700">{formatPrice(item.cost_price)}</p>
+                          <p className="text-xs text-slate-400 font-medium">
+                            Cost Price
+                          </p>
+                          <p className="font-medium text-slate-700">
+                            {formatPrice(item.cost_price)}
+                          </p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-400 font-medium">Selling Price</p>
-                          <p className="font-semibold text-emerald-700">{formatPrice(item.selling_price)}</p>
+                          <p className="text-xs text-slate-400 font-medium">
+                            Selling Price
+                          </p>
+                          <p className="font-semibold text-emerald-700">
+                            {formatPrice(item.selling_price)}
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex justify-end gap-1">
-                        <ActionBtn icon={<Eye size={15} />} label="View" onClick={() => openView(item)} />
-                        <ActionBtn icon={<Pencil size={15} />} label="Edit" onClick={() => openEdit(item)} />
-                        <ActionBtn icon={<Trash2 size={15} />} label="Delete" onClick={() => openDelete(item)} danger />
+                        <ActionBtn
+                          icon={<Eye size={15} />}
+                          label="View"
+                          onClick={() => openView(item)}
+                        />
+                        <ActionBtn
+                          icon={<Pencil size={15} />}
+                          label="Edit"
+                          onClick={() => openEdit(item)}
+                        />
+                        <ActionBtn
+                          icon={<Trash2 size={15} />}
+                          label="Delete"
+                          onClick={() => openDelete(item)}
+                          danger
+                        />
                       </div>
                     </div>
                   )
@@ -548,7 +731,7 @@ export default function InventoryPage() {
           )}
 
           {/* Pagination */}
-          <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 bg-slate-50/60">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-5 py-3 border-t border-slate-100 bg-slate-50/60">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
@@ -560,9 +743,12 @@ export default function InventoryPage() {
               <ChevronLeft size={15} /> Previous
             </button>
             <span className="text-sm text-slate-500">
-              Page <span className="font-semibold text-slate-700">{page}</span> of{" "}
+              Page <span className="font-semibold text-slate-700">{page}</span>{" "}
+              of{" "}
               <span className="font-semibold text-slate-700">{totalPages}</span>
-              <span className="ml-2 text-slate-400">({filtered.length} items)</span>
+              <span className="ml-2 text-slate-400">
+                ({filtered.length} items)
+              </span>
             </span>
             <button
               disabled={page >= totalPages}
@@ -584,7 +770,9 @@ export default function InventoryPage() {
           <InventoryForm form={form} setForm={setForm} />
           <ModalFooter>
             <OutlineBtn onClick={closeModal}>Cancel</OutlineBtn>
-            <PrimaryBtn onClick={handleCreate} loading={saving}>Add Item</PrimaryBtn>
+            <PrimaryBtn onClick={handleCreate} loading={saving}>
+              Add Item
+            </PrimaryBtn>
           </ModalFooter>
         </Modal>
       )}
@@ -594,7 +782,9 @@ export default function InventoryPage() {
           <InventoryForm form={form} setForm={setForm} />
           <ModalFooter>
             <OutlineBtn onClick={closeModal}>Cancel</OutlineBtn>
-            <PrimaryBtn onClick={handleUpdate} loading={saving}>Save Changes</PrimaryBtn>
+            <PrimaryBtn onClick={handleUpdate} loading={saving}>
+              Save Changes
+            </PrimaryBtn>
           </ModalFooter>
         </Modal>
       )}
@@ -604,7 +794,14 @@ export default function InventoryPage() {
           <ViewItem item={selected} />
           <ModalFooter>
             <OutlineBtn onClick={closeModal}>Close</OutlineBtn>
-            <PrimaryBtn onClick={() => { closeModal(); openEdit(selected) }}>Edit Item</PrimaryBtn>
+            <PrimaryBtn
+              onClick={() => {
+                closeModal()
+                openEdit(selected)
+              }}
+            >
+              Edit Item
+            </PrimaryBtn>
           </ModalFooter>
         </Modal>
       )}
@@ -617,13 +814,19 @@ export default function InventoryPage() {
             </div>
             <div>
               {/* FIX 2 & 3: Replace raw " characters with &quot; entities */}
-              <p className="font-semibold text-slate-900 text-base">Delete &quot;{selected.item_name}&quot;?</p>
-              <p className="text-sm text-slate-500 mt-1">This action cannot be undone.</p>
+              <p className="font-semibold text-slate-900 text-base">
+                Delete &quot;{selected.item_name}&quot;?
+              </p>
+              <p className="text-sm text-slate-500 mt-1">
+                This action cannot be undone.
+              </p>
             </div>
           </div>
           <ModalFooter>
             <OutlineBtn onClick={closeModal}>Cancel</OutlineBtn>
-            <DangerBtn onClick={handleDelete} loading={saving}>Delete Item</DangerBtn>
+            <DangerBtn onClick={handleDelete} loading={saving}>
+              Delete Item
+            </DangerBtn>
           </ModalFooter>
         </Modal>
       )}
@@ -653,7 +856,9 @@ function StatCard({
   }
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-4 flex items-center gap-3">
-      <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${colors[color]}`}>
+      <div
+        className={`w-10 h-10 rounded-xl flex items-center justify-center border ${colors[color]}`}
+      >
         {icon}
       </div>
       <div>
@@ -685,9 +890,9 @@ function Modal({
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className={`bg-white rounded-2xl shadow-2xl w-full
-          ${size === "sm" ? "max-w-sm" : "max-w-xl"}
-          max-h-[90vh] overflow-y-auto`}
+        className={`bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full
+    ${size === "sm" ? "max-w-sm" : "max-w-xl"}
+    max-h-[90vh] overflow-y-auto`}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 sticky top-0 bg-white z-10">
           <div className="flex items-center gap-2.5">
@@ -704,7 +909,7 @@ function Modal({
             <X size={16} />
           </button>
         </div>
-        <div className="px-6 py-5">{children}</div>
+        <div className="px-4 sm:px-6 py-5">{children}</div>
       </div>
     </div>
   )
@@ -712,7 +917,7 @@ function Modal({
 
 function ModalFooter({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex justify-end gap-2 pt-4 mt-2 border-t border-slate-100">
+    <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4 mt-2 border-t border-slate-100">
       {children}
     </div>
   )
@@ -734,16 +939,25 @@ function PrimaryBtn({
     <button
       onClick={onClick}
       disabled={loading}
-      className="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white
-                 text-sm font-semibold transition-colors disabled:opacity-60 inline-flex items-center gap-2"
+      className="h-10 px-5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white
+           text-sm font-semibold transition-colors disabled:opacity-60
+           inline-flex items-center justify-center gap-2"
     >
-      {loading && <div className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />}
+      {loading && (
+        <div className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+      )}
       {children}
     </button>
   )
 }
 
-function OutlineBtn({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+function OutlineBtn({
+  onClick,
+  children,
+}: {
+  onClick: () => void
+  children: React.ReactNode
+}) {
   return (
     <button
       onClick={onClick}
@@ -771,7 +985,9 @@ function DangerBtn({
       className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white
                  text-sm font-semibold transition-colors disabled:opacity-60 inline-flex items-center gap-2"
     >
-      {loading && <div className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />}
+      {loading && (
+        <div className="w-3.5 h-3.5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+      )}
       {children}
     </button>
   )
@@ -792,10 +1008,11 @@ function ActionBtn({
     <button
       onClick={onClick}
       title={label}
-      className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors
-        ${danger
-          ? "text-slate-400 hover:text-red-600 hover:bg-red-50"
-          : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"
+      className={`w-9 h-9 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors
+        ${
+          danger
+            ? "text-slate-400 hover:text-red-600 hover:bg-red-50"
+            : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"
         }`}
     >
       {icon}
@@ -821,7 +1038,7 @@ function InventoryForm({
     label: string,
     icon: React.ReactNode,
     node: React.ReactNode,
-    hint?: string
+    hint?: string,
   ) => (
     <div>
       <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
@@ -843,10 +1060,10 @@ function InventoryForm({
           onChange={(e) => setForm({ ...form, item_name: e.target.value })}
           placeholder="e.g. Dental Floss"
           className={inputCls}
-        />
+        />,
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {field(
           "Category",
           <Tag size={12} />,
@@ -855,8 +1072,10 @@ function InventoryForm({
             onChange={(e) => setForm({ ...form, category: e.target.value })}
             className={inputCls}
           >
-            {FORM_CATEGORIES.map((c) => <option key={c}>{c}</option>)}
-          </select>
+            {FORM_CATEGORIES.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>,
         )}
 
         {field(
@@ -867,11 +1086,11 @@ function InventoryForm({
             onChange={(e) => setForm({ ...form, unit: e.target.value })}
             placeholder="e.g. pcs, boxes, ml"
             className={inputCls}
-          />
+          />,
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {field(
           "Quantity",
           <Package size={12} />,
@@ -882,7 +1101,7 @@ function InventoryForm({
             onChange={(e) => setForm({ ...form, quantity: e.target.value })}
             placeholder="0"
             className={inputCls}
-          />
+          />,
         )}
 
         {field(
@@ -893,11 +1112,11 @@ function InventoryForm({
             value={form.expiry_date}
             onChange={(e) => setForm({ ...form, expiry_date: e.target.value })}
             className={inputCls}
-          />
+          />,
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {field(
           "Cost Price (₱)",
           <DollarSign size={12} />,
@@ -909,7 +1128,7 @@ function InventoryForm({
             onChange={(e) => setForm({ ...form, cost_price: e.target.value })}
             placeholder="0.00"
             className={inputCls}
-          />
+          />,
         )}
 
         {field(
@@ -920,10 +1139,12 @@ function InventoryForm({
             min="0"
             step="0.01"
             value={form.selling_price}
-            onChange={(e) => setForm({ ...form, selling_price: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, selling_price: e.target.value })
+            }
             placeholder="0.00"
             className={inputCls}
-          />
+          />,
         )}
       </div>
     </div>
@@ -941,7 +1162,7 @@ function ViewItem({ item }: { item: InventoryItem }) {
   const row = (
     label: string,
     icon: React.ReactNode,
-    value: React.ReactNode
+    value: React.ReactNode,
   ) => (
     <div className="flex items-center justify-between py-3 border-b border-slate-50 last:border-0 gap-4">
       <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wide shrink-0">
@@ -955,52 +1176,85 @@ function ViewItem({ item }: { item: InventoryItem }) {
   return (
     <div>
       {/* Item header card */}
-      <div className="bg-gradient-to-br from-emerald-50 to-indigo-50 rounded-xl p-4 mb-5 border border-emerald-100 flex items-center gap-4">
+      <div className="bg-gradient-to-br from-emerald-50 to-indigo-50 rounded-xl p-4 mb-5 border border-emerald-100 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="w-14 h-14 rounded-xl bg-white border border-emerald-100 flex items-center justify-center shadow-sm shrink-0">
           <FlaskConical size={24} className="text-emerald-500" />
         </div>
         <div>
-          <p className="font-bold text-slate-900 text-lg leading-tight">{item.item_name}</p>
+          <p className="font-bold text-slate-900 text-lg leading-tight">
+            {item.item_name}
+          </p>
           {item.category && (
-            <span className={`inline-flex mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium border ${categoryColor(item.category)}`}>
+            <span
+              className={`inline-flex mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium border ${categoryColor(item.category)}`}
+            >
               {item.category}
             </span>
           )}
         </div>
         <div className="ml-auto">
-          <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${stock.cls}`}>
+          <span
+            className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${stock.cls}`}
+          >
             {stock.label}
           </span>
         </div>
       </div>
 
       <div className="bg-slate-50/60 rounded-xl px-4 divide-y divide-slate-100 border border-slate-100">
-        {row("Quantity", <Package size={13} />,
-          <span className="font-bold text-slate-900 text-base">{item.quantity} {item.unit ?? ""}</span>
+        {row(
+          "Quantity",
+          <Package size={13} />,
+          <span className="font-bold text-slate-900 text-base">
+            {item.quantity} {item.unit ?? ""}
+          </span>,
         )}
-        {row("Expiry Date", <CalendarDays size={13} />,
+        {row(
+          "Expiry Date",
+          <CalendarDays size={13} />,
           item.expiry_date ? (
-            <span className={`font-medium ${expired ? "text-red-600" : expiring ? "text-amber-600" : "text-slate-700"}`}>
-              {expired ? "⚠ EXPIRED — " : expiring ? "⏳ Expiring — " : ""}{formatDate(item.expiry_date)}
+            <span
+              className={`font-medium ${expired ? "text-red-600" : expiring ? "text-amber-600" : "text-slate-700"}`}
+            >
+              {expired ? "⚠ EXPIRED — " : expiring ? "⏳ Expiring — " : ""}
+              {formatDate(item.expiry_date)}
             </span>
-          ) : <span className="text-slate-400">No expiry date</span>
+          ) : (
+            <span className="text-slate-400">No expiry date</span>
+          ),
         )}
-        {row("Cost Price", <DollarSign size={13} />,
-          <span className="font-semibold text-slate-800">{formatPrice(item.cost_price)}</span>
+        {row(
+          "Cost Price",
+          <DollarSign size={13} />,
+          <span className="font-semibold text-slate-800">
+            {formatPrice(item.cost_price)}
+          </span>,
         )}
-        {row("Selling Price", <ShoppingCart size={13} />,
-          <span className="font-bold text-emerald-700 text-base">{formatPrice(item.selling_price)}</span>
+        {row(
+          "Selling Price",
+          <ShoppingCart size={13} />,
+          <span className="font-bold text-emerald-700 text-base">
+            {formatPrice(item.selling_price)}
+          </span>,
         )}
-        {item.cost_price && item.selling_price && row("Margin", <Tag size={13} />,
-          (() => {
-            const margin = ((item.selling_price - item.cost_price) / item.selling_price) * 100
-            return (
-              <span className={`font-semibold ${margin >= 0 ? "text-emerald-600" : "text-red-600"}`}>
-                {margin.toFixed(1)}%
-              </span>
-            )
-          })()
-        )}
+        {item.cost_price &&
+          item.selling_price &&
+          row(
+            "Margin",
+            <Tag size={13} />,
+            (() => {
+              const margin =
+                ((item.selling_price - item.cost_price) / item.selling_price) *
+                100
+              return (
+                <span
+                  className={`font-semibold ${margin >= 0 ? "text-emerald-600" : "text-red-600"}`}
+                >
+                  {margin.toFixed(1)}%
+                </span>
+              )
+            })(),
+          )}
       </div>
     </div>
   )

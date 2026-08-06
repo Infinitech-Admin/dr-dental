@@ -168,26 +168,26 @@ export default function Home() {
     <div>
       {/* ── Hero ── */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#020617] via-[#0B1220] to-[#020617]" />
-        <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] bg-emerald-400/10 rounded-full blur-[120px] -translate-y-1/2" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-600/10 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#F1FAEE] via-[#E8F5E1] to-[#DCEFD6]" />
+        <div className="absolute top-1/2 right-1/4 w-[600px] h-[600px] bg-[#7BC67B]/15 rounded-full blur-[120px] -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#A8D5A2]/20 rounded-full blur-[100px]" />
         <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-16 grid lg:grid-cols-2 gap-12 items-center">
           <motion.div {...fade}>
-            <p className="text-emerald-400 text-sm uppercase tracking-[0.3em] mb-6">
+            <p className="text-[#2F5C2F] text-sm uppercase tracking-[0.3em] mb-6">
               Dr. Dental Care Center
             </p>
 
-            <h1 className="font-serif text-5xl md:text-7xl text-white leading-[1.1] mb-6">
+            <h1 className="font-serif text-5xl md:text-7xl text-[#1F3A1F] leading-[1.1] mb-6">
               Quality Dental Care You Can Trust
             </h1>
 
-            <p className="text-slate-400 text-lg leading-relaxed max-w-lg mb-6">
+            <p className="text-[#4C6B4C] text-lg leading-relaxed max-w-lg mb-6">
               Providing reliable and compassionate dental care for over 6 years.
               Our team is dedicated to helping every patient achieve a healthier
               smile through personalized treatments and modern dental solutions.
             </p>
 
-            <p className="text-slate-400 text-lg leading-relaxed max-w-lg mb-10">
+            <p className="text-[#4C6B4C] text-lg leading-relaxed max-w-lg mb-10">
               Your journey to better oral health starts with a dental team that
               cares, listens, and puts your comfort first.
             </p>
@@ -196,7 +196,7 @@ export default function Home() {
               <Link href="/book">
                 <Button
                   size="lg"
-                  className="bg-emerald-400 text-slate-950 hover:bg-emerald-300 font-medium px-8 hover:shadow-[0_0_20px_rgba(52,211,153,0.4)] transition-all"
+                  className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium px-8 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all"
                 >
                   Book Appointment <ArrowRight className="ml-2" size={18} />
                 </Button>
@@ -206,7 +206,7 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="bg-emerald-400 text-slate-950 hover:bg-emerald-300 font-medium px-8 hover:shadow-[0_0_20px_rgba(52,211,153,0.4)] transition-all"
+                  className="bg-[#A8D5A2] text-[#1F3A1F] hover:bg-[#98CB92] font-medium px-8 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all"
                 >
                   Explore Services
                 </Button>
@@ -224,14 +224,14 @@ export default function Home() {
               alt="Dr. Dental Care Center equipment"
               width={600}
               height={450}
-              className="rounded-2xl shadow-2xl shadow-emerald-400/5 border border-white/5"
+              className="rounded-2xl shadow-2xl shadow-[#7BC67B]/10 border border-[#C8E6C9]"
             />
           </motion.div>
         </div>
       </section>
 
       {/* ── Trust Bar ── */}
-      <section className="border-y border-white/5 bg-[#0B1220]/50">
+      <section className="border-y border-[#C8E6C9] bg-[#E8F5E1]/60">
         <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s, i) => (
             <motion.div
@@ -240,27 +240,27 @@ export default function Home() {
               transition={{ delay: i * 0.1 }}
               className="text-center"
             >
-              <p className="text-3xl font-bold text-emerald-400 font-serif">
+              <p className="text-3xl font-bold text-[#2F5C2F] font-serif">
                 {s.value}
               </p>
-              <p className="text-slate-500 text-sm mt-1">{s.label}</p>
+              <p className="text-[#4C6B4C] text-sm mt-1">{s.label}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* ── Branches ── */}
-      <section className="bg-[#0B1220] py-24 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-400/5 rounded-full blur-[100px]" />
+      <section className="bg-[#DCEFD6] py-24 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#7BC67B]/10 rounded-full blur-[100px]" />
         <div className="relative max-w-7xl mx-auto px-6">
           <motion.div {...fade} className="text-center max-w-2xl mx-auto mb-14">
-            <p className="text-emerald-400 text-sm uppercase tracking-[0.3em] mb-3">
+            <p className="text-[#2F5C2F] text-sm uppercase tracking-[0.3em] mb-3">
               Find Us
             </p>
-            <h2 className="font-serif text-4xl text-white mb-4">
+            <h2 className="font-serif text-4xl text-[#1F3A1F] mb-4">
               Our Branches
             </h2>
-            <p className="text-slate-400">
+            <p className="text-[#4C6B4C]">
               {BRANCHES.length} locations across Mindanao, each ready to give
               you the same quality care, closer to home.
             </p>
@@ -273,31 +273,31 @@ export default function Home() {
                 {...fade}
                 transition={{ duration: 0.5, delay: i * 0.06 }}
               >
-                <Card className="h-full p-6 bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/[0.07] hover:border-emerald-400/30 transition-all duration-300">
+                <Card className="h-full p-6 bg-white/50 border-[#C8E6C9] backdrop-blur-sm hover:bg-white/70 hover:border-[#7BC67B]/50 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-400/10 flex items-center justify-center shrink-0">
-                      <MapPin size={18} className="text-emerald-400" />
+                    <div className="w-10 h-10 rounded-lg bg-[#7BC67B]/15 flex items-center justify-center shrink-0">
+                      <MapPin size={18} className="text-[#2F5C2F]" />
                     </div>
-                    <span className="text-xs text-slate-500 pt-2">
+                    <span className="text-xs text-[#4C6B4C] pt-2">
                       {b.area}
                     </span>
                   </div>
 
-                  <h3 className="text-white font-serif text-lg mb-2">
+                  <h3 className="text-[#1F3A1F] font-serif text-lg mb-2">
                     {b.name}
                   </h3>
 
-                  <p className="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-2">
+                  <p className="text-[#4C6B4C] text-sm leading-relaxed mb-4 line-clamp-2">
                     {b.address}
                   </p>
 
                   <div className="space-y-1.5 mb-5">
-                    <div className="flex items-center gap-2 text-slate-500 text-xs">
+                    <div className="flex items-center gap-2 text-[#4C6B4C] text-xs">
                       <Calendar size={12} />
                       <span>{b.hours}</span>
                     </div>
                     {b.phone && (
-                      <div className="flex items-center gap-2 text-slate-500 text-xs">
+                      <div className="flex items-center gap-2 text-[#4C6B4C] text-xs">
                         <Phone size={12} />
                         <span>{b.phone}</span>
                       </div>
@@ -308,7 +308,7 @@ export default function Home() {
                     href={b.directionsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-emerald-400 text-sm font-medium hover:text-emerald-300 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-[#2F5C2F] text-sm font-medium hover:text-[#1F3A1F] transition-colors"
                   >
                     Get Directions <ArrowRight size={14} />
                   </a>
@@ -320,8 +320,8 @@ export default function Home() {
       </section>
 
       {/* ── Why Choose ── */}
-      <section className="bg-[#020617] py-24 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-400/5 rounded-full blur-[100px]" />
+      <section className="bg-[#F1FAEE] py-24 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#7BC67B]/10 rounded-full blur-[100px]" />
         <div className="relative max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
           <motion.div {...fade}>
             <Image
@@ -329,14 +329,14 @@ export default function Home() {
               alt="Dr. Dental Care Center exterior"
               width={600}
               height={450}
-              className="rounded-2xl border border-white/5"
+              className="rounded-2xl border border-[#C8E6C9]"
             />
           </motion.div>
           <motion.div {...fade} transition={{ delay: 0.2 }}>
-            <p className="text-emerald-400 text-sm uppercase tracking-[0.3em] mb-3">
+            <p className="text-[#2F5C2F] text-sm uppercase tracking-[0.3em] mb-3">
               Why Dr. Dental Care Center
             </p>
-            <h2 className="font-serif text-4xl text-white mb-8">
+            <h2 className="font-serif text-4xl text-[#1F3A1F] mb-8">
               Engineered for Excellence
             </h2>
             {[
@@ -357,12 +357,12 @@ export default function Home() {
               },
             ].map((item, i) => (
               <div key={i} className="flex gap-4 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-emerald-400/10 flex items-center justify-center shrink-0">
-                  <item.icon size={20} className="text-emerald-400" />
+                <div className="w-10 h-10 rounded-lg bg-[#7BC67B]/15 flex items-center justify-center shrink-0">
+                  <item.icon size={20} className="text-[#2F5C2F]" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">{item.title}</h3>
-                  <p className="text-slate-500 text-sm">{item.desc}</p>
+                  <h3 className="text-[#1F3A1F] font-medium mb-1">{item.title}</h3>
+                  <p className="text-[#4C6B4C] text-sm">{item.desc}</p>
                 </div>
               </div>
             ))}

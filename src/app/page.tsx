@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuthStore } from "@/store/authStore"
 
 import HeroSection from "@/components/sections/Hero"
-import Testimonials from "@/components/Testimonials"
+import Testimonials from "@/components/sections/Testimonials"
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -27,10 +27,10 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-green-950">
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
         <div className="flex flex-col items-center gap-3">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-400 border-t-transparent" />
-          <span className="text-sm font-medium tracking-wide text-green-200">
+          <span className="text-sm font-medium tracking-wide text-green-700">
             Loading...
           </span>
         </div>

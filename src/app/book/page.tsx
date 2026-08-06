@@ -263,7 +263,7 @@ function BookInner() {
   // ── Success screen ────────────────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#020617] flex flex-col">
+      <div className="min-h-screen bg-[#F3FAF1] flex flex-col">
         <Header />
         <div className="flex-1 flex items-center justify-center px-6">
           <motion.div
@@ -276,49 +276,49 @@ function BookInner() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                className="w-20 h-20 rounded-full bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center"
+                className="w-20 h-20 rounded-full bg-[#7BC67B]/15 border border-[#7BC67B]/40 flex items-center justify-center"
               >
-                <CheckCircle className="text-emerald-400" size={36} />
+                <CheckCircle className="text-[#2F5C2F]" size={36} />
               </motion.div>
               <motion.div
                 initial={{ scale: 0.8, opacity: 0.6 }}
                 animate={{ scale: 1.4, opacity: 0 }}
                 transition={{ duration: 1.2, repeat: Infinity }}
-                className="absolute inset-0 rounded-full border border-emerald-400/40"
+                className="absolute inset-0 rounded-full border border-[#7BC67B]/50"
               />
             </div>
-            <h2 className="font-serif text-3xl text-white mb-3">
+            <h2 className="font-serif text-3xl text-[#1F3A1F] mb-3">
               Appointment Received
             </h2>
-            <p className="text-slate-400 mb-1 font-medium">
+            <p className="text-[#4C6B4C] mb-1 font-medium">
               We&apos;ve successfully received your appointment request for{" "}
               {activeService?.name ?? "the selected service"}.
             </p>
 
-            <p className="text-slate-500 text-sm mb-8">
+            <p className="text-[#6B8E6B] text-sm mb-8">
               Our team will review your request and send a confirmation to{" "}
-              <span className="text-slate-300">{email}</span> as soon as
+              <span className="text-[#2F5C2F]">{email}</span> as soon as
               possible.
             </p>
             <div className="flex flex-col items-center gap-3">
-              <p className="text-slate-600 text-xs">
+              <p className="text-[#6B8E6B] text-xs">
                 Redirecting to home in{" "}
-                <span className="text-emerald-400 font-semibold">
+                <span className="text-[#2F5C2F] font-semibold">
                   {countdown}s
                 </span>
                 …
               </p>
-              <div className="w-48 h-0.5 bg-white/5 rounded-full overflow-hidden">
+              <div className="w-48 h-0.5 bg-[#C8E6C9] rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: "100%" }}
                   animate={{ width: "0%" }}
                   transition={{ duration: 5, ease: "linear" }}
-                  className="h-full bg-emerald-400/60 rounded-full"
+                  className="h-full bg-[#7BC67B] rounded-full"
                 />
               </div>
               <button
                 onClick={() => router.push("/")}
-                className="mt-2 text-xs text-emerald-400/70 hover:text-emerald-400 transition-colors underline underline-offset-2"
+                className="mt-2 text-xs text-[#2F5C2F]/70 hover:text-[#2F5C2F] transition-colors underline underline-offset-2"
               >
                 Go home now
               </button>
@@ -331,7 +331,7 @@ function BookInner() {
 
   // ── Booking form ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#020617] flex flex-col">
+    <div className="min-h-screen bg-[#F3FAF1] flex flex-col">
       <Header />
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-6 pt-28 pb-20">
@@ -340,17 +340,18 @@ function BookInner() {
             className="mb-12 flex items-start justify-between flex-wrap gap-4"
           >
             <div>
-              <p className="text-emerald-400 text-sm uppercase tracking-[0.3em] mb-3">
+              <p className="text-[#2F5C2F] text-sm uppercase tracking-[0.3em] mb-3">
                 Booking
               </p>
-              <h1 className="font-serif text-4xl md:text-5xl text-white">
+              <h1 className="font-serif text-4xl md:text-5xl text-[#1F3A1F]">
                 Schedule Your Visit
               </h1>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full self-start mt-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-slate-400 text-sm">
-                Signed in as <span className="text-white">{user?.name}</span>
+            <div className="flex items-center gap-2 px-4 py-2 bg-white border border-[#C8E6C9] rounded-full self-start mt-2">
+              <div className="w-2 h-2 rounded-full bg-[#7BC67B] animate-pulse" />
+              <span className="text-[#4C6B4C] text-sm">
+                Signed in as{" "}
+                <span className="text-[#1F3A1F]">{user?.name}</span>
               </span>
             </div>
           </motion.div>
@@ -360,39 +361,39 @@ function BookInner() {
             <div className="lg:col-span-2 space-y-8">
               {/* Step 1 — Your Information */}
               <motion.div {...fade} transition={{ delay: 0.3 }}>
-                <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-sm">
-                  <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-emerald-400 text-slate-950 text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
+                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
                       1
                     </span>{" "}
                     Your Information
                   </h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-slate-400 text-xs mb-1.5 flex items-center gap-1">
+                      <Label className="text-[#4C6B4C] text-xs mb-1.5 flex items-center gap-1">
                         <User size={12} /> Full Name
                       </Label>
                       <Input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
+                        className="bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F] placeholder:text-[#8FA88F]"
                         placeholder="John Doe"
                       />
                     </div>
                     <div>
-                      <Label className="text-slate-400 text-xs mb-1.5 flex items-center gap-1">
+                      <Label className="text-[#4C6B4C] text-xs mb-1.5 flex items-center gap-1">
                         <Mail size={12} /> Email
                       </Label>
                       <Input
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         type="email"
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F]"
                         placeholder="john@example.com"
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <Label className="text-slate-400 text-xs mb-1.5 flex items-center gap-1">
+                      <Label className="text-[#4C6B4C] text-xs mb-1.5 flex items-center gap-1">
                         <Phone size={12} /> Phone
                       </Label>
                       <Input
@@ -404,9 +405,9 @@ function BookInner() {
                           setPhone(val)
                           validatePhone(val)
                         }}
-                        className={`bg-white/5 border-white/10 text-white placeholder:text-slate-500 [&]:text-white [color-scheme:dark] ${
+                        className={`bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F] placeholder:text-[#8FA88F] ${
                           phoneError
-                            ? "border-red-400/50 focus-visible:ring-red-400/30"
+                            ? "border-red-400/60 focus-visible:ring-red-400/30"
                             : ""
                         }`}
                         placeholder="09XXXXXXXXX"
@@ -414,7 +415,7 @@ function BookInner() {
                         inputMode="numeric"
                       />
                       {phoneError && (
-                        <p className="text-red-400 text-xs mt-1.5">
+                        <p className="text-red-500 text-xs mt-1.5">
                           {phoneError}
                         </p>
                       )}
@@ -425,30 +426,30 @@ function BookInner() {
 
               {/* Step 2 — Service */}
               <motion.div {...fade}>
-                <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-sm">
-                  <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-emerald-400 text-slate-950 text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
+                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
                       2
                     </span>{" "}
                     Select Service
                   </h3>
 
                   {lockedFromUrl && activeService ? (
-                    <div className="flex items-center justify-between px-4 py-3 bg-emerald-400/10 border border-emerald-400/30 rounded-xl">
+                    <div className="flex items-center justify-between px-4 py-3 bg-[#7BC67B]/10 border border-[#7BC67B]/40 rounded-xl">
                       <div className="flex items-center gap-3">
-                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#7BC67B] shrink-0" />
                         {servicesLoading ? (
-                          <span className="text-slate-400 text-sm animate-pulse">
+                          <span className="text-[#4C6B4C] text-sm animate-pulse">
                             Loading…
                           </span>
                         ) : (
-                          <span className="text-white font-medium">
+                          <span className="text-[#1F3A1F] font-medium">
                             {activeService.name}
                           </span>
                         )}
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-emerald-400/70 text-xs">
+                        <span className="text-[#2F5C2F]/70 text-xs">
                           Selected
                         </span>
                         <button
@@ -456,7 +457,7 @@ function BookInner() {
                             setSelectedServiceId(null)
                             setLockedFromUrl(false)
                           }}
-                          className="text-slate-500 hover:text-slate-300 text-xs underline underline-offset-2 transition-colors"
+                          className="text-[#6B8E6B] hover:text-[#2F5C2F] text-xs underline underline-offset-2 transition-colors"
                         >
                           Change
                         </button>
@@ -470,7 +471,7 @@ function BookInner() {
                         setLockedFromUrl(false)
                       }}
                     >
-                      <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                      <SelectTrigger className="bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F]">
                         <SelectValue
                           placeholder={
                             servicesLoading
@@ -483,7 +484,7 @@ function BookInner() {
                         {groupedServices.map(([category, services], i) => (
                           <SelectGroup key={category}>
                             {i > 0 && <SelectSeparator />}
-                            <SelectLabel className="text-emerald-600 text-xs uppercase tracking-wide">
+                            <SelectLabel className="text-[#2F5C2F] text-xs uppercase tracking-wide">
                               {category}
                             </SelectLabel>
                             {services.map((s) => (
@@ -501,9 +502,9 @@ function BookInner() {
 
               {/* Step 3 — Branch */}
               <motion.div {...fade} transition={{ delay: 0.05 }}>
-                <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-sm">
-                  <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-emerald-400 text-slate-950 text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
+                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
                       3
                     </span>{" "}
                     Select Branch
@@ -516,26 +517,26 @@ function BookInner() {
                         onClick={() => setSelectedBranchId(b.id)}
                         className={`text-left p-4 rounded-xl border transition-all ${
                           selectedBranchId === b.id
-                            ? "bg-emerald-400/10 border-emerald-400/40 shadow-[0_0_15px_rgba(34,211,238,0.15)]"
-                            : "bg-white/5 border-white/10 hover:bg-white/10"
+                            ? "bg-[#7BC67B]/10 border-[#7BC67B]/50 shadow-[0_0_15px_rgba(123,198,123,0.2)]"
+                            : "bg-[#F3FAF1] border-[#C8E6C9] hover:bg-[#DCEFD6]/60"
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2 mb-1">
-                          <span className="text-white font-medium text-sm">
+                          <span className="text-[#1F3A1F] font-medium text-sm">
                             {b.name}
                           </span>
                           {selectedBranchId === b.id && (
                             <CheckCircle
                               size={14}
-                              className="text-emerald-400 shrink-0 mt-0.5"
+                              className="text-[#2F5C2F] shrink-0 mt-0.5"
                             />
                           )}
                         </div>
-                        <div className="flex items-center gap-1.5 text-slate-500 text-xs mb-1">
+                        <div className="flex items-center gap-1.5 text-[#6B8E6B] text-xs mb-1">
                           <MapPin size={11} className="shrink-0" />
                           <span>{b.area}</span>
                         </div>
-                        <p className="text-slate-500 text-xs">{b.hours}</p>
+                        <p className="text-[#6B8E6B] text-xs">{b.hours}</p>
                       </button>
                     ))}
                   </div>
@@ -544,9 +545,9 @@ function BookInner() {
 
               {/* Step 4 — Date */}
               <motion.div {...fade} transition={{ delay: 0.1 }}>
-                <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-sm">
-                  <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-emerald-400 text-slate-950 text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
+                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
                       4
                     </span>{" "}
                     Choose Date
@@ -558,8 +559,8 @@ function BookInner() {
                         onClick={() => setSelectedDate(d)}
                         className={`p-2 rounded-lg text-center text-sm transition-all ${
                           selectedDate?.toDateString() === d.toDateString()
-                            ? "bg-emerald-400 text-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.3)]"
-                            : "bg-white/5 text-slate-400 hover:bg-white/10"
+                            ? "bg-[#7BC67B] text-[#1F3A1F] shadow-[0_0_15px_rgba(123,198,123,0.35)]"
+                            : "bg-[#F3FAF1] text-[#4C6B4C] hover:bg-[#DCEFD6]/70"
                         }`}
                       >
                         <div className="text-[10px] opacity-60">
@@ -574,16 +575,16 @@ function BookInner() {
 
               {/* Step 5 — Time */}
               <motion.div {...fade} transition={{ delay: 0.2 }}>
-                <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-sm">
-                  <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-emerald-400 text-slate-950 text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
+                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
                       5
                     </span>{" "}
                     Select Time
                   </h3>
 
                   {!selectedDate ? (
-                    <p className="text-slate-500 text-sm">
+                    <p className="text-[#6B8E6B] text-sm">
                       Choose a date to see available times.
                     </p>
                   ) : (
@@ -594,8 +595,8 @@ function BookInner() {
                           onClick={() => setSelectedTime(t)}
                           className={`py-2 px-3 rounded-lg text-sm transition-all ${
                             selectedTime === t
-                              ? "bg-emerald-400 text-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.3)]"
-                              : "bg-white/5 text-slate-400 hover:bg-white/10"
+                              ? "bg-[#7BC67B] text-[#1F3A1F] shadow-[0_0_15px_rgba(123,198,123,0.35)]"
+                              : "bg-[#F3FAF1] text-[#4C6B4C] hover:bg-[#DCEFD6]/70"
                           }`}
                         >
                           {t}
@@ -611,16 +612,16 @@ function BookInner() {
             <div className="lg:col-span-1">
               <div className="sticky top-24">
                 <motion.div {...fade} transition={{ delay: 0.2 }}>
-                  <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-sm">
-                    <h3 className="text-white font-medium mb-6">
+                  <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
+                    <h3 className="text-[#1F3A1F] font-medium mb-6">
                       Appointment Summary
                     </h3>
                     <div className="space-y-4 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Service</span>
-                        <span className="text-white text-right max-w-[60%] leading-snug">
+                        <span className="text-[#6B8E6B]">Service</span>
+                        <span className="text-[#1F3A1F] text-right max-w-[60%] leading-snug">
                           {servicesLoading ? (
-                            <span className="text-slate-500 animate-pulse">
+                            <span className="text-[#8FA88F] animate-pulse">
                               Loading…
                             </span>
                           ) : (
@@ -629,14 +630,14 @@ function BookInner() {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Branch</span>
-                        <span className="text-white text-right max-w-[60%] leading-snug">
+                        <span className="text-[#6B8E6B]">Branch</span>
+                        <span className="text-[#1F3A1F] text-right max-w-[60%] leading-snug">
                           {activeBranch?.name ?? "—"}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Date</span>
-                        <span className="text-white">
+                        <span className="text-[#6B8E6B]">Date</span>
+                        <span className="text-[#1F3A1F]">
                           {selectedDate
                             ? selectedDate.toLocaleDateString("en-US", {
                                 month: "short",
@@ -646,16 +647,16 @@ function BookInner() {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Time</span>
-                        <span className="text-white">
+                        <span className="text-[#6B8E6B]">Time</span>
+                        <span className="text-[#1F3A1F]">
                           {selectedTime || "—"}
                         </span>
                       </div>
-                      <div className="border-t border-white/10 pt-4 flex justify-between">
-                        <span className="text-slate-500">Starting at</span>
+                      <div className="border-t border-[#C8E6C9] pt-4 flex justify-between">
+                        <span className="text-[#6B8E6B]">Starting at</span>
                         <Badge
                           variant="outline"
-                          className="border-emerald-400/30 text-emerald-400"
+                          className="border-[#7BC67B]/50 text-[#2F5C2F]"
                         >
                           {activeService?.price
                             ? `₱${Number(activeService.price).toLocaleString()}`
@@ -664,14 +665,14 @@ function BookInner() {
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <div className="mt-6 pt-4 border-t border-[#C8E6C9]">
+                      <div className="flex items-center gap-2 text-[#6B8E6B] text-xs mb-1">
                         <Calendar size={12} />{" "}
                         {activeBranch
                           ? `Dr. Dental Care Center — ${activeBranch.name}`
                           : "Dr. Dental Care Center"}
                       </div>
-                      <div className="flex items-center gap-2 text-slate-500 text-xs">
+                      <div className="flex items-center gap-2 text-[#6B8E6B] text-xs">
                         <Clock size={12} />{" "}
                         {activeBranch?.hours ?? "Mon–Sat: 9AM–7PM"}
                       </div>
@@ -683,7 +684,7 @@ function BookInner() {
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
-                          className="mt-4 text-red-400 text-xs bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2"
+                          className="mt-4 text-red-500 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2"
                         >
                           {error}
                         </motion.div>
@@ -704,7 +705,7 @@ function BookInner() {
                         loading ||
                         servicesLoading
                       }
-                      className="w-full mt-6 bg-emerald-400 text-slate-950 hover:bg-emerald-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all disabled:opacity-30"
+                      className="w-full mt-6 bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all disabled:opacity-30"
                       size="lg"
                     >
                       {loading ? (

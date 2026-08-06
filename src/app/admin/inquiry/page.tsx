@@ -100,24 +100,12 @@ export default function ContactsAdmin() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-slate-50">
-        <ProtectedNav userRole="admin" />
-
-        <div
-          className={`flex-1 flex items-center justify-center ${isDesktop ? "ml-0" : "ml-72"}`}
-        >
-          <div className="flex flex-col items-center gap-4 bg-white border border-slate-200 shadow-lg rounded-2xl px-8 py-10">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-
-            <div className="text-center">
-              <p className="text-lg font-semibold text-slate-800">
-                Loading Inquiries
-              </p>
-              <p className="text-sm text-slate-500">
-                Please wait while we fetch data...
-              </p>
-            </div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-400 border-t-transparent" />
+          <span className="text-sm font-medium tracking-wide text-green-700">
+            Loading...
+          </span>
         </div>
       </div>
     );

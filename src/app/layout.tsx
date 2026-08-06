@@ -591,7 +591,7 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="bg-[#0a2540] text-white font-sans antialiased">
+      <body className="text-white font-sans antialiased">
         <ServiceWorkerProvider />
         <ClientLayout>{children}</ClientLayout>
       </body>

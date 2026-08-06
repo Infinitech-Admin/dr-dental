@@ -397,8 +397,13 @@ export default function AdminAboutPage() {
   ───────────────────────────────────────── */
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="animate-spin text-emerald-500" size={28} />
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-400 border-t-transparent" />
+          <span className="text-sm font-medium tracking-wide text-green-700">
+            Loading...
+          </span>
+        </div>
       </div>
     )
   }

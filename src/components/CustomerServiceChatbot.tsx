@@ -132,28 +132,28 @@ export default function CustomerServiceChatbot() {
       {/* Chat Window */}
       {open && (
         <div
-          className="mb-4 w-[340px] sm:w-[380px] bg-[#0a2b1e] border border-emerald-800/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          className="mb-4 w-[340px] sm:w-[380px] bg-[#1b3d1f] border border-[#4CAF50]/40 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           style={{ maxHeight: "520px" }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-[#0d3d29] border-b border-emerald-800/50">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#2a5a2f] border-b border-[#4CAF50]/30">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <Bot className="w-4 h-4 text-emerald-400" />
+              <div className="w-8 h-8 rounded-full bg-[#4CAF50]/20 flex items-center justify-center">
+                <Bot className="w-4 h-4 text-[#8BD98F]" />
               </div>
               <div>
                 <p className="text-white font-semibold text-sm leading-tight">
                   Dr. Dental Care Center
                 </p>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-green-400 text-xs">Online</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#8BD98F] animate-pulse" />
+                  <span className="text-[#8BD98F] text-xs">Online</span>
                 </div>
               </div>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-emerald-300 hover:text-white transition p-1 rounded-lg hover:bg-white/10"
+              className="text-[#a8d9ab] hover:text-white transition p-1 rounded-lg hover:bg-white/10"
               aria-label="Close chat"
             >
               <X className="w-4 h-4" />
@@ -162,7 +162,7 @@ export default function CustomerServiceChatbot() {
 
           {/* Messages */}
           <div
-            className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-thin scrollbar-thumb-emerald-800"
+            className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-thin scrollbar-thumb-[#4CAF50]"
             style={{ minHeight: 0 }}
           >
             {messages.map((msg) => (
@@ -172,20 +172,20 @@ export default function CustomerServiceChatbot() {
               >
                 <div
                   className={`w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-xs
-                  ${msg.role === "bot" ? "bg-emerald-500/20" : "bg-green-600/40"}`}
+                  ${msg.role === "bot" ? "bg-[#4CAF50]/20" : "bg-[#3d8b40]/40"}`}
                 >
                   {msg.role === "bot" ? (
-                    <Bot className="w-3.5 h-3.5 text-emerald-400" />
+                    <Bot className="w-3.5 h-3.5 text-[#8BD98F]" />
                   ) : (
-                    <User className="w-3.5 h-3.5 text-green-300" />
+                    <User className="w-3.5 h-3.5 text-[#c9ecc9]" />
                   )}
                 </div>
                 <div
                   className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-line
                     ${
                       msg.role === "bot"
-                        ? "bg-[#0d3d29] text-white rounded-bl-sm"
-                        : "bg-emerald-500 text-[#052e1f] font-medium rounded-br-sm"
+                        ? "bg-[#2a5a2f] text-white rounded-bl-sm"
+                        : "bg-[#4CAF50] text-[#0d2b0f] font-medium rounded-br-sm"
                     }`}
                 >
                   {msg.text}
@@ -195,14 +195,14 @@ export default function CustomerServiceChatbot() {
 
             {typing && (
               <div className="flex items-end gap-2">
-                <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                  <Bot className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="w-6 h-6 rounded-full bg-[#4CAF50]/20 flex items-center justify-center">
+                  <Bot className="w-3.5 h-3.5 text-[#8BD98F]" />
                 </div>
-                <div className="bg-[#0d3d29] px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1 items-center">
+                <div className="bg-[#2a5a2f] px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1 items-center">
                   {[0, 1, 2].map((i) => (
                     <span
                       key={i}
-                      className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce"
+                      className="w-1.5 h-1.5 bg-[#8BD98F] rounded-full animate-bounce"
                       style={{ animationDelay: `${i * 150}ms` }}
                     />
                   ))}
@@ -213,12 +213,12 @@ export default function CustomerServiceChatbot() {
           </div>
 
           {/* Quick Replies */}
-          <div className="px-3 py-2 flex flex-wrap gap-2 border-t border-emerald-800/40">
+          <div className="px-3 py-2 flex flex-wrap gap-2 border-t border-[#4CAF50]/30">
             {QUICK_REPLIES.map((qr) => (
               <button
                 key={qr}
                 onClick={() => sendMessage(qr)}
-                className="text-xs px-3 py-1.5 rounded-full border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10 transition whitespace-nowrap"
+                className="text-xs px-3 py-1.5 rounded-full border border-[#4CAF50]/50 text-[#8BD98F] hover:bg-[#4CAF50]/10 transition whitespace-nowrap"
               >
                 {qr}
               </button>
@@ -226,7 +226,7 @@ export default function CustomerServiceChatbot() {
           </div>
 
           {/* Input */}
-          <div className="px-3 pb-3 pt-2 flex gap-2 items-center border-t border-emerald-800/40">
+          <div className="px-3 pb-3 pt-2 flex gap-2 items-center border-t border-[#4CAF50]/30">
             <input
               ref={inputRef}
               type="text"
@@ -234,15 +234,15 @@ export default function CustomerServiceChatbot() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type a message..."
-              className="flex-1 bg-[#0d3d29] border border-emerald-700/50 rounded-xl px-3.5 py-2 text-sm text-white placeholder-emerald-400/60 focus:outline-none focus:border-emerald-500/60 transition"
+              className="flex-1 bg-[#2a5a2f] border border-[#4CAF50]/40 rounded-xl px-3.5 py-2 text-sm text-white placeholder-[#a8d9ab]/60 focus:outline-none focus:border-[#4CAF50] transition"
             />
             <button
               onClick={() => sendMessage(input)}
               disabled={!input.trim()}
-              className="w-9 h-9 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:bg-emerald-800/50 disabled:cursor-not-allowed flex items-center justify-center transition flex-shrink-0"
+              className="w-9 h-9 rounded-xl bg-[#4CAF50] hover:bg-[#3d8b40] disabled:bg-[#4CAF50]/30 disabled:cursor-not-allowed flex items-center justify-center transition flex-shrink-0"
               aria-label="Send message"
             >
-              <Send className="w-4 h-4 text-[#052e1f]" />
+              <Send className="w-4 h-4 text-[#0d2b0f]" />
             </button>
           </div>
         </div>
@@ -251,13 +251,13 @@ export default function CustomerServiceChatbot() {
       {/* Toggle Button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 shadow-lg hover:shadow-emerald-500/30 flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+        className="w-14 h-14 rounded-full bg-[#4CAF50] hover:bg-[#3d8b40] shadow-lg hover:shadow-[#4CAF50]/30 flex items-center justify-center transition-all hover:scale-105 active:scale-95"
         aria-label={open ? "Close chat" : "Open chat"}
       >
         {open ? (
-          <ChevronDown className="w-6 h-6 text-[#052e1f]" />
+          <ChevronDown className="w-6 h-6 text-[#0d2b0f]" />
         ) : (
-          <MessageCircle className="w-6 h-6 text-[#052e1f]" />
+          <MessageCircle className="w-6 h-6 text-[#0d2b0f]" />
         )}
       </button>
     </>

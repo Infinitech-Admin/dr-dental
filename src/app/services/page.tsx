@@ -133,12 +133,17 @@ export default function Services() {
         className="relative pt-32 pb-20 overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #030F0A 0%, #07281B 60%, #0A4E2F 100%)",
+            "linear-gradient(135deg, #0B2E24 0%, #114837 45%, #1B5E47 100%)",
         }}
       >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-600/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-400/5 rounded-full blur-[100px]" />
+          {/* Soft emerald glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-400/10 rounded-full blur-[140px]" />
+
+          {/* Secondary glow */}
+          <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-emerald-300/8 rounded-full blur-[120px]" />
+
+          {/* Premium grid */}
           <svg
             className="absolute inset-0 w-full h-full opacity-[0.04]"
             xmlns="http://www.w3.org/2000/svg"
@@ -153,23 +158,27 @@ export default function Services() {
                 <path
                   d="M 40 0 L 0 0 0 40"
                   fill="none"
-                  stroke="#34D399"
-                  strokeWidth="0.5"
+                  stroke="#A7F3D0"
+                  strokeWidth="0.4"
                 />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
+
+          {/* Soft vignette */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/20" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-6 text-center">
           <motion.div {...fade}>
             <span
-              className="inline-block text-xs uppercase tracking-[0.35em] mb-5 px-4 py-1.5 rounded-full border"
+              className="inline-block text-xs uppercase tracking-[0.35em] mb-5 px-5 py-2 rounded-full border"
               style={{
-                color: "#6EE7B7",
-                borderColor: "rgba(110,231,183,0.25)",
-                background: "rgba(16,185,129,0.08)",
+                color: "#D6F5E6",
+                borderColor: "rgba(214,245,230,0.18)",
+                background: "rgba(255,255,255,0.05)",
+                backdropFilter: "blur(12px)",
               }}
             >
               Services
@@ -177,30 +186,33 @@ export default function Services() {
 
             <h1
               className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 leading-tight"
-              style={{ color: "#ECFDF5" }}
+              style={{ color: "#F8FFFB" }}
             >
               The Aesthetic Index
             </h1>
 
             <div className="flex items-center justify-center gap-3 mb-6">
               <div
-                className="h-px w-16"
+                className="h-px w-20"
                 style={{
-                  background: "linear-gradient(to right, transparent, #10B981)",
+                  background: "linear-gradient(to right, transparent, #D4AF37)",
                 }}
               />
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               <div
-                className="h-px w-16"
+                className="w-2 h-2 rounded-full"
+                style={{ background: "#D4AF37" }}
+              />
+              <div
+                className="h-px w-20"
                 style={{
-                  background: "linear-gradient(to left, transparent, #10B981)",
+                  background: "linear-gradient(to left, transparent, #D4AF37)",
                 }}
               />
             </div>
 
             <p
-              className="text-base md:text-lg max-w-2xl mx-auto"
-              style={{ color: "#94A3B8" }}
+              className="text-lg max-w-2xl mx-auto leading-8"
+              style={{ color: "#CFE8DD" }}
             >
               Comprehensive dental and aesthetic services, each
               precision-engineered for measurable results.
@@ -518,77 +530,139 @@ export default function Services() {
 
       {/* ── CTA ── */}
       <section
-        className="py-24 relative overflow-hidden"
+        className="relative py-24 overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #030F0A 0%, #07281B 60%, #0A4E2F 100%)",
+            "linear-gradient(135deg, #134E4A 0%, #166534 45%, #1F7A5A 100%)",
         }}
       >
+        {/* Background Effects */}
         <div className="pointer-events-none absolute inset-0">
+          {/* Soft radial glow */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(5,150,105,0.12) 0%, transparent 70%)",
+                "radial-gradient(circle at 50% 35%, rgba(110,231,183,0.12) 0%, transparent 65%)",
             }}
           />
-          <div className="absolute top-8 left-1/4 w-2 h-2 rounded-full bg-emerald-400/40" />
-          <div className="absolute bottom-12 right-1/3 w-1.5 h-1.5 rounded-full bg-emerald-300/30" />
-          <div className="absolute top-1/2 right-1/4 w-1 h-1 rounded-full bg-emerald-400/50" />
+
+          {/* Subtle vignette */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 35%, rgba(0,0,0,0.18))",
+            }}
+          />
+
+          {/* Ambient glow */}
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-300/10 rounded-full blur-[120px]" />
+
+          {/* Decorative particles */}
+          <div className="absolute top-10 left-1/4 w-2 h-2 rounded-full bg-emerald-200/40" />
+          <div className="absolute bottom-12 right-1/3 w-1.5 h-1.5 rounded-full bg-emerald-300/35" />
+          <div className="absolute top-1/2 right-1/4 w-1 h-1 rounded-full bg-emerald-100/50" />
+
+          {/* Premium grid */}
+          <svg
+            className="absolute inset-0 w-full h-full opacity-[0.04]"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <pattern
+                id="premium-grid"
+                width="40"
+                height="40"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 40 0 L 0 0 0 40"
+                  fill="none"
+                  stroke="#BBF7D0"
+                  strokeWidth="0.5"
+                />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#premium-grid)" />
+          </svg>
         </div>
 
         <motion.div
           {...fade}
           className="relative max-w-3xl mx-auto px-6 text-center"
         >
+          {/* Accent Divider */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <div
-              className="h-px w-12"
+              className="h-px w-14"
               style={{
-                background: "linear-gradient(to right, transparent, #10B981)",
+                background:
+                  "linear-gradient(to right, transparent, rgba(187,247,208,.9))",
               }}
             />
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             <div
-              className="h-px w-12"
+              className="w-2 h-2 rounded-full"
               style={{
-                background: "linear-gradient(to left, transparent, #10B981)",
+                background: "#BBF7D0",
+                boxShadow: "0 0 14px rgba(187,247,208,.55)",
+              }}
+            />
+            <div
+              className="h-px w-14"
+              style={{
+                background:
+                  "linear-gradient(to left, transparent, rgba(187,247,208,.9))",
               }}
             />
           </div>
 
           <h2
-            className="font-serif text-3xl md:text-4xl mb-5 leading-tight"
-            style={{ color: "#ECFDF5" }}
+            className="font-serif text-3xl md:text-5xl font-light mb-5 tracking-tight"
+            style={{ color: "#F8FFFB" }}
           >
             Not Sure Which Service Is Right?
           </h2>
-          <p className="mb-10 text-base" style={{ color: "#94A3B8" }}>
-            Our specialists will design a personalized treatment plan during
-            your consultation.
+
+          <p
+            className="max-w-2xl mx-auto mb-10 text-lg leading-8"
+            style={{ color: "#D8EDE4" }}
+          >
+            Our specialists will create a personalized treatment plan tailored
+            to your smile, goals, and lifestyle during your private
+            consultation.
           </p>
 
           <Link href="/book">
             <button
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold transition-all duration-300"
               style={{
-                background: "linear-gradient(135deg, #047857, #10B981)",
+                background: "linear-gradient(135deg, #1B5E47 0%, #2E8B68 100%)",
                 color: "#fff",
-                boxShadow: "0 4px 24px rgba(16,185,129,0.35)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                boxShadow:
+                  "0 14px 36px rgba(21,128,61,.28), inset 0 1px 0 rgba(255,255,255,.12)",
               }}
               onMouseEnter={(e) => {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, #16503C 0%, #25855F 100%)"
                 e.currentTarget.style.boxShadow =
-                  "0 6px 32px rgba(16,185,129,0.55)"
-                e.currentTarget.style.transform = "translateY(-1px)"
+                  "0 18px 45px rgba(21,128,61,.38), inset 0 1px 0 rgba(255,255,255,.16)"
+                e.currentTarget.style.transform = "translateY(-2px)"
               }}
               onMouseLeave={(e) => {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, #1B5E47 0%, #2E8B68 100%)"
                 e.currentTarget.style.boxShadow =
-                  "0 4px 24px rgba(16,185,129,0.35)"
+                  "0 14px 36px rgba(21,128,61,.28), inset 0 1px 0 rgba(255,255,255,.12)"
                 e.currentTarget.style.transform = "translateY(0)"
               }}
             >
               Book Free Consultation
-              <ArrowRight size={16} />
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
             </button>
           </Link>
         </motion.div>

@@ -321,6 +321,7 @@ function NewBookingModal({
   open,
   onClose,
   onSuccess,
+  showToast,
   token,
   services,
   servicesLoading,
@@ -330,6 +331,7 @@ function NewBookingModal({
   onSuccess: () => void
   token: string | null
   services: Service[]
+  showToast: (message: string, type: "success" | "error") => void
   servicesLoading: boolean
 }) {
   type F = {
@@ -413,6 +415,7 @@ function NewBookingModal({
         throw new Error(
           (data as { message?: string }).message || "Failed to create booking.",
         )
+      showToast("Booking created successfully.", "success")
       onSuccess()
       onClose()
       setForm(blank)
@@ -460,7 +463,7 @@ function NewBookingModal({
             {field("Email *", "email", "email", "juan@example.com")}
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {field("Phone", "phone", "tel", "+63 912 345 6789")}
+            {field("Phone", "phone", "tel", "09XXXXXXXXX")}
 
             <div>
               <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5">
@@ -1295,6 +1298,7 @@ export default function AdminBookingsTable() {
         open={showNewModal}
         onClose={() => setShowNewModal(false)}
         onSuccess={fetchBookings}
+        showToast={showToast}
         token={token}
         services={services}
         servicesLoading={servicesLoading}
