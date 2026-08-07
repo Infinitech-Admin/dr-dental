@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowRight, ArrowLeft, Clock, Tag } from "lucide-react"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import servicesBg from "@/assets/services-bg.png"
 
 interface Service {
   id: number
@@ -192,11 +193,17 @@ export default function ServiceDetail() {
         <div className="pointer-events-none absolute inset-0">
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[420px] rounded-full blur-[130px]"
-            style={{ background: "radial-gradient(circle, rgba(31,149,82,0.4), rgba(167,232,107,0.12) 70%)" }}
+            style={{
+              background:
+                "radial-gradient(circle, rgba(31,149,82,0.4), rgba(167,232,107,0.12) 70%)",
+            }}
           />
           <div
             className="absolute bottom-0 right-0 w-[360px] h-[360px] rounded-full blur-[110px]"
-            style={{ background: "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)" }}
+            style={{
+              background:
+                "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)",
+            }}
           />
           <div
             className="absolute inset-0 opacity-[0.04]"
@@ -255,9 +262,19 @@ export default function ServiceDetail() {
       >
         <div
           className="absolute top-0 right-[10%] w-[350px] h-[350px] rounded-full blur-[120px] opacity-60 pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)",
+          }}
         />
-
+        <div className="absolute inset-0">
+          <Image
+            src={servicesBg}
+            alt=""
+            fill
+            className="object-cover opacity-40"
+          />
+        </div>
         <div className="relative max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -269,7 +286,10 @@ export default function ServiceDetail() {
             <div className="relative">
               <div
                 className="absolute -inset-2 rounded-[1.5rem] blur-md opacity-50"
-                style={{ backgroundImage: "linear-gradient(135deg, #1F9552, #A7E86B, #145C36)" }}
+                style={{
+                  backgroundImage:
+                    "linear-gradient(135deg, #1F9552, #A7E86B, #145C36)",
+                }}
               />
               <div
                 className="relative rounded-2xl overflow-hidden border-2 border-white"
@@ -294,13 +314,19 @@ export default function ServiceDetail() {
               <div className="flex items-center gap-3 mb-6">
                 <span
                   className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium"
-                  style={{ background: "rgba(31,149,82,0.1)", color: "#145C36" }}
+                  style={{
+                    background: "rgba(31,149,82,0.1)",
+                    color: "#145C36",
+                  }}
                 >
                   <Clock size={12} /> {service.duration}
                 </span>
                 <span
                   className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium"
-                  style={{ background: "rgba(31,149,82,0.1)", color: "#145C36" }}
+                  style={{
+                    background: "rgba(31,149,82,0.1)",
+                    color: "#145C36",
+                  }}
                 >
                   <Tag size={12} /> {service.category}
                 </span>
@@ -323,7 +349,10 @@ export default function ServiceDetail() {
                   </span>
                   <span
                     className="text-3xl font-serif bg-clip-text text-transparent"
-                    style={{ backgroundImage: "linear-gradient(100deg, #145C36, #1F9552, #4FC97B)" }}
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #145C36, #1F9552, #4FC97B)",
+                    }}
                   >
                     ₱{Number(service.price).toLocaleString()}+
                   </span>
@@ -336,7 +365,8 @@ export default function ServiceDetail() {
                 <button
                   className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
                   style={{
-                    backgroundImage: "linear-gradient(135deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
+                    backgroundImage:
+                      "linear-gradient(135deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
                     color: "#fff",
                     boxShadow: "0 10px 28px -6px rgba(31,149,82,0.5)",
                   }}
@@ -377,10 +407,19 @@ export default function ServiceDetail() {
                       border: "1px solid #DCEFD6",
                     }}
                   >
-                    <div className="h-36" style={{ background: "rgba(79,201,123,0.15)" }} />
+                    <div
+                      className="h-36"
+                      style={{ background: "rgba(79,201,123,0.15)" }}
+                    />
                     <div className="p-5 space-y-2">
-                      <div className="h-4 w-2/3 rounded" style={{ background: "rgba(79,201,123,0.2)" }} />
-                      <div className="h-3 w-full rounded" style={{ background: "rgba(79,201,123,0.1)" }} />
+                      <div
+                        className="h-4 w-2/3 rounded"
+                        style={{ background: "rgba(79,201,123,0.2)" }}
+                      />
+                      <div
+                        className="h-3 w-full rounded"
+                        style={{ background: "rgba(79,201,123,0.1)" }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -415,7 +454,10 @@ export default function ServiceDetail() {
                       >
                         <div
                           className="absolute top-0 left-0 right-0 h-1 z-10"
-                          style={{ backgroundImage: "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)" }}
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
+                          }}
                         />
                         <div className="h-36 overflow-hidden relative">
                           <Image
@@ -453,7 +495,10 @@ export default function ServiceDetail() {
                             {r.price > 0 && (
                               <span
                                 className="text-xs font-semibold bg-clip-text text-transparent"
-                                style={{ backgroundImage: "linear-gradient(100deg, #145C36, #1F9552)" }}
+                                style={{
+                                  backgroundImage:
+                                    "linear-gradient(100deg, #145C36, #1F9552)",
+                                }}
                               >
                                 ₱{Number(r.price).toLocaleString()}+
                               </span>

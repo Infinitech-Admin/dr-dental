@@ -21,6 +21,7 @@ const links = [
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
   { href: "/branches", label: "Branches" },
+  { href: "/book", label: "Book Now" },
 ]
 
 export default function Navbar() {
@@ -129,13 +130,6 @@ export default function Navbar() {
           {mounted &&
             (isLoggedIn && user ? (
               <div className="flex items-center gap-3">
-                <Link href="/book">
-                  <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium text-sm px-5 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all flex items-center gap-2">
-                    <Calendar size={14} />
-                    Book Now
-                  </Button>
-                </Link>
-
                 <div
                   className="relative flex items-center gap-2 pl-3 border-l border-[#C8E6C9]"
                   ref={dropdownRef}
@@ -208,12 +202,6 @@ export default function Navbar() {
 
         {/* Mobile + tablet toggle — anything under 1024px */}
         <div className="flex lg:hidden items-center gap-2 sm:gap-3">
-          <Link href="/book" className="hidden sm:block">
-            <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] text-sm px-4">
-              Book
-            </Button>
-          </Link>
-
           <button
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -264,12 +252,7 @@ export default function Navbar() {
                     {user.name}
                   </span>
                 </div>
-                <Link href="/book" className="block">
-                  <Button className="w-full bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] flex items-center justify-center gap-2">
-                    <Calendar size={15} />
-                    Book Now
-                  </Button>
-                </Link>
+                
                 <Link href="/profile" className="block">
                   <Button
                     variant="outline"

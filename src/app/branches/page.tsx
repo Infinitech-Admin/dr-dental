@@ -28,11 +28,17 @@ export default function BranchesPage() {
         />
         <div
           className="absolute top-32 right-[6%] w-[260px] h-[260px] rounded-full blur-[100px]"
-          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.4), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(79,201,123,0.4), transparent 70%)",
+          }}
         />
         <div
           className="absolute bottom-0 left-[4%] w-[300px] h-[300px] rounded-full blur-[110px]"
-          style={{ background: "radial-gradient(circle, rgba(167,232,107,0.35), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(167,232,107,0.35), transparent 70%)",
+          }}
         />
         <div
           className="absolute inset-0 opacity-[0.035] pointer-events-none"
@@ -88,16 +94,22 @@ export default function BranchesPage() {
             src={branchBg}
             alt=""
             fill
-            className="object-cover opacity-[0.12] mix-blend-luminosity"
+            className="object-cover opacity-90 mix-blend-luminosity"
           />
         </div>
         <div
           className="absolute top-1/4 right-[8%] w-[380px] h-[380px] rounded-full blur-[130px] opacity-70 pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.35), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(79,201,123,0.35), transparent 70%)",
+          }}
         />
         <div
           className="absolute bottom-0 left-[6%] w-[320px] h-[320px] rounded-full blur-[110px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(167,232,107,0.3), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(167,232,107,0.3), transparent 70%)",
+          }}
         />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
@@ -120,14 +132,20 @@ export default function BranchesPage() {
                   {/* corner glow accent on hover */}
                   <div
                     className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500"
-                    style={{ background: "radial-gradient(circle, rgba(79,201,123,0.5), transparent 70%)" }}
+                    style={{
+                      background:
+                        "radial-gradient(circle, rgba(79,201,123,0.5), transparent 70%)",
+                    }}
                   />
 
                   <div className="relative flex items-start justify-between gap-3 mb-4">
                     <div>
                       <p
                         className="text-xs uppercase tracking-[0.35em] font-semibold mb-3 bg-clip-text text-transparent"
-                        style={{ backgroundImage: "linear-gradient(100deg, #145C36, #4FC97B)" }}
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(100deg, #145C36, #4FC97B)",
+                        }}
                       >
                         {branch.area}
                       </p>
@@ -138,7 +156,8 @@ export default function BranchesPage() {
                     <div
                       className="shrink-0 mt-1 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                       style={{
-                        backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
+                        backgroundImage:
+                          "linear-gradient(135deg, #1F9552, #4FC97B)",
                         boxShadow: "0 6px 16px -4px rgba(31,149,82,0.5)",
                       }}
                     >

@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Card } from "@/components/ui/card"
+import branchBg from "@/assets/branch-bg.jpg"
+import Image from "next/image"
 import {
   Phone,
   Mail,
@@ -59,10 +61,21 @@ export default async function BranchDetailPage({
         />
         <div
           className="absolute top-20 right-[8%] w-[220px] h-[220px] rounded-full blur-[100px]"
-          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.4), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(79,201,123,0.4), transparent 70%)",
+          }}
         />
+        <div className="absolute inset-0">
+          <Image
+            src={branchBg}
+            alt=""
+            fill
+            className="object-cover opacity-70 mix-blend-luminosity"
+          />
+        </div>
         <div
-          className="absolute inset-0 opacity-[0.035] pointer-events-none"
+          className="absolute inset-0 opacity-10 pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(#0B3D26 1px, transparent 1px), linear-gradient(90deg, #0B3D26 1px, transparent 1px)",
@@ -81,7 +94,9 @@ export default async function BranchDetailPage({
 
           <p
             className="text-xs sm:text-sm uppercase tracking-[0.25em] sm:tracking-[0.35em] mb-3 sm:mb-4 font-mono font-semibold bg-clip-text text-transparent"
-            style={{ backgroundImage: "linear-gradient(100deg, #145C36, #4FC97B)" }}
+            style={{
+              backgroundImage: "linear-gradient(100deg, #145C36, #4FC97B)",
+            }}
           >
             {branch.area}
           </p>
@@ -115,11 +130,17 @@ export default async function BranchDetailPage({
         />
         <div
           className="absolute top-1/3 right-[6%] w-[340px] h-[340px] rounded-full blur-[120px] opacity-70 pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.35), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(79,201,123,0.35), transparent 70%)",
+          }}
         />
         <div
           className="absolute bottom-0 left-[4%] w-[300px] h-[300px] rounded-full blur-[110px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(167,232,107,0.3), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(167,232,107,0.3), transparent 70%)",
+          }}
         />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
@@ -128,14 +149,20 @@ export default async function BranchDetailPage({
             <Card className="h-full p-5 sm:p-6 bg-white border-0 rounded-2xl shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4)] relative overflow-hidden">
               <div
                 className="absolute top-0 left-0 right-0 h-1"
-                style={{ backgroundImage: "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)" }}
+                style={{
+                  backgroundImage:
+                    "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
+                }}
               />
               <div className="flex items-center gap-2 mb-5 sm:mb-6">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4FC97B] opacity-75" />
                   <span
                     className="relative inline-flex rounded-full h-2 w-2"
-                    style={{ backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)" }}
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(135deg, #1F9552, #4FC97B)",
+                    }}
                   />
                 </span>
                 <p className="text-xs uppercase tracking-[0.2em] text-[#145C36] font-mono font-semibold">
@@ -151,7 +178,10 @@ export default async function BranchDetailPage({
                   >
                     <div
                       className="shrink-0 mt-0.5 w-8 h-8 rounded-full flex items-center justify-center"
-                      style={{ backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)" }}
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(135deg, #1F9552, #4FC97B)",
+                      }}
                     >
                       <item.icon size={15} className="text-white" />
                     </div>
@@ -221,7 +251,10 @@ export default async function BranchDetailPage({
             <Card className="relative overflow-hidden bg-white border-0 rounded-2xl shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4)]">
               <div
                 className="absolute top-0 left-0 right-0 h-1 z-10"
-                style={{ backgroundImage: "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)" }}
+                style={{
+                  backgroundImage:
+                    "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
+                }}
               />
               <div className="pointer-events-none absolute top-6 left-3 w-6 h-6 border-t-2 border-l-2 border-[#4FC97B] rounded-tl-md z-10" />
               <div className="pointer-events-none absolute top-6 right-3 w-6 h-6 border-t-2 border-r-2 border-[#4FC97B] rounded-tr-md z-10" />
@@ -237,7 +270,10 @@ export default async function BranchDetailPage({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold bg-clip-text text-transparent"
-                  style={{ backgroundImage: "linear-gradient(100deg, #145C36, #1F9552)" }}
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #145C36, #1F9552)",
+                  }}
                 >
                   <Navigation size={14} className="text-[#1F9552]" />
                   Get Directions

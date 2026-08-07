@@ -167,3 +167,14 @@ select:-webkit-autofill {
   -webkit-text-fill-color: hsl(var(--foreground)) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
+
+.leaflet-container {
+    z-index: 0;
+}
+
+.leaflet-pane,
+.leaflet-control,
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 1 !important;
+}

@@ -81,7 +81,7 @@ export default function FloatingSocialMedia() {
       <Button
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
-        className="h-14 w-14 rounded-full bg-[#dc143c] hover:bg-[#b01030] text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl md:hidden"
+        className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-900 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl md:hidden"
         aria-label="Toggle social media links"
       >
         {isOpen ? <X className="h-6 w-6" /> : <Share2 className="h-6 w-6" />}

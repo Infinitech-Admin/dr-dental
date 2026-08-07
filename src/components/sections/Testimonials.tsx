@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import testimonialsBg from "@/assets/testimonials-bg.png"
 import { motion } from "framer-motion"
 import {
   Star,
@@ -126,17 +128,31 @@ export default function Testimonials() {
             "radial-gradient(100% 80% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 70% at 90% 20%, #CFF3D6 0%, transparent 60%), linear-gradient(165deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
         }}
       />
+       <div className="absolute inset-0">
+          <Image
+            src={testimonialsBg}
+            alt=""
+            fill
+            className="object-cover opacity-50"
+          />
+        </div>
       <motion.div
         animate={{ scale: [1, 1.15, 1], rotate: [0, 12, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
         className="absolute -top-32 -right-24 w-[550px] h-[550px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(31,149,82,0.35), transparent 70%)" }}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(31,149,82,0.35), transparent 70%)",
+        }}
       />
       <motion.div
         animate={{ scale: [1, 1.1, 1], x: [0, 30, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
         className="absolute bottom-0 -left-24 w-[450px] h-[450px] rounded-full blur-[100px] pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(167,232,107,0.35), transparent 70%)" }}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(167,232,107,0.35), transparent 70%)",
+        }}
       />
 
       <div className="relative max-w-7xl mx-auto">
@@ -240,7 +256,10 @@ export default function Testimonials() {
                 >
                   <div
                     className="absolute top-0 left-0 right-0 h-1"
-                    style={{ backgroundImage: "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)" }}
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
+                    }}
                   />
 
                   {/* Stars */}
@@ -260,7 +279,10 @@ export default function Testimonials() {
 
                   <p
                     className="text-6xl font-serif leading-none mb-2 bg-clip-text text-transparent opacity-70"
-                    style={{ backgroundImage: "linear-gradient(135deg, #1F9552, #A7E86B)" }}
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(135deg, #1F9552, #A7E86B)",
+                    }}
                   >
                     &ldquo;
                   </p>
@@ -291,7 +313,8 @@ export default function Testimonials() {
                     <div
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white shadow-md"
                       style={{
-                        backgroundImage: "linear-gradient(120deg, #1F9552, #4FC97B)",
+                        backgroundImage:
+                          "linear-gradient(120deg, #1F9552, #4FC97B)",
                         boxShadow: "0 6px 16px -6px rgba(31,149,82,0.6)",
                       }}
                     >
@@ -325,7 +348,10 @@ export default function Testimonials() {
                           }`}
                           style={
                             i === currentIndex
-                              ? { backgroundImage: "linear-gradient(90deg, #1F9552, #4FC97B)" }
+                              ? {
+                                  backgroundImage:
+                                    "linear-gradient(90deg, #1F9552, #4FC97B)",
+                                }
                               : undefined
                           }
                           aria-label={`Go to ${i + 1}`}
@@ -361,7 +387,10 @@ export default function Testimonials() {
                 <div key={stat.label} className="text-center">
                   <p
                     className="text-3xl font-serif mb-1 bg-clip-text text-transparent"
-                    style={{ backgroundImage: "linear-gradient(120deg, #145C36, #4FC97B)" }}
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(120deg, #145C36, #4FC97B)",
+                    }}
                   >
                     {stat.value}
                   </p>
@@ -372,17 +401,27 @@ export default function Testimonials() {
           </motion.div>
 
           {/* RIGHT — Form */}
-          <motion.div {...fade} transition={{ delay: 0.15 }} className="relative">
+          <motion.div
+            {...fade}
+            transition={{ delay: 0.15 }}
+            className="relative"
+          >
             <div
               className="absolute -inset-[2px] rounded-2xl opacity-60 blur-[2px]"
-              style={{ backgroundImage: "linear-gradient(135deg, #1F9552, #A7E86B, #145C36)" }}
+              style={{
+                backgroundImage:
+                  "linear-gradient(135deg, #1F9552, #A7E86B, #145C36)",
+              }}
             />
             <div className="relative bg-white/90 backdrop-blur-md border border-white/50 rounded-2xl p-8 shadow-xl shadow-[#1F9552]/10">
               {submitted ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
                   <div
                     className="w-16 h-16 rounded-full flex items-center justify-center"
-                    style={{ backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)" }}
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(135deg, #1F9552, #4FC97B)",
+                    }}
                   >
                     <CheckCircle className="w-8 h-8 text-white" />
                   </div>
@@ -496,7 +535,8 @@ export default function Testimonials() {
                         submitting || !isValid
                           ? undefined
                           : {
-                              backgroundImage: "linear-gradient(120deg, #1F9552, #2FAE63, #4FC97B)",
+                              backgroundImage:
+                                "linear-gradient(120deg, #1F9552, #2FAE63, #4FC97B)",
                               boxShadow: "0 10px 28px -8px rgba(31,149,82,0.6)",
                             }
                       }
@@ -525,7 +565,10 @@ export default function Testimonials() {
           animate={{ scale: [1, 1.15, 1] }}
           transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full blur-[110px] pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.35), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, rgba(79,201,123,0.35), transparent 70%)",
+          }}
         />
         <motion.div
           {...fade}
@@ -535,7 +578,9 @@ export default function Testimonials() {
             Ready to Transform{" "}
             <span
               className="bg-clip-text text-transparent"
-              style={{ backgroundImage: "linear-gradient(100deg, #A7E86B, #4FC97B)" }}
+              style={{
+                backgroundImage: "linear-gradient(100deg, #A7E86B, #4FC97B)",
+              }}
             >
               Your Smile?
             </span>
@@ -549,7 +594,8 @@ export default function Testimonials() {
               size="lg"
               className="text-white font-medium px-10 border-0 hover:-translate-y-0.5 transition-all duration-300"
               style={{
-                backgroundImage: "linear-gradient(120deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
+                backgroundImage:
+                  "linear-gradient(120deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
                 boxShadow: "0 12px 32px -8px rgba(79,201,123,0.7)",
               }}
             >

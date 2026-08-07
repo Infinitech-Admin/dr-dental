@@ -2,14 +2,12 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import heroBg from "@/assets/hero-bg.jpg"
 import branchBg from "@/assets/branch-bg.jpg"
 import equipment from "@/assets/equipment-2.jpg"
 import exterior from "@/assets/exterior-2.jpg"
-import { BRANCHES } from "@/lib/branches-data"
+import dynamic from "next/dynamic"
 import {
   ArrowRight,
   Shield,
@@ -20,15 +18,18 @@ import {
   Smile,
   Heart,
   Zap,
-  Loader2,
   GraduationCap,
   Stethoscope,
   MapPin,
-  Phone,
-  Calendar,
-  Quote,
 } from "lucide-react"
 import { motion } from "framer-motion"
+
+const BranchesMap = dynamic(() => import("../BranchMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[480px] rounded-2xl bg-[#E4F7E6] animate-pulse" />
+  ),
+})
 
 const fade = {
   initial: { opacity: 0, y: 30 },
@@ -51,121 +52,15 @@ const slideRight = {
   transition: { duration: 0.6 },
 }
 
-const ICON_MAP: Record<string, React.ElementType> = {
-  Sparkles,
-  Smile,
-  Shield,
-  Heart,
-  Zap,
-  Star,
-  Award,
-  Users,
-}
-
-const FALLBACK_ICONS: React.ElementType[] = [
-  Sparkles,
-  Smile,
-  Shield,
-  Heart,
-  Zap,
-  Star,
-  Award,
-  Users,
-]
-
-const CREDENTIAL_ICON_MAP: Record<string, React.ElementType> = {
-  GraduationCap,
-  Stethoscope,
-  Star,
-  Award,
-}
-
-function CredentialIcon({
-  name,
-  ...props
-}: {
-  name: string
-  size?: number
-  className?: string
-}) {
-  const Icon = CREDENTIAL_ICON_MAP[name] ?? Award
-  return <Icon {...props} />
-}
-
-interface Service {
-  id: number
-  name: string
-  description: string
-  icon?: string
-  price?: number
-  duration?: number
-  category?: string
-}
-
-type Credential = {
-  icon: string
-  label: string
-  value: string
-  sub: string
-}
-
 type Stat = { value: string; label: string }
 
-type DoctorProfile = {
-  name: string
-  title: string
-  role: string
-  bio: string
-  quote: string
-  location: string
-  since_year: string
-  image_url: string | null
-  credentials: Credential[]
-}
-
-type AboutData = {
-  stats: Stat[]
-  doctor: DoctorProfile | null
-}
-
-function normalizeServices(raw: unknown): Service[] {
-  if (Array.isArray(raw)) return raw as Service[]
-  if (raw && typeof raw === "object") {
-    const obj = raw as Record<string, unknown>
-    if (Array.isArray(obj.data)) return obj.data as Service[]
-    if (Array.isArray(obj.services)) return obj.services as Service[]
-  }
-  return []
-}
-
 export default function Home() {
-  const [services, setServices] = useState<Service[]>([])
-  const [servicesLoading, setServicesLoading] = useState(true)
-  const [about, setAbout] = useState<AboutData | null>(null)
-
-  useEffect(() => {
-    fetch("/api/services")
-      .then((r) => r.json())
-      .then((raw) => setServices(normalizeServices(raw)))
-      .catch(console.error)
-      .finally(() => setServicesLoading(false))
-
-    fetch("/api/about", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d: AboutData) => setAbout(d))
-      .catch(console.error)
-  }, [])
-
-  const stats: Stat[] = about?.stats?.length
-    ? about.stats
-    : [
-        { value: "5K+", label: "Patients Treated" },
-        { value: "98%", label: "Satisfaction Rate" },
-        { value: "6+", label: "Years Experience" },
-        { value: "10+", label: "Specialists" },
-      ]
-
-  const doctor = about?.doctor ?? null
+  const stats: Stat[] = [
+    { value: "6+", label: "Years Experience" },
+    { value: "5K+", label: "Patients Treated" },
+    { value: "98%", label: "Satisfaction Rate" },
+    { value: "10+", label: "Specialists" },
+  ]
 
   return (
     <div className="bg-[#0B3D26]">
@@ -388,74 +283,11 @@ export default function Home() {
               Our Branches
             </h2>
             <p className="text-[#4C6B4C]">
-              {BRANCHES.length} locations across Mindanao, each ready to give
-              you the same quality care, closer to home.
+              Seven locations across Mindanao, each ready to give you the same
+              quality care, closer to home.
             </p>
           </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {BRANCHES.map((b, i) => (
-              <motion.div
-                key={b.id}
-                {...fade}
-                transition={{ duration: 0.5, delay: i * 0.06 }}
-                className="group"
-              >
-                <Card className="relative h-full p-6 bg-white border-[#C8E6C9] overflow-hidden hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#1F9552]/10 transition-all duration-300">
-                  <div
-                    className="absolute top-0 left-0 right-0 h-1 opacity-80"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
-                    }}
-                  />
-                  <div className="flex items-start justify-between mb-4">
-                    <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(135deg, #1F9552, #4FC97B)",
-                      }}
-                    >
-                      <MapPin size={18} className="text-white" />
-                    </div>
-                    <span className="text-xs text-[#4C6B4C] pt-2 font-medium">
-                      {b.area}
-                    </span>
-                  </div>
-
-                  <h3 className="text-[#0B2E1C] font-serif text-lg mb-2">
-                    {b.name}
-                  </h3>
-
-                  <p className="text-[#4C6B4C] text-sm leading-relaxed mb-4 line-clamp-2">
-                    {b.address}
-                  </p>
-
-                  <div className="space-y-1.5 mb-5">
-                    <div className="flex items-center gap-2 text-[#4C6B4C] text-xs">
-                      <Calendar size={12} />
-                      <span>{b.hours}</span>
-                    </div>
-                    {b.phone && (
-                      <div className="flex items-center gap-2 text-[#4C6B4C] text-xs">
-                        <Phone size={12} />
-                        <span>{b.phone}</span>
-                      </div>
-                    )}
-                  </div>
-                  <a
-                    href={b.directionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[#145C36] text-sm font-semibold hover:gap-2.5 transition-all"
-                  >
-                    Get Directions <ArrowRight size={14} />
-                  </a>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+          <BranchesMap />
         </div>
       </section>
 
