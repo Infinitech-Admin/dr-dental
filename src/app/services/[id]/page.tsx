@@ -129,10 +129,19 @@ export default function ServiceDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-green-50">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{
+          background:
+            "radial-gradient(100% 70% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 60% at 90% 100%, #CFF3D6 0%, transparent 55%), #F1FAEE",
+        }}
+      >
         <div className="flex flex-col items-center gap-3">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-400 border-t-transparent" />
-          <span className="text-sm font-medium tracking-wide text-green-700">
+          <div
+            className="h-10 w-10 animate-spin rounded-full border-4 border-t-transparent"
+            style={{ borderColor: "#4FC97B", borderTopColor: "transparent" }}
+          />
+          <span className="text-sm font-medium tracking-wide text-[#145C36]">
             Loading...
           </span>
         </div>
@@ -144,18 +153,22 @@ export default function ServiceDetail() {
     return (
       <div
         className="font-sans min-h-screen flex items-center justify-center"
-        style={{ background: "#F0FDF4" }}
+        style={{
+          background:
+            "radial-gradient(100% 70% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 60% at 90% 100%, #CFF3D6 0%, transparent 55%), #F1FAEE",
+        }}
       >
         <div className="text-center">
-          <p className="text-lg mb-4" style={{ color: "#94A3B8" }}>
+          <p className="text-lg mb-4" style={{ color: "#4C6B4C" }}>
             Service not found.
           </p>
           <Link href="/services">
             <button
               className="inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 rounded-lg"
               style={{
-                background: "linear-gradient(135deg, #047857, #059669)",
+                backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
                 color: "#fff",
+                boxShadow: "0 6px 18px -4px rgba(31,149,82,0.4)",
               }}
             >
               <ArrowLeft size={14} /> Back to Services
@@ -173,18 +186,33 @@ export default function ServiceDetail() {
         className="relative pt-32 pb-16 overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #030F0A 0%, #07281B 60%, #0A4E2F 100%)",
+            "linear-gradient(160deg, #0B3D26 0%, #0E4A2D 45%, #0B3D26 100%)",
         }}
       >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-600/10 rounded-full blur-[120px]" />
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[420px] rounded-full blur-[130px]"
+            style={{ background: "radial-gradient(circle, rgba(31,149,82,0.4), rgba(167,232,107,0.12) 70%)" }}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-[360px] h-[360px] rounded-full blur-[110px]"
+            style={{ background: "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)" }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#A7E86B 1px, transparent 1px), linear-gradient(90deg, #A7E86B 1px, transparent 1px)",
+              backgroundSize: "44px 44px",
+            }}
+          />
         </div>
 
         <div className="relative max-w-5xl mx-auto px-6">
           <button
             onClick={() => router.push("/services")}
-            className="inline-flex items-center gap-2 text-sm mb-8 transition-colors"
-            style={{ color: "#6EE7B7" }}
+            className="inline-flex items-center gap-2 text-sm mb-8 transition-colors hover:text-white"
+            style={{ color: "#A7E86B" }}
           >
             <ArrowLeft size={14} /> Back to Services
           </button>
@@ -195,19 +223,21 @@ export default function ServiceDetail() {
             transition={{ duration: 0.5 }}
           >
             <span
-              className="inline-block text-xs uppercase tracking-[0.3em] mb-4 px-3 py-1 rounded-full border"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] mb-4 px-3 py-1 rounded-full border"
               style={{
-                color: "#6EE7B7",
-                borderColor: "rgba(110,231,183,0.25)",
-                background: "rgba(16,185,129,0.08)",
+                color: "#D6F5E6",
+                borderColor: "rgba(167,232,107,0.25)",
+                background: "rgba(255,255,255,0.05)",
+                backdropFilter: "blur(8px)",
               }}
             >
+              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#1F9552] to-[#A7E86B]" />
               {service.category}
             </span>
 
             <h1
               className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight"
-              style={{ color: "#ECFDF5" }}
+              style={{ color: "#F8FFFB" }}
             >
               {service.title}
             </h1>
@@ -216,8 +246,19 @@ export default function ServiceDetail() {
       </section>
 
       {/* ── Content ── */}
-      <section className="py-16" style={{ background: "#F0FDF4" }}>
-        <div className="max-w-5xl mx-auto px-6">
+      <section
+        className="relative py-16 overflow-hidden"
+        style={{
+          background:
+            "radial-gradient(100% 70% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 60% at 90% 100%, #CFF3D6 0%, transparent 55%), #F1FAEE",
+        }}
+      >
+        <div
+          className="absolute top-0 right-[10%] w-[350px] h-[350px] rounded-full blur-[120px] opacity-60 pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)" }}
+        />
+
+        <div className="relative max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -225,38 +266,41 @@ export default function ServiceDetail() {
             className="grid md:grid-cols-2 gap-10 items-start"
           >
             {/* Image */}
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{
-                border: "1px solid #D1FAE5",
-                boxShadow: "0 4px 20px rgba(16,185,129,0.08)",
-              }}
-            >
-              <Image
-                src={service.image}
-                alt={service.title}
-                width={600}
-                height={450}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  ;(e.target as HTMLImageElement).src =
-                    "/placeholder-service.jpg"
-                }}
+            <div className="relative">
+              <div
+                className="absolute -inset-2 rounded-[1.5rem] blur-md opacity-50"
+                style={{ backgroundImage: "linear-gradient(135deg, #1F9552, #A7E86B, #145C36)" }}
               />
+              <div
+                className="relative rounded-2xl overflow-hidden border-2 border-white"
+                style={{ boxShadow: "0 12px 36px -10px rgba(11,61,38,0.3)" }}
+              >
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  width={600}
+                  height={450}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    ;(e.target as HTMLImageElement).src =
+                      "/placeholder-service.jpg"
+                  }}
+                />
+              </div>
             </div>
 
             {/* Info */}
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <span
-                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full"
-                  style={{ background: "#ECFDF5", color: "#10B981" }}
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium"
+                  style={{ background: "rgba(31,149,82,0.1)", color: "#145C36" }}
                 >
                   <Clock size={12} /> {service.duration}
                 </span>
                 <span
-                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full"
-                  style={{ background: "#ECFDF5", color: "#10B981" }}
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium"
+                  style={{ background: "rgba(31,149,82,0.1)", color: "#145C36" }}
                 >
                   <Tag size={12} /> {service.category}
                 </span>
@@ -264,7 +308,7 @@ export default function ServiceDetail() {
 
               <p
                 className="text-base leading-relaxed mb-8"
-                style={{ color: "#64748B" }}
+                style={{ color: "#4C6B4C" }}
               >
                 {service.desc || "No description available for this treatment."}
               </p>
@@ -273,13 +317,13 @@ export default function ServiceDetail() {
                 <div className="mb-8">
                   <span
                     className="text-xs block mb-1"
-                    style={{ color: "#94A3B8" }}
+                    style={{ color: "#4C6B4C" }}
                   >
                     Starting at
                   </span>
                   <span
-                    className="text-3xl font-serif"
-                    style={{ color: "#047857" }}
+                    className="text-3xl font-serif bg-clip-text text-transparent"
+                    style={{ backgroundImage: "linear-gradient(100deg, #145C36, #1F9552, #4FC97B)" }}
                   >
                     ₱{Number(service.price).toLocaleString()}+
                   </span>
@@ -290,11 +334,11 @@ export default function ServiceDetail() {
                 href={`/book?service_id=${service.id}&service=${encodeURIComponent(service.title)}`}
               >
                 <button
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
                   style={{
-                    background: "linear-gradient(135deg, #047857, #10B981)",
+                    backgroundImage: "linear-gradient(135deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
                     color: "#fff",
-                    boxShadow: "0 4px 24px rgba(16,185,129,0.35)",
+                    boxShadow: "0 10px 28px -6px rgba(31,149,82,0.5)",
                   }}
                 >
                   Book Now <ArrowRight size={16} />
@@ -307,13 +351,19 @@ export default function ServiceDetail() {
 
       {/* ── Related Services ── */}
       {(relatedLoading || related.length > 0) && (
-        <section className="pb-24" style={{ background: "#F0FDF4" }}>
-          <div className="max-w-5xl mx-auto px-6">
+        <section
+          className="relative pb-24 overflow-hidden"
+          style={{
+            background:
+              "radial-gradient(100% 70% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 60% at 90% 100%, #CFF3D6 0%, transparent 55%), #F1FAEE",
+          }}
+        >
+          <div className="relative max-w-5xl mx-auto px-6">
             <div className="flex items-center gap-4 mb-8">
-              <h2 className="font-serif text-2xl" style={{ color: "#0F172A" }}>
+              <h2 className="font-serif text-2xl" style={{ color: "#0B2E1C" }}>
                 Related Services
               </h2>
-              <div className="flex-1 h-px" style={{ background: "#D1FAE5" }} />
+              <div className="flex-1 h-px" style={{ background: "#DCEFD6" }} />
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -324,13 +374,13 @@ export default function ServiceDetail() {
                     className="rounded-2xl overflow-hidden animate-pulse"
                     style={{
                       background: "#fff",
-                      border: "1px solid #D1FAE5",
+                      border: "1px solid #DCEFD6",
                     }}
                   >
-                    <div className="h-36 bg-emerald-100/60" />
+                    <div className="h-36" style={{ background: "rgba(79,201,123,0.15)" }} />
                     <div className="p-5 space-y-2">
-                      <div className="h-4 w-2/3 rounded bg-emerald-100" />
-                      <div className="h-3 w-full rounded bg-emerald-50" />
+                      <div className="h-4 w-2/3 rounded" style={{ background: "rgba(79,201,123,0.2)" }} />
+                      <div className="h-3 w-full rounded" style={{ background: "rgba(79,201,123,0.1)" }} />
                     </div>
                   </div>
                 ))}
@@ -346,23 +396,27 @@ export default function ServiceDetail() {
                   >
                     <Link href={`/services/${r.id}`} className="block h-full">
                       <div
-                        className="group rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer"
+                        className="group rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer relative"
                         style={{
                           background: "#fff",
-                          border: "1px solid #D1FAE5",
-                          boxShadow: "0 2px 12px rgba(16,185,129,0.06)",
+                          border: "1px solid #DCEFD6",
+                          boxShadow: "0 4px 16px -6px rgba(31,149,82,0.1)",
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.boxShadow =
-                            "0 8px 32px rgba(5,150,105,0.16), 0 0 0 1px #6EE7B7"
-                          e.currentTarget.style.borderColor = "#6EE7B7"
+                            "0 16px 36px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B"
+                          e.currentTarget.style.borderColor = "#4FC97B"
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.boxShadow =
-                            "0 2px 12px rgba(16,185,129,0.06)"
-                          e.currentTarget.style.borderColor = "#D1FAE5"
+                            "0 4px 16px -6px rgba(31,149,82,0.1)"
+                          e.currentTarget.style.borderColor = "#DCEFD6"
                         }}
                       >
+                        <div
+                          className="absolute top-0 left-0 right-0 h-1 z-10"
+                          style={{ backgroundImage: "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)" }}
+                        />
                         <div className="h-36 overflow-hidden relative">
                           <Image
                             src={r.image}
@@ -380,17 +434,17 @@ export default function ServiceDetail() {
                         <div className="p-5 flex flex-col flex-1">
                           <h3
                             className="font-serif text-base mb-2 leading-snug"
-                            style={{ color: "#0F172A" }}
+                            style={{ color: "#0B2E1C" }}
                           >
                             {r.title}
                           </h3>
 
                           <div className="flex items-center justify-between mt-auto pt-3">
                             <span
-                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium"
                               style={{
-                                background: "#ECFDF5",
-                                color: "#10B981",
+                                background: "rgba(31,149,82,0.1)",
+                                color: "#145C36",
                               }}
                             >
                               <Clock size={10} />
@@ -398,8 +452,8 @@ export default function ServiceDetail() {
                             </span>
                             {r.price > 0 && (
                               <span
-                                className="text-xs font-semibold"
-                                style={{ color: "#047857" }}
+                                className="text-xs font-semibold bg-clip-text text-transparent"
+                                style={{ backgroundImage: "linear-gradient(100deg, #145C36, #1F9552)" }}
                               >
                                 ₱{Number(r.price).toLocaleString()}+
                               </span>

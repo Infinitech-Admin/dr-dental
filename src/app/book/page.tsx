@@ -38,6 +38,21 @@ const fade = {
   transition: { duration: 0.6 },
 }
 
+// ── Bold mid-green token system (matches the About page) ──────────────────
+const GREEN_DEEP = "#0E7A3F"
+const GREEN_MID = "#189A4D"
+const GREEN_BRIGHT = "#2FBD63"
+const GREEN_LIME = "#5CD97A"
+
+const PAGE_BG = "linear-gradient(160deg, #EAFBF0 0%, #DBF5E4 45%, #C9EED4 100%)"
+const HEADER_GLOW =
+  "radial-gradient(ellipse 60% 50% at 20% 0%, rgba(47,189,99,0.16) 0%, transparent 60%)"
+const ACCENT_GRADIENT = `linear-gradient(135deg, ${GREEN_MID} 0%, ${GREEN_BRIGHT} 55%, ${GREEN_LIME} 100%)`
+const ACCENT_GRADIENT_HOVER = `linear-gradient(135deg, ${GREEN_DEEP} 0%, ${GREEN_MID} 55%, ${GREEN_BRIGHT} 100%)`
+const BADGE_NUMBER_GRADIENT = `linear-gradient(135deg, ${GREEN_MID}, ${GREEN_BRIGHT})`
+const GLOW = "0 0 18px rgba(47,189,99,0.45)"
+const GLOW_SOFT = "0 0 15px rgba(47,189,99,0.25)"
+
 const timeSlots = [
   "8:00 AM",
   "9:00 AM",
@@ -263,62 +278,72 @@ function BookInner() {
   // ── Success screen ────────────────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#F3FAF1] flex flex-col">
+      <div className="min-h-screen flex flex-col" style={{ background: PAGE_BG }}>
         <Header />
-        <div className="flex-1 flex items-center justify-center px-6">
+        <div className="flex-1 flex items-center justify-center px-6 relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0" style={{ background: HEADER_GLOW }} />
+          <div className="pointer-events-none absolute top-1/4 -left-20 w-[350px] h-[350px] bg-emerald-300/20 rounded-full blur-[110px]" />
+          <div className="pointer-events-none absolute bottom-0 right-0 w-[300px] h-[300px] bg-lime-300/20 rounded-full blur-[100px]" />
+
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-center max-w-md"
+            className="relative text-center max-w-md"
           >
             <div className="relative w-20 h-20 mx-auto mb-8">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                className="w-20 h-20 rounded-full bg-[#7BC67B]/15 border border-[#7BC67B]/40 flex items-center justify-center"
+                className="w-20 h-20 rounded-full flex items-center justify-center"
+                style={{
+                  background: ACCENT_GRADIENT,
+                  boxShadow: GLOW,
+                }}
               >
-                <CheckCircle className="text-[#2F5C2F]" size={36} />
+                <CheckCircle className="text-white" size={36} />
               </motion.div>
               <motion.div
                 initial={{ scale: 0.8, opacity: 0.6 }}
-                animate={{ scale: 1.4, opacity: 0 }}
+                animate={{ scale: 1.5, opacity: 0 }}
                 transition={{ duration: 1.2, repeat: Infinity }}
-                className="absolute inset-0 rounded-full border border-[#7BC67B]/50"
+                className="absolute inset-0 rounded-full border"
+                style={{ borderColor: "rgba(47,189,99,0.5)" }}
               />
             </div>
-            <h2 className="font-serif text-3xl text-[#1F3A1F] mb-3">
+            <h2 className="font-serif text-3xl text-[#0E3B22] mb-3">
               Appointment Received
             </h2>
-            <p className="text-[#4C6B4C] mb-1 font-medium">
+            <p className="text-[#2F6B45] mb-1 font-medium">
               We&apos;ve successfully received your appointment request for{" "}
               {activeService?.name ?? "the selected service"}.
             </p>
 
-            <p className="text-[#6B8E6B] text-sm mb-8">
+            <p className="text-[#5C8F6D] text-sm mb-8">
               Our team will review your request and send a confirmation to{" "}
-              <span className="text-[#2F5C2F]">{email}</span> as soon as
-              possible.
+              <span className="text-[#0E7A3F] font-medium">{email}</span> as
+              soon as possible.
             </p>
             <div className="flex flex-col items-center gap-3">
-              <p className="text-[#6B8E6B] text-xs">
+              <p className="text-[#5C8F6D] text-xs">
                 Redirecting to home in{" "}
-                <span className="text-[#2F5C2F] font-semibold">
+                <span className="text-[#0E7A3F] font-semibold">
                   {countdown}s
                 </span>
                 …
               </p>
-              <div className="w-48 h-0.5 bg-[#C8E6C9] rounded-full overflow-hidden">
+              <div className="w-48 h-1 bg-[#C9EED4] rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: "100%" }}
                   animate={{ width: "0%" }}
                   transition={{ duration: 5, ease: "linear" }}
-                  className="h-full bg-[#7BC67B] rounded-full"
+                  className="h-full rounded-full"
+                  style={{ background: ACCENT_GRADIENT }}
                 />
               </div>
               <button
                 onClick={() => router.push("/")}
-                className="mt-2 text-xs text-[#2F5C2F]/70 hover:text-[#2F5C2F] transition-colors underline underline-offset-2"
+                className="mt-2 text-xs text-[#0E7A3F]/70 hover:text-[#0E7A3F] transition-colors underline underline-offset-2"
               >
                 Go home now
               </button>
@@ -331,27 +356,45 @@ function BookInner() {
 
   // ── Booking form ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#F3FAF1] flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: PAGE_BG }}>
       <Header />
-      <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-6 pt-28 pb-20">
+      <main className="flex-1 relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0" style={{ background: HEADER_GLOW }} />
+        <div className="pointer-events-none absolute top-40 -right-32 w-[420px] h-[420px] bg-emerald-300/15 rounded-full blur-[130px]" />
+        <div className="pointer-events-none absolute bottom-0 -left-24 w-[350px] h-[350px] bg-lime-300/15 rounded-full blur-[120px]" />
+
+        <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-20">
           <motion.div
             {...fade}
             className="mb-12 flex items-start justify-between flex-wrap gap-4"
           >
             <div>
-              <p className="text-[#2F5C2F] text-sm uppercase tracking-[0.3em] mb-3">
+              <p
+                className="text-sm uppercase tracking-[0.3em] mb-3 font-semibold"
+                style={{
+                  background: ACCENT_GRADIENT,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
                 Booking
               </p>
-              <h1 className="font-serif text-4xl md:text-5xl text-[#1F3A1F]">
+              <h1 className="font-serif text-4xl md:text-5xl text-[#0E3B22]">
                 Schedule Your Visit
               </h1>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white border border-[#C8E6C9] rounded-full self-start mt-2">
-              <div className="w-2 h-2 rounded-full bg-[#7BC67B] animate-pulse" />
-              <span className="text-[#4C6B4C] text-sm">
+            <div
+              className="flex items-center gap-2 px-4 py-2 bg-white rounded-full self-start mt-2"
+              style={{ border: "1px solid #B7ECC4", boxShadow: GLOW_SOFT }}
+            >
+              <div
+                className="w-2 h-2 rounded-full animate-pulse"
+                style={{ background: GREEN_BRIGHT }}
+              />
+              <span className="text-[#2F6B45] text-sm">
                 Signed in as{" "}
-                <span className="text-[#1F3A1F]">{user?.name}</span>
+                <span className="text-[#0E3B22] font-medium">{user?.name}</span>
               </span>
             </div>
           </motion.div>
@@ -361,39 +404,42 @@ function BookInner() {
             <div className="lg:col-span-2 space-y-8">
               {/* Step 1 — Your Information */}
               <motion.div {...fade} transition={{ delay: 0.3 }}>
-                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
-                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#B7ECC4] shadow-sm">
+                  <h3 className="text-[#0E3B22] font-medium mb-4 flex items-center gap-2">
+                    <span
+                      className="w-6 h-6 rounded-full text-white text-xs flex items-center justify-center font-bold"
+                      style={{ background: BADGE_NUMBER_GRADIENT }}
+                    >
                       1
                     </span>{" "}
                     Your Information
                   </h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-[#4C6B4C] text-xs mb-1.5 flex items-center gap-1">
+                      <Label className="text-[#2F6B45] text-xs mb-1.5 flex items-center gap-1">
                         <User size={12} /> Full Name
                       </Label>
                       <Input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F] placeholder:text-[#8FA88F]"
+                        className="bg-[#EAFBF0] border-[#B7ECC4] text-[#0E3B22] placeholder:text-[#8FC29E]"
                         placeholder="John Doe"
                       />
                     </div>
                     <div>
-                      <Label className="text-[#4C6B4C] text-xs mb-1.5 flex items-center gap-1">
+                      <Label className="text-[#2F6B45] text-xs mb-1.5 flex items-center gap-1">
                         <Mail size={12} /> Email
                       </Label>
                       <Input
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         type="email"
-                        className="bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F]"
+                        className="bg-[#EAFBF0] border-[#B7ECC4] text-[#0E3B22]"
                         placeholder="john@example.com"
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <Label className="text-[#4C6B4C] text-xs mb-1.5 flex items-center gap-1">
+                      <Label className="text-[#2F6B45] text-xs mb-1.5 flex items-center gap-1">
                         <Phone size={12} /> Phone
                       </Label>
                       <Input
@@ -405,7 +451,7 @@ function BookInner() {
                           setPhone(val)
                           validatePhone(val)
                         }}
-                        className={`bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F] placeholder:text-[#8FA88F] ${
+                        className={`bg-[#EAFBF0] border-[#B7ECC4] text-[#0E3B22] placeholder:text-[#8FC29E] ${
                           phoneError
                             ? "border-red-400/60 focus-visible:ring-red-400/30"
                             : ""
@@ -426,30 +472,43 @@ function BookInner() {
 
               {/* Step 2 — Service */}
               <motion.div {...fade}>
-                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
-                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#B7ECC4] shadow-sm">
+                  <h3 className="text-[#0E3B22] font-medium mb-4 flex items-center gap-2">
+                    <span
+                      className="w-6 h-6 rounded-full text-white text-xs flex items-center justify-center font-bold"
+                      style={{ background: BADGE_NUMBER_GRADIENT }}
+                    >
                       2
                     </span>{" "}
                     Select Service
                   </h3>
 
                   {lockedFromUrl && activeService ? (
-                    <div className="flex items-center justify-between px-4 py-3 bg-[#7BC67B]/10 border border-[#7BC67B]/40 rounded-xl">
+                    <div
+                      className="flex items-center justify-between px-4 py-3 rounded-xl"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(24,154,77,0.1), rgba(92,217,122,0.08))",
+                        border: "1px solid rgba(47,189,99,0.35)",
+                      }}
+                    >
                       <div className="flex items-center gap-3">
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#7BC67B] shrink-0" />
+                        <div
+                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                          style={{ background: GREEN_BRIGHT }}
+                        />
                         {servicesLoading ? (
-                          <span className="text-[#4C6B4C] text-sm animate-pulse">
+                          <span className="text-[#2F6B45] text-sm animate-pulse">
                             Loading…
                           </span>
                         ) : (
-                          <span className="text-[#1F3A1F] font-medium">
+                          <span className="text-[#0E3B22] font-medium">
                             {activeService.name}
                           </span>
                         )}
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[#2F5C2F]/70 text-xs">
+                        <span className="text-[#0E7A3F]/70 text-xs">
                           Selected
                         </span>
                         <button
@@ -457,7 +516,7 @@ function BookInner() {
                             setSelectedServiceId(null)
                             setLockedFromUrl(false)
                           }}
-                          className="text-[#6B8E6B] hover:text-[#2F5C2F] text-xs underline underline-offset-2 transition-colors"
+                          className="text-[#5C8F6D] hover:text-[#0E7A3F] text-xs underline underline-offset-2 transition-colors"
                         >
                           Change
                         </button>
@@ -471,7 +530,7 @@ function BookInner() {
                         setLockedFromUrl(false)
                       }}
                     >
-                      <SelectTrigger className="bg-[#F3FAF1] border-[#C8E6C9] text-[#1F3A1F]">
+                      <SelectTrigger className="bg-[#EAFBF0] border-[#B7ECC4] text-[#0E3B22]">
                         <SelectValue
                           placeholder={
                             servicesLoading
@@ -484,7 +543,7 @@ function BookInner() {
                         {groupedServices.map(([category, services], i) => (
                           <SelectGroup key={category}>
                             {i > 0 && <SelectSeparator />}
-                            <SelectLabel className="text-[#2F5C2F] text-xs uppercase tracking-wide">
+                            <SelectLabel className="text-[#0E7A3F] text-xs uppercase tracking-wide">
                               {category}
                             </SelectLabel>
                             {services.map((s) => (
@@ -502,106 +561,168 @@ function BookInner() {
 
               {/* Step 3 — Branch */}
               <motion.div {...fade} transition={{ delay: 0.05 }}>
-                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
-                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#B7ECC4] shadow-sm">
+                  <h3 className="text-[#0E3B22] font-medium mb-4 flex items-center gap-2">
+                    <span
+                      className="w-6 h-6 rounded-full text-white text-xs flex items-center justify-center font-bold"
+                      style={{ background: BADGE_NUMBER_GRADIENT }}
+                    >
                       3
                     </span>{" "}
                     Select Branch
                   </h3>
 
                   <div className="grid sm:grid-cols-2 gap-3">
-                    {BRANCHES.map((b) => (
-                      <button
-                        key={b.id}
-                        onClick={() => setSelectedBranchId(b.id)}
-                        className={`text-left p-4 rounded-xl border transition-all ${
-                          selectedBranchId === b.id
-                            ? "bg-[#7BC67B]/10 border-[#7BC67B]/50 shadow-[0_0_15px_rgba(123,198,123,0.2)]"
-                            : "bg-[#F3FAF1] border-[#C8E6C9] hover:bg-[#DCEFD6]/60"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <span className="text-[#1F3A1F] font-medium text-sm">
-                            {b.name}
-                          </span>
-                          {selectedBranchId === b.id && (
-                            <CheckCircle
-                              size={14}
-                              className="text-[#2F5C2F] shrink-0 mt-0.5"
-                            />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[#6B8E6B] text-xs mb-1">
-                          <MapPin size={11} className="shrink-0" />
-                          <span>{b.area}</span>
-                        </div>
-                        <p className="text-[#6B8E6B] text-xs">{b.hours}</p>
-                      </button>
-                    ))}
+                    {BRANCHES.map((b) => {
+                      const active = selectedBranchId === b.id
+                      return (
+                        <button
+                          key={b.id}
+                          onClick={() => setSelectedBranchId(b.id)}
+                          className="text-left p-4 rounded-xl border transition-all"
+                          style={
+                            active
+                              ? {
+                                  background:
+                                    "linear-gradient(135deg, rgba(24,154,77,0.12), rgba(92,217,122,0.1))",
+                                  borderColor: "rgba(47,189,99,0.5)",
+                                  boxShadow: GLOW_SOFT,
+                                }
+                              : {
+                                  background: "#EAFBF0",
+                                  borderColor: "#B7ECC4",
+                                }
+                          }
+                          onMouseEnter={(e) => {
+                            if (!active)
+                              e.currentTarget.style.background = "#D3F4DD"
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!active)
+                              e.currentTarget.style.background = "#EAFBF0"
+                          }}
+                        >
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <span className="text-[#0E3B22] font-medium text-sm">
+                              {b.name}
+                            </span>
+                            {active && (
+                              <CheckCircle
+                                size={14}
+                                className="text-[#0E7A3F] shrink-0 mt-0.5"
+                              />
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[#5C8F6D] text-xs mb-1">
+                            <MapPin size={11} className="shrink-0" />
+                            <span>{b.area}</span>
+                          </div>
+                          <p className="text-[#5C8F6D] text-xs">{b.hours}</p>
+                        </button>
+                      )
+                    })}
                   </div>
                 </Card>
               </motion.div>
 
               {/* Step 4 — Date */}
               <motion.div {...fade} transition={{ delay: 0.1 }}>
-                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
-                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#B7ECC4] shadow-sm">
+                  <h3 className="text-[#0E3B22] font-medium mb-4 flex items-center gap-2">
+                    <span
+                      className="w-6 h-6 rounded-full text-white text-xs flex items-center justify-center font-bold"
+                      style={{ background: BADGE_NUMBER_GRADIENT }}
+                    >
                       4
                     </span>{" "}
                     Choose Date
                   </h3>
                   <div className="grid grid-cols-7 gap-2">
-                    {days.slice(0, 21).map((d, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setSelectedDate(d)}
-                        className={`p-2 rounded-lg text-center text-sm transition-all ${
-                          selectedDate?.toDateString() === d.toDateString()
-                            ? "bg-[#7BC67B] text-[#1F3A1F] shadow-[0_0_15px_rgba(123,198,123,0.35)]"
-                            : "bg-[#F3FAF1] text-[#4C6B4C] hover:bg-[#DCEFD6]/70"
-                        }`}
-                      >
-                        <div className="text-[10px] opacity-60">
-                          {d.toLocaleDateString("en-US", { weekday: "short" })}
-                        </div>
-                        <div className="font-medium">{d.getDate()}</div>
-                      </button>
-                    ))}
+                    {days.slice(0, 21).map((d, i) => {
+                      const active =
+                        selectedDate?.toDateString() === d.toDateString()
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => setSelectedDate(d)}
+                          className="p-2 rounded-lg text-center text-sm transition-all"
+                          style={
+                            active
+                              ? {
+                                  background: ACCENT_GRADIENT,
+                                  color: "#FFFFFF",
+                                  boxShadow: GLOW,
+                                }
+                              : { background: "#EAFBF0", color: "#2F6B45" }
+                          }
+                          onMouseEnter={(e) => {
+                            if (!active)
+                              e.currentTarget.style.background = "#D3F4DD"
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!active)
+                              e.currentTarget.style.background = "#EAFBF0"
+                          }}
+                        >
+                          <div className="text-[10px] opacity-70">
+                            {d.toLocaleDateString("en-US", { weekday: "short" })}
+                          </div>
+                          <div className="font-medium">{d.getDate()}</div>
+                        </button>
+                      )
+                    })}
                   </div>
                 </Card>
               </motion.div>
 
               {/* Step 5 — Time */}
               <motion.div {...fade} transition={{ delay: 0.2 }}>
-                <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
-                  <h3 className="text-[#1F3A1F] font-medium mb-4 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#7BC67B] text-[#1F3A1F] text-xs flex items-center justify-center font-bold">
+                <Card className="p-6 bg-white border-[#B7ECC4] shadow-sm">
+                  <h3 className="text-[#0E3B22] font-medium mb-4 flex items-center gap-2">
+                    <span
+                      className="w-6 h-6 rounded-full text-white text-xs flex items-center justify-center font-bold"
+                      style={{ background: BADGE_NUMBER_GRADIENT }}
+                    >
                       5
                     </span>{" "}
                     Select Time
                   </h3>
 
                   {!selectedDate ? (
-                    <p className="text-[#6B8E6B] text-sm">
+                    <p className="text-[#5C8F6D] text-sm">
                       Choose a date to see available times.
                     </p>
                   ) : (
                     <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-                      {timeSlots.map((t) => (
-                        <button
-                          key={t}
-                          onClick={() => setSelectedTime(t)}
-                          className={`py-2 px-3 rounded-lg text-sm transition-all ${
-                            selectedTime === t
-                              ? "bg-[#7BC67B] text-[#1F3A1F] shadow-[0_0_15px_rgba(123,198,123,0.35)]"
-                              : "bg-[#F3FAF1] text-[#4C6B4C] hover:bg-[#DCEFD6]/70"
-                          }`}
-                        >
-                          {t}
-                        </button>
-                      ))}
+                      {timeSlots.map((t) => {
+                        const active = selectedTime === t
+                        return (
+                          <button
+                            key={t}
+                            onClick={() => setSelectedTime(t)}
+                            className="py-2 px-3 rounded-lg text-sm transition-all"
+                            style={
+                              active
+                                ? {
+                                    background: ACCENT_GRADIENT,
+                                    color: "#FFFFFF",
+                                    boxShadow: GLOW,
+                                  }
+                                : { background: "#EAFBF0", color: "#2F6B45" }
+                            }
+                            onMouseEnter={(e) => {
+                              if (!active)
+                                e.currentTarget.style.background = "#D3F4DD"
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!active)
+                                e.currentTarget.style.background = "#EAFBF0"
+                            }}
+                          >
+                            {t}
+                          </button>
+                        )
+                      })}
                     </div>
                   )}
                 </Card>
@@ -612,16 +733,23 @@ function BookInner() {
             <div className="lg:col-span-1">
               <div className="sticky top-24">
                 <motion.div {...fade} transition={{ delay: 0.2 }}>
-                  <Card className="p-6 bg-white border-[#C8E6C9] shadow-sm">
-                    <h3 className="text-[#1F3A1F] font-medium mb-6">
+                  <Card
+                    className="p-6 bg-white overflow-hidden relative"
+                    style={{ border: "1px solid #B7ECC4", boxShadow: GLOW_SOFT }}
+                  >
+                    <div
+                      className="absolute top-0 left-0 right-0 h-1.5"
+                      style={{ background: ACCENT_GRADIENT }}
+                    />
+                    <h3 className="text-[#0E3B22] font-medium mb-6 mt-1">
                       Appointment Summary
                     </h3>
                     <div className="space-y-4 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-[#6B8E6B]">Service</span>
-                        <span className="text-[#1F3A1F] text-right max-w-[60%] leading-snug">
+                        <span className="text-[#5C8F6D]">Service</span>
+                        <span className="text-[#0E3B22] text-right max-w-[60%] leading-snug">
                           {servicesLoading ? (
-                            <span className="text-[#8FA88F] animate-pulse">
+                            <span className="text-[#8FC29E] animate-pulse">
                               Loading…
                             </span>
                           ) : (
@@ -630,14 +758,14 @@ function BookInner() {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-[#6B8E6B]">Branch</span>
-                        <span className="text-[#1F3A1F] text-right max-w-[60%] leading-snug">
+                        <span className="text-[#5C8F6D]">Branch</span>
+                        <span className="text-[#0E3B22] text-right max-w-[60%] leading-snug">
                           {activeBranch?.name ?? "—"}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-[#6B8E6B]">Date</span>
-                        <span className="text-[#1F3A1F]">
+                        <span className="text-[#5C8F6D]">Date</span>
+                        <span className="text-[#0E3B22]">
                           {selectedDate
                             ? selectedDate.toLocaleDateString("en-US", {
                                 month: "short",
@@ -647,16 +775,16 @@ function BookInner() {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-[#6B8E6B]">Time</span>
-                        <span className="text-[#1F3A1F]">
+                        <span className="text-[#5C8F6D]">Time</span>
+                        <span className="text-[#0E3B22]">
                           {selectedTime || "—"}
                         </span>
                       </div>
-                      <div className="border-t border-[#C8E6C9] pt-4 flex justify-between">
-                        <span className="text-[#6B8E6B]">Starting at</span>
+                      <div className="border-t border-[#B7ECC4] pt-4 flex justify-between items-center">
+                        <span className="text-[#5C8F6D]">Starting at</span>
                         <Badge
-                          variant="outline"
-                          className="border-[#7BC67B]/50 text-[#2F5C2F]"
+                          className="text-white border-0"
+                          style={{ background: ACCENT_GRADIENT }}
                         >
                           {activeService?.price
                             ? `₱${Number(activeService.price).toLocaleString()}`
@@ -665,14 +793,14 @@ function BookInner() {
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-[#C8E6C9]">
-                      <div className="flex items-center gap-2 text-[#6B8E6B] text-xs mb-1">
+                    <div className="mt-6 pt-4 border-t border-[#B7ECC4]">
+                      <div className="flex items-center gap-2 text-[#5C8F6D] text-xs mb-1">
                         <Calendar size={12} />{" "}
                         {activeBranch
                           ? `Dr. Dental Care Center — ${activeBranch.name}`
                           : "Dr. Dental Care Center"}
                       </div>
-                      <div className="flex items-center gap-2 text-[#6B8E6B] text-xs">
+                      <div className="flex items-center gap-2 text-[#5C8F6D] text-xs">
                         <Clock size={12} />{" "}
                         {activeBranch?.hours ?? "Mon–Sat: 9AM–7PM"}
                       </div>
@@ -705,7 +833,14 @@ function BookInner() {
                         loading ||
                         servicesLoading
                       }
-                      className="w-full mt-6 bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all disabled:opacity-30"
+                      className="w-full mt-6 text-white border-0 transition-all disabled:opacity-30"
+                      style={{ background: ACCENT_GRADIENT, boxShadow: GLOW }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = ACCENT_GRADIENT_HOVER
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = ACCENT_GRADIENT
+                      }}
                       size="lg"
                     >
                       {loading ? (

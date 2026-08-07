@@ -130,22 +130,30 @@ export default function Services() {
     <div className="font-sans">
       {/* ── Hero ── */}
       <section
-        className="relative pt-32 pb-20 overflow-hidden"
+        className="relative pt-32 pb-24 overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #0B2E24 0%, #114837 45%, #1B5E47 100%)",
+            "linear-gradient(160deg, #0B3D26 0%, #0E4A2D 45%, #0B3D26 100%)",
         }}
       >
         <div className="pointer-events-none absolute inset-0">
-          {/* Soft emerald glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-400/10 rounded-full blur-[140px]" />
-
-          {/* Secondary glow */}
-          <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-emerald-300/8 rounded-full blur-[120px]" />
+          {/* mid-green mesh glows */}
+          <div
+            className="absolute -top-24 left-1/2 -translate-x-1/2 w-[800px] h-[560px] rounded-full blur-[140px]"
+            style={{ background: "radial-gradient(circle, rgba(31,149,82,0.4), rgba(167,232,107,0.12) 70%)" }}
+          />
+          <div
+            className="absolute bottom-0 right-0 w-[480px] h-[480px] rounded-full blur-[120px]"
+            style={{ background: "radial-gradient(circle, rgba(79,201,123,0.32), transparent 70%)" }}
+          />
+          <div
+            className="absolute top-1/3 left-0 w-[320px] h-[320px] rounded-full blur-[110px]"
+            style={{ background: "radial-gradient(circle, rgba(167,232,107,0.22), transparent 70%)" }}
+          />
 
           {/* Premium grid */}
           <svg
-            className="absolute inset-0 w-full h-full opacity-[0.04]"
+            className="absolute inset-0 w-full h-full opacity-[0.05]"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
@@ -158,7 +166,7 @@ export default function Services() {
                 <path
                   d="M 40 0 L 0 0 0 40"
                   fill="none"
-                  stroke="#A7F3D0"
+                  stroke="#A7E86B"
                   strokeWidth="0.4"
                 />
               </pattern>
@@ -173,39 +181,49 @@ export default function Services() {
         <div className="relative max-w-7xl mx-auto px-6 text-center">
           <motion.div {...fade}>
             <span
-              className="inline-block text-xs uppercase tracking-[0.35em] mb-5 px-5 py-2 rounded-full border"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.35em] mb-5 px-5 py-2 rounded-full border"
               style={{
                 color: "#D6F5E6",
-                borderColor: "rgba(214,245,230,0.18)",
+                borderColor: "rgba(167,232,107,0.22)",
                 background: "rgba(255,255,255,0.05)",
                 backdropFilter: "blur(12px)",
               }}
             >
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#1F9552] to-[#A7E86B] animate-pulse" />
               Services
             </span>
 
-            <h1
-              className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 leading-tight"
-              style={{ color: "#F8FFFB" }}
-            >
-              The Aesthetic Index
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 leading-tight">
+              <span style={{ color: "#F8FFFB" }}>The Aesthetic </span>
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(100deg, #A7E86B 0%, #4FC97B 50%, #1F9552 100%)",
+                }}
+              >
+                Index
+              </span>
             </h1>
 
             <div className="flex items-center justify-center gap-3 mb-6">
               <div
                 className="h-px w-20"
                 style={{
-                  background: "linear-gradient(to right, transparent, #D4AF37)",
+                  background: "linear-gradient(to right, transparent, #A7E86B)",
                 }}
               />
               <div
                 className="w-2 h-2 rounded-full"
-                style={{ background: "#D4AF37" }}
+                style={{
+                  backgroundImage: "linear-gradient(135deg, #1F9552, #A7E86B)",
+                  boxShadow: "0 0 14px rgba(167,232,107,0.6)",
+                }}
               />
               <div
                 className="h-px w-20"
                 style={{
-                  background: "linear-gradient(to left, transparent, #D4AF37)",
+                  background: "linear-gradient(to left, transparent, #A7E86B)",
                 }}
               />
             </div>
@@ -222,31 +240,44 @@ export default function Services() {
       </section>
 
       {/* ── Filter + Cards ── */}
-      <section className="py-24" style={{ background: "#F0FDF4" }}>
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="relative py-24 overflow-hidden">
+        {/* light mesh base */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(100% 70% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 60% at 90% 100%, #CFF3D6 0%, transparent 55%), #F1FAEE",
+          }}
+        />
+        <div
+          className="absolute top-0 right-[10%] w-[400px] h-[400px] rounded-full blur-[130px] opacity-60 pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(79,201,123,0.3), transparent 70%)" }}
+        />
+
+        <div className="relative max-w-7xl mx-auto px-6">
           {/* Search */}
           <div className="relative max-w-md mx-auto mb-8">
             <Search
               className="absolute left-3.5 top-1/2 -translate-y-1/2"
-              style={{ color: "#94A3B8" }}
+              style={{ color: "#4C6B4C" }}
               size={15}
             />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search treatments..."
-              className="pl-10 pr-10 h-11 rounded-xl border text-slate-900 placeholder:text-slate-400 focus-visible:ring-emerald-500"
+              className="pl-10 pr-10 h-11 rounded-xl border text-[#0B2E1C] placeholder:text-[#4C6B4C]/60 focus-visible:ring-[#1F9552]"
               style={{
                 background: "#fff",
-                borderColor: "#A7F3D0",
-                boxShadow: "0 1px 4px rgba(16,185,129,0.08)",
+                borderColor: "#C8E6C9",
+                boxShadow: "0 4px 16px -6px rgba(31,149,82,0.15)",
               }}
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                style={{ color: "#94A3B8" }}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors hover:text-[#145C36]"
+                style={{ color: "#4C6B4C" }}
               >
                 <X size={14} />
               </button>
@@ -255,7 +286,10 @@ export default function Services() {
 
           {/* Tabs — dynamic, built from API categories */}
           <div className="flex justify-center mb-8">
-            <div className="inline-flex flex-wrap justify-center rounded-xl p-1 gap-1">
+            <div
+              className="inline-flex flex-wrap justify-center rounded-xl p-1 gap-1 backdrop-blur-sm"
+              style={{ background: "rgba(255,255,255,0.6)", border: "1px solid #DCEFD6" }}
+            >
               {categories.map((t) => (
                 <button
                   key={t}
@@ -264,14 +298,14 @@ export default function Services() {
                   style={
                     tab === t
                       ? {
-                          background:
-                            "linear-gradient(135deg, #047857, #059669)",
+                          backgroundImage:
+                            "linear-gradient(135deg, #1F9552, #4FC97B)",
                           color: "#ffffff",
-                          boxShadow: "0 2px 12px rgba(5,150,105,0.35)",
+                          boxShadow: "0 6px 18px -4px rgba(31,149,82,0.5)",
                         }
                       : {
-                          background: "#ffff",
-                          color: "#10B981",
+                          background: "transparent",
+                          color: "#1F9552",
                           boxShadow: "none",
                         }
                   }
@@ -283,7 +317,7 @@ export default function Services() {
           </div>
 
           {/* Count */}
-          <p className="text-center text-sm mb-10" style={{ color: "#94A3B8" }}>
+          <p className="text-center text-sm mb-10" style={{ color: "#4C6B4C" }}>
             {!loading &&
               `${filteredItems.length} treatment${filteredItems.length !== 1 ? "s" : ""} found`}
           </p>
@@ -297,16 +331,16 @@ export default function Services() {
                   className="rounded-2xl overflow-hidden animate-pulse"
                   style={{
                     background: "#fff",
-                    border: "1px solid #D1FAE5",
-                    boxShadow: "0 2px 12px rgba(16,185,129,0.06)",
+                    border: "1px solid #DCEFD6",
+                    boxShadow: "0 2px 12px rgba(31,149,82,0.06)",
                   }}
                 >
-                  <div className="h-48 bg-emerald-100/60" />
+                  <div className="h-48" style={{ background: "rgba(79,201,123,0.15)" }} />
                   <div className="p-6 space-y-3">
-                    <div className="h-3 w-1/3 rounded bg-emerald-100" />
-                    <div className="h-5 w-2/3 rounded bg-emerald-100" />
-                    <div className="h-3 w-full rounded bg-emerald-50" />
-                    <div className="h-3 w-4/5 rounded bg-emerald-50" />
+                    <div className="h-3 w-1/3 rounded" style={{ background: "rgba(79,201,123,0.2)" }} />
+                    <div className="h-5 w-2/3 rounded" style={{ background: "rgba(79,201,123,0.2)" }} />
+                    <div className="h-3 w-full rounded" style={{ background: "rgba(79,201,123,0.1)" }} />
+                    <div className="h-3 w-4/5 rounded" style={{ background: "rgba(79,201,123,0.1)" }} />
                   </div>
                 </div>
               ))}
@@ -316,13 +350,13 @@ export default function Services() {
           {/* Error state */}
           {!loading && fetchError && (
             <div className="text-center py-20">
-              <p className="text-lg mb-2" style={{ color: "#94A3B8" }}>
+              <p className="text-lg mb-2" style={{ color: "#4C6B4C" }}>
                 Failed to load services.
               </p>
               <button
                 onClick={() => window.location.reload()}
                 className="text-sm hover:underline"
-                style={{ color: "#059669" }}
+                style={{ color: "#1F9552" }}
               >
                 Try again
               </button>
@@ -332,14 +366,14 @@ export default function Services() {
           {/* Empty state */}
           {!loading && !fetchError && filteredItems.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-lg mb-2" style={{ color: "#94A3B8" }}>
+              <p className="text-lg mb-2" style={{ color: "#4C6B4C" }}>
                 No treatments found.
               </p>
               {search && (
                 <button
                   onClick={() => setSearch("")}
                   className="text-sm hover:underline"
-                  style={{ color: "#059669" }}
+                  style={{ color: "#1F9552" }}
                 >
                   Clear search
                 </button>
@@ -365,14 +399,14 @@ export default function Services() {
                       <div className="flex items-center gap-4 mb-8">
                         <h2
                           className="font-serif text-2xl"
-                          style={{ color: "#0F172A" }}
+                          style={{ color: "#0B2E1C" }}
                         >
                           {category}
                         </h2>
-                        <div className="flex-1 h-px" />
+                        <div className="flex-1 h-px" style={{ background: "#DCEFD6" }} />
                         <span
-                          className="text-xs px-2.5 py-1 rounded-full"
-                          style={{ background: "#ECFDF5", color: "#10B981" }}
+                          className="text-xs px-2.5 py-1 rounded-full font-medium"
+                          style={{ background: "rgba(31,149,82,0.1)", color: "#145C36" }}
                         >
                           {categoryItems.length}
                         </span>
@@ -392,23 +426,28 @@ export default function Services() {
                             className="block h-full"
                           >
                             <div
-                              className="group rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer"
+                              className="group rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer relative"
                               style={{
                                 background: "#fff",
-                                border: "1px solid #D1FAE5",
-                                boxShadow: "0 2px 12px rgba(16,185,129,0.06)",
+                                border: "1px solid #DCEFD6",
+                                boxShadow: "0 4px 16px -6px rgba(31,149,82,0.1)",
                               }}
                               onMouseEnter={(e) => {
                                 e.currentTarget.style.boxShadow =
-                                  "0 8px 32px rgba(5,150,105,0.16), 0 0 0 1px #6EE7B7"
-                                e.currentTarget.style.borderColor = "#6EE7B7"
+                                  "0 16px 40px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B"
+                                e.currentTarget.style.borderColor = "#4FC97B"
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.boxShadow =
-                                  "0 2px 12px rgba(16,185,129,0.06)"
-                                e.currentTarget.style.borderColor = "#D1FAE5"
+                                  "0 4px 16px -6px rgba(31,149,82,0.1)"
+                                e.currentTarget.style.borderColor = "#DCEFD6"
                               }}
                             >
+                              <div
+                                className="absolute top-0 left-0 right-0 h-1 z-10"
+                                style={{ backgroundImage: "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)" }}
+                              />
+
                               {/* Image */}
                               <div className="h-48 overflow-hidden relative">
                                 <Image
@@ -426,7 +465,7 @@ export default function Services() {
                                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                   style={{
                                     background:
-                                      "linear-gradient(180deg, transparent 40%, rgba(4,120,87,0.18) 100%)",
+                                      "linear-gradient(180deg, transparent 40%, rgba(11,61,38,0.35) 100%)",
                                   }}
                                 />
                               </div>
@@ -436,31 +475,31 @@ export default function Services() {
                                 <div
                                   className="w-8 h-0.5 rounded-full mb-3 transition-all duration-300 group-hover:w-14"
                                   style={{
-                                    background:
-                                      "linear-gradient(to right, #059669, #34D399)",
+                                    backgroundImage:
+                                      "linear-gradient(to right, #1F9552, #A7E86B)",
                                   }}
                                 />
 
                                 <h3
                                   className="font-serif text-xl mb-2 leading-snug"
-                                  style={{ color: "#0F172A" }}
+                                  style={{ color: "#0B2E1C" }}
                                 >
                                   {s.title}
                                 </h3>
 
                                 <p
                                   className="text-sm leading-relaxed mb-4 flex-1"
-                                  style={{ color: "#64748B" }}
+                                  style={{ color: "#4C6B4C" }}
                                 >
                                   {s.desc}
                                 </p>
 
                                 <div className="flex items-center gap-3 mb-5">
                                   <span
-                                    className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full"
+                                    className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium"
                                     style={{
-                                      background: "#ECFDF5",
-                                      color: "#10B981",
+                                      background: "rgba(31,149,82,0.1)",
+                                      color: "#145C36",
                                     }}
                                   >
                                     <Clock size={11} />
@@ -468,8 +507,8 @@ export default function Services() {
                                   </span>
                                   {s.price > 0 && (
                                     <span
-                                      className="text-xs font-semibold"
-                                      style={{ color: "#047857" }}
+                                      className="text-xs font-semibold bg-clip-text text-transparent"
+                                      style={{ backgroundImage: "linear-gradient(100deg, #145C36, #1F9552)" }}
                                     >
                                       ₱{Number(s.price).toLocaleString()}+
                                     </span>
@@ -478,11 +517,11 @@ export default function Services() {
 
                                 <div
                                   className="flex items-center justify-between pt-4"
-                                  style={{ borderTop: "1px solid #ECFDF5" }}
+                                  style={{ borderTop: "1px solid #DCEFD6" }}
                                 >
                                   <span
                                     className="text-xs"
-                                    style={{ color: "#94A3B8" }}
+                                    style={{ color: "#4C6B4C" }}
                                   >
                                     {s.category}
                                   </span>
@@ -496,19 +535,19 @@ export default function Services() {
                                     }}
                                     className="flex items-center gap-1.5 text-sm font-medium px-4 py-1.5 rounded-lg transition-all duration-200"
                                     style={{
-                                      background:
-                                        "linear-gradient(135deg, #047857, #059669)",
+                                      backgroundImage:
+                                        "linear-gradient(135deg, #1F9552, #4FC97B)",
                                       color: "#fff",
                                       boxShadow:
-                                        "0 2px 8px rgba(5,150,105,0.25)",
+                                        "0 4px 14px -3px rgba(31,149,82,0.4)",
                                     }}
                                     onMouseEnter={(e) => {
                                       e.currentTarget.style.boxShadow =
-                                        "0 4px 16px rgba(5,150,105,0.45)"
+                                        "0 8px 22px -4px rgba(31,149,82,0.6)"
                                     }}
                                     onMouseLeave={(e) => {
                                       e.currentTarget.style.boxShadow =
-                                        "0 2px 8px rgba(5,150,105,0.25)"
+                                        "0 4px 14px -3px rgba(31,149,82,0.4)"
                                     }}
                                   >
                                     Book Now <ArrowRight size={13} />
@@ -533,7 +572,7 @@ export default function Services() {
         className="relative py-24 overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #134E4A 0%, #166534 45%, #1F7A5A 100%)",
+            "linear-gradient(150deg, #0B3D26 0%, #145C36 45%, #0E4A2D 100%)",
         }}
       >
         {/* Background Effects */}
@@ -543,7 +582,7 @@ export default function Services() {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(circle at 50% 35%, rgba(110,231,183,0.12) 0%, transparent 65%)",
+                "radial-gradient(circle at 50% 35%, rgba(79,201,123,0.18) 0%, transparent 65%)",
             }}
           />
 
@@ -557,16 +596,23 @@ export default function Services() {
           />
 
           {/* Ambient glow */}
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-300/10 rounded-full blur-[120px]" />
+          <div
+            className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-[120px]"
+            style={{ background: "radial-gradient(circle, rgba(167,232,107,0.18), transparent 70%)" }}
+          />
+          <div
+            className="absolute bottom-0 right-[10%] w-[380px] h-[380px] rounded-full blur-[110px]"
+            style={{ background: "radial-gradient(circle, rgba(79,201,123,0.22), transparent 70%)" }}
+          />
 
           {/* Decorative particles */}
-          <div className="absolute top-10 left-1/4 w-2 h-2 rounded-full bg-emerald-200/40" />
-          <div className="absolute bottom-12 right-1/3 w-1.5 h-1.5 rounded-full bg-emerald-300/35" />
-          <div className="absolute top-1/2 right-1/4 w-1 h-1 rounded-full bg-emerald-100/50" />
+          <div className="absolute top-10 left-1/4 w-2 h-2 rounded-full" style={{ background: "rgba(167,232,107,0.5)" }} />
+          <div className="absolute bottom-12 right-1/3 w-1.5 h-1.5 rounded-full" style={{ background: "rgba(79,201,123,0.45)" }} />
+          <div className="absolute top-1/2 right-1/4 w-1 h-1 rounded-full" style={{ background: "rgba(207,243,214,0.6)" }} />
 
           {/* Premium grid */}
           <svg
-            className="absolute inset-0 w-full h-full opacity-[0.04]"
+            className="absolute inset-0 w-full h-full opacity-[0.05]"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
@@ -579,7 +625,7 @@ export default function Services() {
                 <path
                   d="M 40 0 L 0 0 0 40"
                   fill="none"
-                  stroke="#BBF7D0"
+                  stroke="#A7E86B"
                   strokeWidth="0.5"
                 />
               </pattern>
@@ -598,30 +644,33 @@ export default function Services() {
               className="h-px w-14"
               style={{
                 background:
-                  "linear-gradient(to right, transparent, rgba(187,247,208,.9))",
+                  "linear-gradient(to right, transparent, rgba(167,232,107,.9))",
               }}
             />
             <div
               className="w-2 h-2 rounded-full"
               style={{
-                background: "#BBF7D0",
-                boxShadow: "0 0 14px rgba(187,247,208,.55)",
+                backgroundImage: "linear-gradient(135deg, #1F9552, #A7E86B)",
+                boxShadow: "0 0 14px rgba(167,232,107,.6)",
               }}
             />
             <div
               className="h-px w-14"
               style={{
                 background:
-                  "linear-gradient(to left, transparent, rgba(187,247,208,.9))",
+                  "linear-gradient(to left, transparent, rgba(167,232,107,.9))",
               }}
             />
           </div>
 
-          <h2
-            className="font-serif text-3xl md:text-5xl font-light mb-5 tracking-tight"
-            style={{ color: "#F8FFFB" }}
-          >
-            Not Sure Which Service Is Right?
+          <h2 className="font-serif text-3xl md:text-5xl font-light mb-5 tracking-tight">
+            <span style={{ color: "#F8FFFB" }}>Not Sure Which Service Is </span>
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: "linear-gradient(100deg, #A7E86B, #4FC97B)" }}
+            >
+              Right?
+            </span>
           </h2>
 
           <p
@@ -637,24 +686,20 @@ export default function Services() {
             <button
               className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-semibold transition-all duration-300"
               style={{
-                background: "linear-gradient(135deg, #1B5E47 0%, #2E8B68 100%)",
+                backgroundImage: "linear-gradient(135deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
                 color: "#fff",
                 border: "1px solid rgba(255,255,255,0.12)",
                 boxShadow:
-                  "0 14px 36px rgba(21,128,61,.28), inset 0 1px 0 rgba(255,255,255,.12)",
+                  "0 14px 36px rgba(31,149,82,.4), inset 0 1px 0 rgba(255,255,255,.12)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background =
-                  "linear-gradient(135deg, #16503C 0%, #25855F 100%)"
                 e.currentTarget.style.boxShadow =
-                  "0 18px 45px rgba(21,128,61,.38), inset 0 1px 0 rgba(255,255,255,.16)"
+                  "0 18px 45px rgba(79,201,123,.55), inset 0 1px 0 rgba(255,255,255,.16)"
                 e.currentTarget.style.transform = "translateY(-2px)"
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background =
-                  "linear-gradient(135deg, #1B5E47 0%, #2E8B68 100%)"
                 e.currentTarget.style.boxShadow =
-                  "0 14px 36px rgba(21,128,61,.28), inset 0 1px 0 rgba(255,255,255,.12)"
+                  "0 14px 36px rgba(31,149,82,.4), inset 0 1px 0 rgba(255,255,255,.12)"
                 e.currentTarget.style.transform = "translateY(0)"
               }}
             >
