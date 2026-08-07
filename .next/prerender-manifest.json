@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/branches/ponciano":{},"/branches/bajada":{},"/branches/sm-gensan":{},"/branches/tagum":{},"/branches/panabo":{},"/branches/digos":{}},"dynamicRoutes":{"/branches/[id]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/branches/[id]","routeRegex":"^\\/branches\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"4e70ae1f615877e8b116df84e966807f","previewModeSigningKey":"dd7dfc4c033b07b1fca1eea952a309953366f37376a2748ae4b1713bca7da300","previewModeEncryptionKey":"17e5c412f45fed7a6dea25e8f9db864eab6962a8eb4bf0c0d8302d53a902ae5d"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "fe9330d8e01a52dcadade7cd8df3e01f",
+    "previewModeSigningKey": "875a92ed92257a4dafa0ae3a944bd92b65cabd4fd5e17dcb4ba2e8eb8d163385",
+    "previewModeEncryptionKey": "67e71d8a497797228a9daa81eca71f65a7676090f2889d7da49190438016b084"
+  }
+}

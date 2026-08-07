@@ -9,7 +9,6 @@ import {
   X,
   LogOut,
   Download,
-  Calendar,
   User,
   ChevronDown,
 } from "lucide-react"
@@ -185,12 +184,6 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link href="/book">
-                  <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
-                    Book Now
-                  </Button>
-                </Link>
-
                 <Link href="/login">
                   <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
                     Login
@@ -252,7 +245,7 @@ export default function Navbar() {
                     {user.name}
                   </span>
                 </div>
-                
+
                 <Link href="/profile" className="block">
                   <Button
                     variant="outline"
@@ -273,13 +266,8 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="space-y-3">
-                <Link href="/book" className="block">
-                  <Button className="w-full mt-4 bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B]">
-                    Book Now
-                  </Button>
-                </Link>
                 <Link href="/login" className="block">
-                  <Button className="w-full bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B]">
+                  <Button className="w-full mt-4 bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B]">
                     Login
                   </Button>
                 </Link>

@@ -24,6 +24,7 @@ import {
   CheckCircle,
   ArrowRight,
   MapPin,
+  LogIn,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter } from "next/navigation"
@@ -64,6 +65,30 @@ const timeSlots = [
   "4:00 PM",
 ]
 
+// ── Draft persistence so guests don't lose progress when sent to log in ────
+const DRAFT_KEY = "dr_dental_booking_draft"
+
+interface BookingDraft {
+  name?: string
+  email?: string
+  phone?: string
+  selectedServiceId?: number | null
+  lockedFromUrl?: boolean
+  selectedBranchId?: string | null
+  selectedDate?: string | null
+  selectedTime?: string
+}
+
+function readBookingDraft(): BookingDraft | null {
+  if (typeof window === "undefined") return null
+  try {
+    const raw = window.localStorage.getItem(DRAFT_KEY)
+    return raw ? (JSON.parse(raw) as BookingDraft) : null
+  } catch {
+    return null
+  }
+}
+
 function generateDays() {
   const days: Date[] = []
   const now = new Date()
@@ -100,46 +125,55 @@ function BookInner() {
   const router = useRouter()
   const { isLoggedIn, user, token, _hasHydrated } = useAuthStore()
 
-  // ── Auth guard — wait for hydration before redirecting ──
-  useEffect(() => {
-    if (!_hasHydrated) return
-    if (!isLoggedIn || !token) {
-      const currentPath =
-        typeof window !== "undefined"
-          ? window.location.pathname + window.location.search
-          : "/book"
-      router.replace(`/login?redirect=${encodeURIComponent(currentPath)}`)
-    }
-  }, [_hasHydrated, isLoggedIn, token, router])
+  // Read any saved draft once, synchronously, before first paint.
+  const [draft] = useState<BookingDraft | null>(() => readBookingDraft())
 
   const [allServices, setAllServices] = useState<ApiService[]>([])
   const [servicesLoading, setServicesLoading] = useState(false)
 
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(
-    null,
+    () => draft?.selectedServiceId ?? null,
   )
-  const [lockedFromUrl, setLockedFromUrl] = useState(false)
+  const [lockedFromUrl, setLockedFromUrl] = useState(
+    () => draft?.lockedFromUrl ?? false,
+  )
 
-  const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null)
+  const [selectedBranchId, setSelectedBranchId] = useState<string | null>(
+    () => draft?.selectedBranchId ?? null,
+  )
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [selectedTime, setSelectedTime] = useState("")
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
+    draft?.selectedDate ? new Date(draft.selectedDate) : null,
+  )
+  const [selectedTime, setSelectedTime] = useState(
+    () => draft?.selectedTime ?? "",
+  )
 
-  // Start empty — synced from user after hydration
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
+  // Pre-filled from draft (if any); otherwise synced from user after hydration
+  const [name, setName] = useState(() => draft?.name ?? "")
+  const [email, setEmail] = useState(() => draft?.email ?? "")
+  const [phone, setPhone] = useState(() => draft?.phone ?? "")
   const [phoneError, setPhoneError] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [countdown, setCountdown] = useState(5)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  // ── Auto-fill name & email once user is available after hydration ──
+  // ── Once the draft has been read into state, clear it from storage ──
   useEffect(() => {
-    if (user?.name) setName(user.name)
-    if (user?.email) setEmail(user.email)
-    if (user?.phone) setPhone(user.phone)
+    if (draft && typeof window !== "undefined") {
+      window.localStorage.removeItem(DRAFT_KEY)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // ── Auto-fill name & email/phone once user is available after hydration,
+  //     but never clobber values already restored from a draft ──
+  useEffect(() => {
+    if (user?.name && !name) setName(user.name)
+    if (user?.email && !email) setEmail(user.email)
+    if (user?.phone && !phone) setPhone(user.phone)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   useEffect(() => {
@@ -161,12 +195,15 @@ function BookInner() {
   }, [])
 
   useEffect(() => {
+    // Don't let a query param clobber a service already restored from draft
+    if (selectedServiceId != null) return
     const params = new URLSearchParams(window.location.search)
     const qId = params.get("service_id")
     if (qId) {
       setSelectedServiceId(Number(qId))
       setLockedFromUrl(true)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -203,6 +240,32 @@ function BookInner() {
     }
   }
 
+  // ── Save current form progress and send the user to log in ──
+  function saveDraftAndRedirectToLogin() {
+    if (typeof window !== "undefined") {
+      const toSave: BookingDraft = {
+        name,
+        email,
+        phone,
+        selectedServiceId,
+        lockedFromUrl,
+        selectedBranchId,
+        selectedDate: selectedDate ? selectedDate.toISOString() : null,
+        selectedTime,
+      }
+      try {
+        window.localStorage.setItem(DRAFT_KEY, JSON.stringify(toSave))
+      } catch {
+        // storage unavailable — proceed anyway, just without persistence
+      }
+    }
+    const currentPath =
+      typeof window !== "undefined"
+        ? window.location.pathname + window.location.search
+        : "/book"
+    router.push(`/login?redirect=${encodeURIComponent(currentPath)}`)
+  }
+
   async function handleSubmit() {
     if (
       !selectedDate ||
@@ -221,6 +284,12 @@ function BookInner() {
     }
     if (!/^09\d{9}$/.test(phone)) {
       setError("Phone number must be 11 digits and start with 09.")
+      return
+    }
+
+    // Form is complete — now make sure the user is logged in before booking.
+    if (!isLoggedIn || !token) {
+      saveDraftAndRedirectToLogin()
       return
     }
 
@@ -253,7 +322,8 @@ function BookInner() {
       const data = (await response.json()) as Record<string, unknown>
 
       if (response.status === 401) {
-        router.replace("/login?redirect=/book")
+        // Session expired mid-submit — keep their progress and re-auth.
+        saveDraftAndRedirectToLogin()
         return
       }
       if (!response.ok || !data.success) {
@@ -272,16 +342,22 @@ function BookInner() {
     }
   }
 
-  // Show nothing while hydrating or if not logged in
-  if (!_hasHydrated || !isLoggedIn || !token) return null
+  // Wait for auth store hydration only (form itself is public)
+  if (!_hasHydrated) return null
 
   // ── Success screen ────────────────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: PAGE_BG }}>
+      <div
+        className="min-h-screen flex flex-col"
+        style={{ background: PAGE_BG }}
+      >
         <Header />
         <div className="flex-1 flex items-center justify-center px-6 relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0" style={{ background: HEADER_GLOW }} />
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ background: HEADER_GLOW }}
+          />
           <div className="pointer-events-none absolute top-1/4 -left-20 w-[350px] h-[350px] bg-emerald-300/20 rounded-full blur-[110px]" />
           <div className="pointer-events-none absolute bottom-0 right-0 w-[300px] h-[300px] bg-lime-300/20 rounded-full blur-[100px]" />
 
@@ -359,7 +435,10 @@ function BookInner() {
     <div className="min-h-screen flex flex-col" style={{ background: PAGE_BG }}>
       <Header />
       <main className="flex-1 relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0" style={{ background: HEADER_GLOW }} />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: HEADER_GLOW }}
+        />
         <div className="pointer-events-none absolute top-40 -right-32 w-[420px] h-[420px] bg-emerald-300/15 rounded-full blur-[130px]" />
         <div className="pointer-events-none absolute bottom-0 -left-24 w-[350px] h-[350px] bg-lime-300/15 rounded-full blur-[120px]" />
 
@@ -390,12 +469,27 @@ function BookInner() {
             >
               <div
                 className="w-2 h-2 rounded-full animate-pulse"
-                style={{ background: GREEN_BRIGHT }}
+                style={{ background: isLoggedIn ? GREEN_BRIGHT : "#B7ECC4" }}
               />
-              <span className="text-[#2F6B45] text-sm">
-                Signed in as{" "}
-                <span className="text-[#0E3B22] font-medium">{user?.name}</span>
-              </span>
+              {isLoggedIn && user ? (
+                <span className="text-[#2F6B45] text-sm">
+                  Signed in as{" "}
+                  <span className="text-[#0E3B22] font-medium">
+                    {user?.name}
+                  </span>
+                </span>
+              ) : (
+                <button
+                  onClick={saveDraftAndRedirectToLogin}
+                  className="flex items-center gap-1.5 text-[#2F6B45] text-sm hover:text-[#0E7A3F] transition-colors"
+                >
+                  <LogIn size={13} />
+                  Booking as guest —{" "}
+                  <span className="text-[#0E7A3F] font-medium underline underline-offset-2">
+                    sign in
+                  </span>
+                </button>
+              )}
             </div>
           </motion.div>
 
@@ -665,7 +759,9 @@ function BookInner() {
                           }}
                         >
                           <div className="text-[10px] opacity-70">
-                            {d.toLocaleDateString("en-US", { weekday: "short" })}
+                            {d.toLocaleDateString("en-US", {
+                              weekday: "short",
+                            })}
                           </div>
                           <div className="font-medium">{d.getDate()}</div>
                         </button>
@@ -735,7 +831,10 @@ function BookInner() {
                 <motion.div {...fade} transition={{ delay: 0.2 }}>
                   <Card
                     className="p-6 bg-white overflow-hidden relative"
-                    style={{ border: "1px solid #B7ECC4", boxShadow: GLOW_SOFT }}
+                    style={{
+                      border: "1px solid #B7ECC4",
+                      boxShadow: GLOW_SOFT,
+                    }}
                   >
                     <div
                       className="absolute top-0 left-0 right-0 h-1.5"
@@ -872,6 +971,13 @@ function BookInner() {
                         </span>
                       )}
                     </Button>
+
+                    {!isLoggedIn && (
+                      <p className="mt-3 text-center text-[#5C8F6D] text-xs">
+                        You&apos;ll be asked to sign in to confirm your
+                        appointment.
+                      </p>
+                    )}
                   </Card>
                 </motion.div>
               </div>
