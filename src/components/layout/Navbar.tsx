@@ -4,14 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import {
-  Menu,
-  X,
-  LogOut,
-  Download,
-  User,
-  ChevronDown,
-} from "lucide-react"
+import { Menu, X, LogOut, Download, User, ChevronDown } from "lucide-react"
 import { useAuthStore } from "@/store/authStore"
 import { usePWAInstall } from "@/hooks/use-pwa-install"
 
@@ -98,19 +91,31 @@ export default function Navbar() {
 
         {/* Desktop nav links — 1024px and up only */}
         <div className="hidden lg:flex items-center gap-8 xl:gap-10">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`text-sm tracking-wide transition-colors ${
-                pathname === l.href
-                  ? "text-[#2F5C2F]"
-                  : "text-[#4C6B4C] hover:text-[#1F3A1F]"
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            const isActive =
+              l.href === "/"
+                ? pathname === "/"
+                : pathname === l.href || pathname.startsWith(`${l.href}/`)
+
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`relative py-2 text-sm tracking-wide transition-colors ${
+                  isActive
+                    ? "text-[#2F5C2F] font-semibold"
+                    : "text-[#4C6B4C] hover:text-[#1F3A1F]"
+                }`}
+              >
+                {l.label}
+
+                {/* Active tab indicator */}
+                {isActive && (
+                  <span className="absolute left-0 right-0 -bottom-1 h-0.5 rounded-full bg-[#7BC67B]" />
+                )}
+              </Link>
+            )
+          })}
         </div>
 
         {/* Full desktop right panel — 1024px and up only */}

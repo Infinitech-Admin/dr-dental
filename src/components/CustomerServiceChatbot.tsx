@@ -22,7 +22,7 @@ const BOT_RESPONSES: Record<string, string> = {
     "I'm not sure about that, but our team would be happy to help! You can reach us directly or book an appointment online.",
   greet:
     "Hello! 👋 Welcome to Dr. Dental Care Center. How can I help you today?",
-  book: "You can book an appointment at drdentalcare.com/appointments, call us directly, or send us a message on Facebook or Instagram. Walk-ins are also welcome, subject to availability!",
+  book: "You can book an appointment at drdentalcare.com/book, call us directly, or send us a message on Facebook or Instagram. Walk-ins are also welcome, subject to availability!",
   services:
     "We offer a wide range of services:\n\n🦷 General Dentistry — check-ups, cleaning, fillings, extractions\n✨ Cosmetic Dentistry — whitening, veneers, smile makeovers\n🔧 Orthodontics — metal braces, ceramic braces, Invisalign\n🏗️ Restorative — implants, crowns, bridges, root canals\n💉 Aesthetics — botox, dermal fillers, facial rejuvenation\n👶 Pediatric Dentistry — gentle care for kids\n\nWould you like details on any specific service?",
   hours:

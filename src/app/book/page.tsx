@@ -484,9 +484,9 @@ function BookInner() {
                   className="flex items-center gap-1.5 text-[#2F6B45] text-sm hover:text-[#0E7A3F] transition-colors"
                 >
                   <LogIn size={13} />
-                  Booking as guest —{" "}
+                  Booking as Guest —{" "}
                   <span className="text-[#0E7A3F] font-medium underline underline-offset-2">
-                    sign in
+                    Login
                   </span>
                 </button>
               )}
