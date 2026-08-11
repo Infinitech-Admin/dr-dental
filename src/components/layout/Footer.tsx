@@ -131,7 +131,19 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-emerald-900 py-6 text-center text-xs text-emerald-200/60">
-        &copy; 2026 Dr. Dental Care Center. All rights reserved.
+        <div>&copy; 2026 Dr. Dental Care Center. All rights reserved.</div>
+
+        <div className="mt-2">
+          Powered by{" "}
+          <a
+            href="https://www.infinitechphil.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-200 hover:text-white transition-colors"
+          >
+            Infinitech Advertising Corporation
+          </a>
+        </div>
       </div>
     </footer>
   )

@@ -4,7 +4,6 @@ import ClientLayout from "./ClientLayout";
 import ServiceWorkerProvider from "@/components/ServiceWorkerProvider";
 import "leaflet/dist/leaflet.css"
 import "./globals.css";
-import CustomCursor from "@/components/CustomCursor";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://drdentalcarecenter.com"),
@@ -595,7 +594,6 @@ export default function RootLayout({
 
       <body className="text-white font-sans antialiased">
         <ServiceWorkerProvider />
-        <CustomCursor />
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

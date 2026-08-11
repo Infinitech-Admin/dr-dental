@@ -74,37 +74,47 @@ export default function Home() {
               "radial-gradient(120% 90% at 15% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(90% 80% at 85% 15%, #CFF3D6 0%, transparent 60%), linear-gradient(160deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
           }}
         />
-        {/* hero background image, faded into the mesh */}
-        <div className="absolute inset-0 opacity-50 pointer-events-none">
+        {/* hero background image, faded into the mesh — kept visible enough that the tooth motif reads */}
+        <div className="absolute inset-0 opacity-[0.75] mix-blend-multiply pointer-events-none">
           <Image src={heroBg} alt="" fill priority className="object-cover" />
         </div>
-        {/* animated blobs */}
+
+        {/* single ambient blob — one accent, not two competing ones */}
         <motion.div
-          animate={{ scale: [1, 1.15, 1], rotate: [0, 15, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.12, 1], rotate: [0, 12, 0] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -top-24 right-[-10%] w-[650px] h-[650px] rounded-full blur-[110px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(31,149,82,0.45), rgba(167,232,107,0.15) 70%)",
+              "radial-gradient(circle, rgba(31,149,82,0.4), rgba(167,232,107,0.12) 70%)",
           }}
         />
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], x: [0, 30, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[-15%] left-[-8%] w-[500px] h-[500px] rounded-full blur-[100px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(79,201,123,0.5), transparent 70%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(#0B3D26 1px, transparent 1px), linear-gradient(90deg, #0B3D26 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
+
+        {/* signature: a smile line that draws itself in, connecting headline to photo */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none hidden md:block"
+          viewBox="0 0 1600 900"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="smileGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#1F9552" stopOpacity="0" />
+              <stop offset="45%" stopColor="#2FAE63" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#A7E86B" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <motion.path
+            d="M -60 260 Q 620 520 900 400 T 1660 190"
+            fill="none"
+            stroke="url(#smileGrad)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.6, ease: "easeInOut", delay: 0.4 }}
+          />
+        </svg>
 
         <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-20 grid lg:grid-cols-2 gap-14 items-center">
           <motion.div {...fade}>
@@ -188,28 +198,53 @@ export default function Home() {
               />
             </div>
 
-            {/* floating stat card */}
+            {/* floating credential rail — two real stats, not one padded card */}
             <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="absolute -bottom-8 -left-8 bg-white/90 backdrop-blur-md rounded-2xl px-6 py-4 shadow-xl border border-[#C8E6C9] flex items-center gap-3"
+              transition={{ delay: 0.7, duration: 0.5 }}
+              className="absolute -bottom-8 -left-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#C8E6C9] flex items-stretch overflow-hidden"
             >
-              <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                style={{
-                  backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
-                }}
-              >
-                <Smile size={20} className="text-white" />
+              <div className="flex items-center gap-3 px-5 py-4">
+                <div
+                  className="w-10 h-10 rounded-xl grid place-items-center shrink-0"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(135deg, #1F9552, #4FC97B)",
+                  }}
+                >
+                  <Smile size={18} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-serif text-xl text-[#0B2E1C] leading-none">
+                    {stats[0].value}
+                  </p>
+                  <p className="text-[#4C6B4C] text-[11px] mt-1 whitespace-nowrap">
+                    {stats[0].label}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="font-serif text-2xl text-[#0B2E1C] leading-none">
-                  {stats[0]?.value ?? "5K+"}
-                </p>
-                <p className="text-[#4C6B4C] text-xs mt-1">
-                  {stats[0]?.label ?? "Patients Treated"}
-                </p>
+
+              <div className="w-px bg-[#C8E6C9]" />
+
+              <div className="flex items-center gap-3 px-5 py-4">
+                <div
+                  className="w-10 h-10 rounded-xl grid place-items-center shrink-0"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(135deg, #4FC97B, #A7E86B)",
+                  }}
+                >
+                  <Heart size={18} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-serif text-xl text-[#0B2E1C] leading-none">
+                    {stats[2].value}
+                  </p>
+                  <p className="text-[#4C6B4C] text-[11px] mt-1 whitespace-nowrap">
+                    {stats[2].label}
+                  </p>
+                </div>
               </div>
             </motion.div>
           </motion.div>

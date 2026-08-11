@@ -1,58 +1,58 @@
-"use client"
-import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
-import Link from "next/link"
-import { ArrowRight, ArrowLeft, Clock, Tag } from "lucide-react"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import servicesBg from "@/assets/services-bg.png"
+"use client";
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowRight, ArrowLeft, Clock, Tag } from "lucide-react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import servicesBg from "@/assets/services-bg.png";
 
 interface Service {
-  id: number
-  title: string
-  desc: string
-  duration: string
-  image: string
-  status: string
-  category: string
-  price: number
+  id: number;
+  title: string;
+  desc: string;
+  duration: string;
+  image: string;
+  status: string;
+  category: string;
+  price: number;
 }
 
 interface RawService {
-  id: number
-  name: string
-  description?: string
-  duration?: string
-  image?: string
-  status: string
-  category: string
-  price: number
+  id: number;
+  name: string;
+  description?: string;
+  duration?: string;
+  image?: string;
+  status: string;
+  category: string;
+  price: number;
 }
 
 export default function ServiceDetail() {
-  const params = useParams()
-  const router = useRouter()
-  const id = params?.id as string
+  const params = useParams();
+  const router = useRouter();
+  const id = params?.id as string;
 
-  const [service, setService] = useState<Service | null>(null)
-  const [related, setRelated] = useState<Service[]>([])
-  const [loading, setLoading] = useState(true)
-  const [relatedLoading, setRelatedLoading] = useState(false)
-  const [fetchError, setFetchError] = useState(false)
+  const [service, setService] = useState<Service | null>(null);
+  const [related, setRelated] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [relatedLoading, setRelatedLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
-    if (!id) return
+    if (!id) return;
 
     const fetchService = async () => {
-      setLoading(true)
-      setFetchError(false)
+      setLoading(true);
+      setFetchError(false);
       try {
-        const res = await fetch(`/api/services/${id}`, { cache: "no-store" })
-        if (!res.ok) throw new Error("Not found")
-        const data = await res.json()
+        const res = await fetch(`/api/services/${id}`, { cache: "no-store" });
+        if (!res.ok) throw new Error("Not found");
+        const data = await res.json();
 
         // Handle both flat object and { data: {...} } shapes
-        const s: RawService = data?.data ? data.data : data
+        const s: RawService = data?.data ? data.data : data;
 
         setService({
           id: s.id,
@@ -67,29 +67,29 @@ export default function ServiceDetail() {
           status: s.status,
           category: s.category || "Other",
           price: s.price,
-        })
+        });
       } catch (error) {
-        console.error("Failed to fetch service:", error)
-        setFetchError(true)
+        console.error("Failed to fetch service:", error);
+        setFetchError(true);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchService()
-  }, [id])
+    fetchService();
+  }, [id]);
 
   // Fetch related services once we know the current service's category
   useEffect(() => {
-    if (!service) return
+    if (!service) return;
 
     const fetchRelated = async () => {
-      setRelatedLoading(true)
+      setRelatedLoading(true);
       try {
         const res = await fetch("/api/services?per_page=100", {
           cache: "no-store",
-        })
-        const data = await res.json()
+        });
+        const data = await res.json();
 
         const raw: RawService[] = Array.isArray(data)
           ? data
@@ -97,7 +97,7 @@ export default function ServiceDetail() {
             ? data.data
             : Array.isArray(data?.data?.data)
               ? data.data.data
-              : []
+              : [];
 
         const formatted: Service[] = raw
           .filter((s) => s.category === service.category && s.id !== service.id)
@@ -115,18 +115,18 @@ export default function ServiceDetail() {
             category: s.category || "Other",
             price: s.price,
           }))
-          .slice(0, 3)
+          .slice(0, 3);
 
-        setRelated(formatted)
+        setRelated(formatted);
       } catch (error) {
-        console.error("Failed to fetch related services:", error)
+        console.error("Failed to fetch related services:", error);
       } finally {
-        setRelatedLoading(false)
+        setRelatedLoading(false);
       }
-    }
+    };
 
-    fetchRelated()
-  }, [service])
+    fetchRelated();
+  }, [service]);
 
   if (loading) {
     return (
@@ -147,7 +147,7 @@ export default function ServiceDetail() {
           </span>
         </div>
       </div>
-    )
+    );
   }
 
   if (fetchError || !service) {
@@ -177,7 +177,7 @@ export default function ServiceDetail() {
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -302,8 +302,8 @@ export default function ServiceDetail() {
                   height={450}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    ;(e.target as HTMLImageElement).src =
-                      "/placeholder-service.jpg"
+                    (e.target as HTMLImageElement).src =
+                      "/placeholder-service.jpg";
                   }}
                 />
               </div>
@@ -443,13 +443,13 @@ export default function ServiceDetail() {
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.boxShadow =
-                            "0 16px 36px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B"
-                          e.currentTarget.style.borderColor = "#4FC97B"
+                            "0 16px 36px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B";
+                          e.currentTarget.style.borderColor = "#4FC97B";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.boxShadow =
-                            "0 4px 16px -6px rgba(31,149,82,0.1)"
-                          e.currentTarget.style.borderColor = "#DCEFD6"
+                            "0 4px 16px -6px rgba(31,149,82,0.1)";
+                          e.currentTarget.style.borderColor = "#DCEFD6";
                         }}
                       >
                         <div
@@ -467,8 +467,8 @@ export default function ServiceDetail() {
                             height={144}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             onError={(e) => {
-                              ;(e.target as HTMLImageElement).src =
-                                "/placeholder-service.jpg"
+                              (e.target as HTMLImageElement).src =
+                                "/placeholder-service.jpg";
                             }}
                           />
                         </div>
@@ -514,5 +514,5 @@ export default function ServiceDetail() {
         </section>
       )}
     </div>
-  )
+  );
 }
