@@ -1,5 +1,4 @@
 {
-  "/about/page": "app/about/page.js",
   "/api/services/route": "app/api/services/route.js",
   "/api/testimonials/route": "app/api/testimonials/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",

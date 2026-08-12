@@ -359,21 +359,22 @@ export default function ServiceDetail() {
                 </div>
               )}
 
-              <Link
-                href={`/book?service_id=${service.id}&service=${encodeURIComponent(service.title)}`}
+              <button
+                onClick={() =>
+                  router.push(
+                    `/book?service_id=${service.id}&service=${encodeURIComponent(service.title)}`,
+                  )
+                }
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(135deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
+                  color: "#fff",
+                  boxShadow: "0 10px 28px -6px rgba(31,149,82,0.5)",
+                }}
               >
-                <button
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(135deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
-                    color: "#fff",
-                    boxShadow: "0 10px 28px -6px rgba(31,149,82,0.5)",
-                  }}
-                >
-                  Book Now <ArrowRight size={16} />
-                </button>
-              </Link>
+                Book Now <ArrowRight size={16} />
+              </button>
             </div>
           </motion.div>
         </div>
@@ -432,81 +433,85 @@ export default function ServiceDetail() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.35 }}
+                    role="link"
+                    tabIndex={0}
+                    onClick={() => router.push(`/services/${r.id}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        router.push(`/services/${r.id}`);
+                      }
+                    }}
+                    className="group rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer relative"
+                    style={{
+                      background: "#fff",
+                      border: "1px solid #DCEFD6",
+                      boxShadow: "0 4px 16px -6px rgba(31,149,82,0.1)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        "0 16px 36px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B";
+                      e.currentTarget.style.borderColor = "#4FC97B";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 16px -6px rgba(31,149,82,0.1)";
+                      e.currentTarget.style.borderColor = "#DCEFD6";
+                    }}
                   >
-                    <Link href={`/services/${r.id}`} className="block h-full">
-                      <div
-                        className="group rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer relative"
-                        style={{
-                          background: "#fff",
-                          border: "1px solid #DCEFD6",
-                          boxShadow: "0 4px 16px -6px rgba(31,149,82,0.1)",
+                    <div
+                      className="absolute top-0 left-0 right-0 h-1 z-10"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
+                      }}
+                    />
+                    <div className="h-36 overflow-hidden relative pointer-events-none">
+                      <Image
+                        src={r.image}
+                        alt={r.title}
+                        width={300}
+                        height={144}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src =
+                            "/placeholder-service.jpg";
                         }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.boxShadow =
-                            "0 16px 36px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B";
-                          e.currentTarget.style.borderColor = "#4FC97B";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.boxShadow =
-                            "0 4px 16px -6px rgba(31,149,82,0.1)";
-                          e.currentTarget.style.borderColor = "#DCEFD6";
-                        }}
+                      />
+                    </div>
+
+                    <div className="p-5 flex flex-col flex-1 pointer-events-none">
+                      <h3
+                        className="font-serif text-base mb-2 leading-snug"
+                        style={{ color: "#0B2E1C" }}
                       >
-                        <div
-                          className="absolute top-0 left-0 right-0 h-1 z-10"
+                        {r.title}
+                      </h3>
+
+                      <div className="flex items-center justify-between mt-auto pt-3">
+                        <span
+                          className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium"
                           style={{
-                            backgroundImage:
-                              "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
+                            background: "rgba(31,149,82,0.1)",
+                            color: "#145C36",
                           }}
-                        />
-                        <div className="h-36 overflow-hidden relative">
-                          <Image
-                            src={r.image}
-                            alt={r.title}
-                            width={300}
-                            height={144}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src =
-                                "/placeholder-service.jpg";
+                        >
+                          <Clock size={10} />
+                          {r.duration}
+                        </span>
+                        {r.price > 0 && (
+                          <span
+                            className="text-xs font-semibold bg-clip-text text-transparent"
+                            style={{
+                              backgroundImage:
+                                "linear-gradient(100deg, #145C36, #1F9552)",
                             }}
-                          />
-                        </div>
-
-                        <div className="p-5 flex flex-col flex-1">
-                          <h3
-                            className="font-serif text-base mb-2 leading-snug"
-                            style={{ color: "#0B2E1C" }}
                           >
-                            {r.title}
-                          </h3>
-
-                          <div className="flex items-center justify-between mt-auto pt-3">
-                            <span
-                              className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full font-medium"
-                              style={{
-                                background: "rgba(31,149,82,0.1)",
-                                color: "#145C36",
-                              }}
-                            >
-                              <Clock size={10} />
-                              {r.duration}
-                            </span>
-                            {r.price > 0 && (
-                              <span
-                                className="text-xs font-semibold bg-clip-text text-transparent"
-                                style={{
-                                  backgroundImage:
-                                    "linear-gradient(100deg, #145C36, #1F9552)",
-                                }}
-                              >
-                                ₱{Number(r.price).toLocaleString()}+
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                            ₱{Number(r.price).toLocaleString()}+
+                          </span>
+                        )}
                       </div>
-                    </Link>
+                    </div>
                   </motion.div>
                 ))}
             </div>
