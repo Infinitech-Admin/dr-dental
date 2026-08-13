@@ -21,6 +21,7 @@ import {
   FileText,
   Eye,
   Trash2,
+  MapPin,
 } from "lucide-react"
 import { useAuthStore } from "@/store/authStore"
 import { BRANCHES } from "@/lib/branches-data"
@@ -94,6 +95,7 @@ interface Booking {
   name: string
   email: string
   phone?: string | null
+  branch: string
 }
 
 interface PaginationMeta {
@@ -382,7 +384,7 @@ function NewBookingModal({
   }
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.date || !form.time) {
+    if (!form.name || !form.email || !form.date || !form.time || !form.branch) {
       setError("Please fill in all required fields.")
       return
     }
@@ -406,7 +408,7 @@ function NewBookingModal({
           phone: form.phone,
           booking_date,
           service_id: form.service_id || undefined,
-          branch: form.branch || undefined,
+          branch: form.branch,
           notes: form.notes || undefined,
         }),
       })
@@ -467,7 +469,7 @@ function NewBookingModal({
 
             <div>
               <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5">
-                Branch
+                Branch *
               </label>
               <select
                 value={form.branch}
@@ -682,6 +684,11 @@ function ViewModal({
               icon: <FileText size={14} />,
               label: "Service",
               val: booking.service?.name ?? "—",
+            },
+            {
+              icon: <MapPin size={14} />,
+              label: "Branch",
+              val: booking.branch ?? "—",
             },
           ].map(({ icon, label, val }) => (
             <div

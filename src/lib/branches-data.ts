@@ -112,6 +112,24 @@ export const BRANCHES: Branch[] = [
         blurb: "Our Digos branch bringing accessible dental care to Davao del Sur.",
         facebook: "https://www.facebook.com/profile.php?id=61590649856296",
     },
+    {
+        id: "toril",
+        name: "Toril",
+        area: "Davao City",
+        phone: "-",
+        email: "",
+        address:
+            "Toril Branch, Davao City, Davao del Sur 8000",
+        hours: "Mon-Fri · 8AM-5PM",
+        mapQuery:
+            "Toril, Davao City",
+        directionsUrl:
+            "https://maps.google.com/?q=DR+Dental+Care+Center+Toril",
+        blurb:
+            "Your trusted dental care provider in Toril, Davao City, offering quality and accessible dental services for you and your family.",
+        facebook: "",
+    },
+
 ]
 
 export function getBranchById(id: string): Branch | undefined {

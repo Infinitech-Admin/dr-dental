@@ -52,10 +52,22 @@ type Pagination = {
 /* ─────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────── */
-const CATEGORIES = ["All", "Dental", "Aesthetic"]
+const CATEGORIES = [
+  "All",
+  "General Dentistry",
+  "Cosmetic Dentistry",
+  "Restorative Dentistry",
+  "Orthodontics",
+  "Wisdom Tooth Removal",
+  "Dental Implants",
+  "Root Canal Treatment",
+  "Oral Surgery",
+  "Pediatric Dentistry",
+  "TMJ Treatment",
+] as const
 
 const EMPTY_FORM: FormState = {
-  category: "Dental",
+  category: "General Dentistry",
   treatment: "",
   before_image: null,
   after_image: null,

@@ -29,18 +29,16 @@ const ACCENT_GRADIENT_ACTIVE = `linear-gradient(135deg, ${GREEN_DEEP} 0%, ${GREE
 // default region-wide zoom. Not precise geolocation — display only.
 // ---------------------------------------------------------------------------
 const BRANCH_COORDS: Record<string, [number, number]> = {
-  ponciano: [6.99, 125.545],
-  bajada: [7.12, 125.673],
-  "sm-gensan": [6.115977, 125.1784822],
-  tagum: [7.4458314, 125.8113755],
-  panabo: [7.28, 125.635],
-  digos: [6.7599794, 125.3443487],
-}
+  "sm-gensan": [6.1, 125.15],
+  digos: [6.72, 125.3],
 
-// ---------------------------------------------------------------------------
-// Decide which side a branch's label should sit on, so nearby branches
-// (e.g. Ponciano/Bajada) don't have overlapping tooltips.
-// ---------------------------------------------------------------------------
+  toril: [6.88, 125.48],
+  ponciano: [7.02, 125.52],
+  bajada: [7.12, 125.72],
+  panabo: [7.28, 125.58],
+
+  tagum: [7.45, 125.85],
+}
 const LABEL_DIRECTION: Record<string, "left" | "right"> = {
   ponciano: "left",
   bajada: "right",
@@ -51,8 +49,7 @@ const LABEL_DIRECTION: Record<string, "left" | "right"> = {
 }
 
 function getLabelOffset(direction: "left" | "right"): [number, number] {
-  // Push the label out to the side of the pin instead of stacking above it
-  return direction === "left" ? [-24, -17] : [24, -17]
+  return direction === "left" ? [-20, -10] : [20, -10]
 }
 
 // ---------------------------------------------------------------------------
@@ -63,8 +60,8 @@ function createBranchIcon(isActive: boolean) {
     className: "",
     html: `
       <div style="
-        width: 34px;
-        height: 34px;
+        width: 26px;
+        height: 26px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -72,19 +69,19 @@ function createBranchIcon(isActive: boolean) {
         border: 2px solid white;
         border-radius: 50% 50% 50% 0;
         transform: rotate(-45deg);
-        box-shadow: 0 2px 8px rgba(14,122,63,0.45);
+        box-shadow: 0 2px 7px rgba(14,122,63,0.45);
       ">
         <span style="
           transform: rotate(45deg);
           color: white;
-          font-size: 16px;
+          font-size: 12px;
           line-height: 1;
         ">+</span>
       </div>
     `,
-    iconSize: [34, 34],
-    iconAnchor: [17, 34],
-    popupAnchor: [0, -32],
+    iconSize: [26, 26],
+    iconAnchor: [13, 26],
+    popupAnchor: [0, -24],
   })
 }
 
@@ -160,26 +157,31 @@ export default function BranchesMap({
       <style jsx global>{`
         .branch-tooltip {
           background: #ffffff !important;
-          border: 1.5px solid ${GREEN_BRIGHT} !important;
-          border-radius: 8px !important;
-          padding: 5px 12px !important;
-          box-shadow: 0 2px 10px rgba(14, 122, 63, 0.3) !important;
+          border: 1px solid ${GREEN_BRIGHT} !important;
+          border-radius: 6px !important;
+          padding: 3px 8px !important;
+          box-shadow: 0 2px 7px rgba(14, 122, 63, 0.25) !important;
           cursor: pointer !important;
         }
+
         .branch-tooltip::before {
           display: none !important;
         }
+
         .branch-tooltip .leaflet-tooltip-content,
         .branch-tooltip span {
           color: ${GREEN_DEEP} !important;
-          font-size: 13px !important;
+          font-size: 14px !important;
           font-weight: 700 !important;
-          letter-spacing: 0.01em;
+          line-height: 1.3 !important;
+          letter-spacing: 0 !important;
         }
+
         .branch-tooltip:hover {
           background: ${GREEN_DEEP} !important;
           border-color: ${GREEN_DEEP} !important;
         }
+
         .branch-tooltip:hover span {
           color: #ffffff !important;
         }

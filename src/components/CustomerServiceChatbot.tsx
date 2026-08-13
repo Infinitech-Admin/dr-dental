@@ -12,56 +12,67 @@ interface Message {
 const QUICK_REPLIES = [
   "Book an appointment",
   "Our services",
-  "Clinic hours",
-  "Location",
-  "Payment options",
+  "Our branches",
+  "Do I need an appointment?",
+  "Emergency care",
 ]
 
 const BOT_RESPONSES: Record<string, string> = {
   default:
-    "I'm not sure about that, but our team would be happy to help! You can reach us directly or book an appointment online.",
+    "I'm not sure about that, but our team would be happy to help! Please contact your nearest Dr. Dental Care Center branch, or send us an inquiry through the website.",
   greet:
     "Hello! 👋 Welcome to Dr. Dental Care Center. How can I help you today?",
-  book: "You can book an appointment at drdentalcare.com/book, call us directly, or send us a message on Facebook or Instagram. Walk-ins are also welcome, subject to availability!",
+  book: "You can book an appointment by contacting your preferred Dr. Dental Care Center branch's official page, or by sending an inquiry through our website. When requesting an appointment, it helps to share your preferred branch, preferred date and time, and the service or concern you'd like checked. Walk-in patients may also be accommodated, depending on the branch's availability.",
+  appointmentNeeded:
+    "Appointments are recommended so we can help ensure your preferred dentist, specialist, or treatment schedule is available. You can contact your preferred branch for appointment assistance. Walk-in patients may also be accommodated depending on the branch's availability.",
   services:
-    "We offer a wide range of services:\n\n🦷 General Dentistry — check-ups, cleaning, fillings, extractions\n✨ Cosmetic Dentistry — whitening, veneers, smile makeovers\n🔧 Orthodontics — metal braces, ceramic braces, Invisalign\n🏗️ Restorative — implants, crowns, bridges, root canals\n💉 Aesthetics — botox, dermal fillers, facial rejuvenation\n👶 Pediatric Dentistry — gentle care for kids\n\nWould you like details on any specific service?",
+    "We offer a comprehensive range of dental services, which may include:\n\n🦷 Preventive and General Dentistry\n✨ Cosmetic Dentistry\n🏗️ Restorative Dentistry\n🔧 Orthodontic Treatment\n🩹 Oral Surgery\n🦴 Prosthodontic Services\n👶 Pediatric Dental Care\n🌿 Periodontal Care\n🩺 Endodontic Treatment\n😮‍💨 TMJ and other specialized services\n\nAvailable treatments and specialists may vary by branch, so a consultation is recommended to find the best option for your needs. Would you like details on a specific service?",
   hours:
-    "Our clinic hours are:\n\n📅 Mon–Fri: 8:00 AM – 5:00 PM\n\nWe recommend booking in advance to secure your preferred time slot!",
+    "Office hours can vary by branch. The best way to get exact hours and dentist availability is to contact your preferred branch directly through its official page.",
   location:
-    "We're located in Unit I-3 K.H Building cor. Ponciano And Bonifacio Street, Davao City, Philippines. Visit drdentalcare.com or contact us directly for the exact address and directions. 📍",
+    "Dr. Dental Care Center has branches across Mindanao, including:\n\n📍 Davao City\n📍 Tagum City\n📍 Bajada\n📍 Panabo City\n📍 General Santos City\n📍 Digos City\n📍 Toril\n\nMessage your preferred branch's official page for its exact address, operating hours, and dentist availability. 😊",
   payment:
-    "We accept multiple payment methods:\n\n💵 Cash\n💳 Credit & Debit Cards\n📱 GCash & Maya\n🏥 PhilHealth (for eligible procedures)\n\nWe also offer flexible installment plans for certain treatments. Ask our front desk for details!",
+    "Accepted payment methods can vary by branch. Please contact your preferred branch directly, and our team will be happy to let you know what's available there.",
+  specialists:
+    "Dr. Dental works with dental professionals across different areas of practice and expertise to help address a wide range of dental concerns. For treatments that need specialized care, contact your preferred branch to ask about the right specialist and available schedule.",
+  consultation:
+    "Yes! We encourage a proper dental consultation and assessment before deciding on any treatment. During the consultation, our dental professionals can evaluate your dental condition, explain the appropriate treatment options, and answer your questions so you can make an informed decision.",
   whitening:
-    "Our professional teeth whitening can lighten your smile by several shades in just one visit! We use safe, clinic-grade whitening agents. Book a consultation to find the best option for you. 😁",
+    "Cosmetic dentistry, including teeth whitening, is one of our services — though the exact options and treatments available can vary by branch. Book a consultation with your preferred branch and our dental professionals can recommend the best option for you. 😁",
   braces:
-    "We offer metal braces, ceramic braces, and Invisalign clear aligners. The best option depends on your case — book a free orthodontic consultation and our dentist will recommend the right treatment for you!",
+    "Orthodontic treatment is part of our services. The best option for you depends on your case and what's available at your preferred branch — book a consultation and our dentist can recommend the right treatment.",
   implant:
-    "Dental implants are the gold standard for replacing missing teeth. They look, feel, and function just like natural teeth. We use advanced 3D imaging to plan implant placement precisely. Book a consultation to learn if you're a candidate!",
-  pain: "We prioritize pain-free dentistry! We use modern local anesthesia and gentle techniques to keep you comfortable throughout your treatment. Many patients are pleasantly surprised at how comfortable procedures feel here. 😊",
+    "Restorative and prosthodontic services, which can include options for missing teeth, are part of what we offer. Availability may vary by branch, so a consultation is the best way to find out if this is right for you.",
+  pain: "We understand dental visits can feel intimidating for some patients. Our dental professionals are happy to walk you through your options and what to expect during a consultation, so you feel informed and comfortable before any treatment.",
   price:
-    "Our pricing varies depending on the treatment. We offer competitive rates and flexible payment options. For an accurate quote, book a consultation — initial check-ups include a full assessment and treatment plan.",
+    "The cost of dental treatment depends on your individual condition, treatment requirements, materials, complexity, and recommended procedure. Since every patient's needs are different, we encourage scheduling a consultation so our dental professionals can properly assess your condition and discuss suitable treatment options.",
   emergency:
-    "For dental emergencies like severe toothache, knocked-out tooth, or swollen jaw — please contact us immediately by phone or visit the clinic. We accommodate emergency cases as quickly as possible. 🚨",
-  kids: "Yes, we're very child-friendly! Our pediatric dental services are designed to make kids feel comfortable and at ease. We use gentle techniques and a warm, welcoming environment to help children develop positive dental habits early. 👶",
+    "For urgent dental concerns, please contact your nearest Dr. Dental Care Center branch for assistance. Availability will depend on the nature of the concern, the dentist on duty, and the branch schedule. For serious medical emergencies requiring immediate medical attention, please seek appropriate emergency medical care right away. 🚨",
+  kids: "Pediatric Dental Care is part of our services, designed with children in mind. Availability of pediatric specialists can vary by branch, so it's best to contact your preferred branch to check schedules. 👶",
 }
 
 function getBotResponse(input: string): string {
   const msg = input.toLowerCase()
   if (msg.match(/^(hi|hello|hey|good\s?(morning|afternoon|evening)|kumusta)/))
     return BOT_RESPONSES.greet
+  if (msg.match(/do i need an appointment|walk.?in/))
+    return BOT_RESPONSES.appointmentNeeded
   if (msg.match(/book|appointment|schedule|reserve/)) return BOT_RESPONSES.book
   if (msg.match(/service|offer|treatment|procedure|what do you/))
     return BOT_RESPONSES.services
   if (msg.match(/hour|open|close|schedule|time|when/))
     return BOT_RESPONSES.hours
-  if (msg.match(/location|address|where|directions|map|find you/))
+  if (msg.match(/location|address|where|directions|map|find you|branch/))
     return BOT_RESPONSES.location
   if (msg.match(/pay|payment|gcash|maya|credit|cash|philhealth|installment/))
     return BOT_RESPONSES.payment
+  if (msg.match(/specialist|expert/)) return BOT_RESPONSES.specialists
+  if (msg.match(/consult|assessment|before treatment|before deciding/))
+    return BOT_RESPONSES.consultation
   if (msg.match(/whiten|bleach|bright/)) return BOT_RESPONSES.whitening
   if (msg.match(/brace|aligner|invisalign|orthodont|crooked|straight/))
     return BOT_RESPONSES.braces
-  if (msg.match(/implant|missing tooth|missing teeth/))
+  if (msg.match(/implant|missing tooth|missing teeth|prosthodont/))
     return BOT_RESPONSES.implant
   if (msg.match(/pain|hurt|scared|nervous|anxious|fear/))
     return BOT_RESPONSES.pain

@@ -96,7 +96,19 @@ const CASES: Case[] = [
   },
 ];
 
-const CATEGORIES = ["All", "Cosmetic", "Orthodontic", "Restorative"];
+const CATEGORIES = [
+  "All",
+  "General Dentistry",
+  "Cosmetic Dentistry",
+  "Restorative Dentistry",
+  "Orthodontics",
+  "Wisdom Tooth Removal",
+  "Dental Implants",
+  "Root Canal Treatment",
+  "Oral Surgery",
+  "Pediatric Dentistry",
+  "TMJ Treatment",
+] as const
 
 const STATS = [
   { value: "2,400+", label: "Patients treated" },

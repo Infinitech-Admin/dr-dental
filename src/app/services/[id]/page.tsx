@@ -1,58 +1,58 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { ArrowRight, ArrowLeft, Clock, Tag } from "lucide-react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import servicesBg from "@/assets/services-bg.png";
+"use client"
+import { useState, useEffect } from "react"
+import { useParams, useRouter } from "next/navigation"
+import Link from "next/link"
+import { ArrowRight, ArrowLeft, Clock, Tag } from "lucide-react"
+import { motion } from "framer-motion"
+import Image from "next/image"
+import servicesBg from "@/assets/services-bg.png"
 
 interface Service {
-  id: number;
-  title: string;
-  desc: string;
-  duration: string;
-  image: string;
-  status: string;
-  category: string;
-  price: number;
+  id: number
+  title: string
+  desc: string
+  duration: string
+  image: string
+  status: string
+  category: string
+  price: number
 }
 
 interface RawService {
-  id: number;
-  name: string;
-  description?: string;
-  duration?: string;
-  image?: string;
-  status: string;
-  category: string;
-  price: number;
+  id: number
+  name: string
+  description?: string
+  duration?: string
+  image?: string
+  status: string
+  category: string
+  price: number
 }
 
 export default function ServiceDetail() {
-  const params = useParams();
-  const router = useRouter();
-  const id = params?.id as string;
+  const params = useParams()
+  const router = useRouter()
+  const id = params?.id as string
 
-  const [service, setService] = useState<Service | null>(null);
-  const [related, setRelated] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [relatedLoading, setRelatedLoading] = useState(false);
-  const [fetchError, setFetchError] = useState(false);
+  const [service, setService] = useState<Service | null>(null)
+  const [related, setRelated] = useState<Service[]>([])
+  const [loading, setLoading] = useState(true)
+  const [relatedLoading, setRelatedLoading] = useState(false)
+  const [fetchError, setFetchError] = useState(false)
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) return
 
     const fetchService = async () => {
-      setLoading(true);
-      setFetchError(false);
+      setLoading(true)
+      setFetchError(false)
       try {
-        const res = await fetch(`/api/services/${id}`, { cache: "no-store" });
-        if (!res.ok) throw new Error("Not found");
-        const data = await res.json();
+        const res = await fetch(`/api/services/${id}`, { cache: "no-store" })
+        if (!res.ok) throw new Error("Not found")
+        const data = await res.json()
 
         // Handle both flat object and { data: {...} } shapes
-        const s: RawService = data?.data ? data.data : data;
+        const s: RawService = data?.data ? data.data : data
 
         setService({
           id: s.id,
@@ -63,33 +63,33 @@ export default function ServiceDetail() {
             ? s.image.startsWith("http")
               ? s.image
               : `${process.env.NEXT_PUBLIC_API_URL}${s.image}`
-            : "/placeholder-service.jpg",
+            : "/placeholder-service.png",
           status: s.status,
           category: s.category || "Other",
           price: s.price,
-        });
+        })
       } catch (error) {
-        console.error("Failed to fetch service:", error);
-        setFetchError(true);
+        console.error("Failed to fetch service:", error)
+        setFetchError(true)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchService();
-  }, [id]);
+    fetchService()
+  }, [id])
 
   // Fetch related services once we know the current service's category
   useEffect(() => {
-    if (!service) return;
+    if (!service) return
 
     const fetchRelated = async () => {
-      setRelatedLoading(true);
+      setRelatedLoading(true)
       try {
         const res = await fetch("/api/services?per_page=100", {
           cache: "no-store",
-        });
-        const data = await res.json();
+        })
+        const data = await res.json()
 
         const raw: RawService[] = Array.isArray(data)
           ? data
@@ -97,7 +97,7 @@ export default function ServiceDetail() {
             ? data.data
             : Array.isArray(data?.data?.data)
               ? data.data.data
-              : [];
+              : []
 
         const formatted: Service[] = raw
           .filter((s) => s.category === service.category && s.id !== service.id)
@@ -110,44 +110,146 @@ export default function ServiceDetail() {
               ? s.image.startsWith("http")
                 ? s.image
                 : `${process.env.NEXT_PUBLIC_API_URL}${s.image}`
-              : "/placeholder-service.jpg",
+              : "/placeholder-service.png",
             status: s.status,
             category: s.category || "Other",
             price: s.price,
           }))
-          .slice(0, 3);
+          .slice(0, 3)
 
-        setRelated(formatted);
+        setRelated(formatted)
       } catch (error) {
-        console.error("Failed to fetch related services:", error);
+        console.error("Failed to fetch related services:", error)
       } finally {
-        setRelatedLoading(false);
+        setRelatedLoading(false)
       }
-    };
+    }
 
-    fetchRelated();
-  }, [service]);
+    fetchRelated()
+  }, [service])
 
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{
-          background:
-            "radial-gradient(100% 70% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 60% at 90% 100%, #CFF3D6 0%, transparent 55%), #F1FAEE",
-        }}
-      >
-        <div className="flex flex-col items-center gap-3">
-          <div
-            className="h-10 w-10 animate-spin rounded-full border-4 border-t-transparent"
-            style={{ borderColor: "#4FC97B", borderTopColor: "transparent" }}
-          />
-          <span className="text-sm font-medium tracking-wide text-[#145C36]">
-            Loading...
-          </span>
-        </div>
+      <div className="font-sans">
+        {/* ── Hero Skeleton ── */}
+        <section
+          className="relative pt-32 pb-16 overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(160deg, #0B3D26 0%, #0E4A2D 45%, #0B3D26 100%)",
+          }}
+        >
+          <div className="pointer-events-none absolute inset-0">
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[420px] rounded-full blur-[130px]"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(31,149,82,0.4), rgba(167,232,107,0.12) 70%)",
+              }}
+            />
+            <div
+              className="absolute bottom-0 right-0 w-[360px] h-[360px] rounded-full blur-[110px]"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)",
+              }}
+            />
+          </div>
+
+          <div className="relative max-w-5xl mx-auto px-6">
+            <div
+              className="h-4 w-32 rounded mb-8 animate-pulse"
+              style={{ background: "rgba(255,255,255,0.15)" }}
+            />
+            <div
+              className="h-6 w-28 rounded-full mb-4 animate-pulse"
+              style={{ background: "rgba(255,255,255,0.12)" }}
+            />
+            <div
+              className="h-12 w-3/4 rounded mb-2 animate-pulse"
+              style={{ background: "rgba(255,255,255,0.15)" }}
+            />
+            <div
+              className="h-12 w-1/2 rounded animate-pulse"
+              style={{ background: "rgba(255,255,255,0.15)" }}
+            />
+          </div>
+        </section>
+
+        {/* ── Content Skeleton ── */}
+        <section
+          className="relative py-16 overflow-hidden"
+          style={{
+            background:
+              "radial-gradient(100% 70% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 60% at 90% 100%, #CFF3D6 0%, transparent 55%), #F1FAEE",
+          }}
+        >
+          <div className="relative max-w-5xl mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-10 items-start">
+              {/* Image skeleton */}
+              <div
+                className="rounded-2xl aspect-[4/3] animate-pulse"
+                style={{ background: "rgba(79,201,123,0.15)" }}
+              />
+
+              {/* Info skeleton */}
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="h-7 w-24 rounded-full animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.15)" }}
+                  />
+                  <div
+                    className="h-7 w-28 rounded-full animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.15)" }}
+                  />
+                </div>
+
+                <div className="space-y-2.5 mb-8">
+                  <div
+                    className="h-3.5 w-full rounded animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.12)" }}
+                  />
+                  <div
+                    className="h-3.5 w-full rounded animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.12)" }}
+                  />
+                  <div
+                    className="h-3.5 w-2/3 rounded animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.12)" }}
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <div
+                    className="h-3 w-16 rounded mb-2 animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.12)" }}
+                  />
+                  <div
+                    className="h-9 w-32 rounded animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.2)" }}
+                  />
+                  <div
+                    className="h-3 w-48 rounded mt-3 animate-pulse"
+                    style={{ background: "rgba(79,201,123,0.1)" }}
+                  />
+                </div>
+
+                <div
+                  className="h-3 w-40 rounded mb-6 animate-pulse"
+                  style={{ background: "rgba(79,201,123,0.1)" }}
+                />
+
+                <div
+                  className="h-12 w-40 rounded-xl animate-pulse"
+                  style={{ background: "rgba(79,201,123,0.25)" }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-    );
+    )
   }
 
   if (fetchError || !service) {
@@ -177,7 +279,7 @@ export default function ServiceDetail() {
           </Link>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -302,8 +404,8 @@ export default function ServiceDetail() {
                   height={450}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "/placeholder-service.jpg";
+                    ;(e.target as HTMLImageElement).src =
+                      "/placeholder-service.png"
                   }}
                 />
               </div>
@@ -340,7 +442,7 @@ export default function ServiceDetail() {
               </p>
 
               {service.price > 0 && (
-                <div className="mb-8">
+                <div className="mb-6">
                   <span
                     className="text-xs block mb-1"
                     style={{ color: "#4C6B4C" }}
@@ -354,10 +456,20 @@ export default function ServiceDetail() {
                         "linear-gradient(100deg, #145C36, #1F9552, #4FC97B)",
                     }}
                   >
-                    ₱{Number(service.price).toLocaleString()}+
+                    ₱{Number(service.price).toLocaleString()}
                   </span>
+                  <p
+                    className="text-xs mt-2 max-w-sm"
+                    style={{ color: "#4C6B4C" }}
+                  >
+                    Final cost varies by case complexity and materials used.
+                  </p>
                 </div>
               )}
+
+              <p className="text-xs mb-6 max-w-sm" style={{ color: "#4C6B4C" }}>
+                Service availability may vary by branch.
+              </p>
 
               <button
                 onClick={() =>
@@ -438,8 +550,8 @@ export default function ServiceDetail() {
                     onClick={() => router.push(`/services/${r.id}`)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        router.push(`/services/${r.id}`);
+                        e.preventDefault()
+                        router.push(`/services/${r.id}`)
                       }
                     }}
                     className="group rounded-2xl overflow-hidden transition-all duration-300 flex flex-col h-full cursor-pointer relative"
@@ -450,13 +562,13 @@ export default function ServiceDetail() {
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.boxShadow =
-                        "0 16px 36px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B";
-                      e.currentTarget.style.borderColor = "#4FC97B";
+                        "0 16px 36px -8px rgba(31,149,82,0.25), 0 0 0 1px #4FC97B"
+                      e.currentTarget.style.borderColor = "#4FC97B"
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.boxShadow =
-                        "0 4px 16px -6px rgba(31,149,82,0.1)";
-                      e.currentTarget.style.borderColor = "#DCEFD6";
+                        "0 4px 16px -6px rgba(31,149,82,0.1)"
+                      e.currentTarget.style.borderColor = "#DCEFD6"
                     }}
                   >
                     <div
@@ -474,8 +586,8 @@ export default function ServiceDetail() {
                         height={144}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src =
-                            "/placeholder-service.jpg";
+                          ;(e.target as HTMLImageElement).src =
+                            "/placeholder-service.png"
                         }}
                       />
                     </div>
@@ -519,5 +631,5 @@ export default function ServiceDetail() {
         </section>
       )}
     </div>
-  );
+  )
 }

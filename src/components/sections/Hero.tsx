@@ -57,7 +57,7 @@ type Stat = { value: string; label: string }
 export default function Home() {
   const stats: Stat[] = [
     { value: "6+", label: "Years Experience" },
-    { value: "5K+", label: "Patients Treated" },
+    { value: "150K+", label: "Patients Treated" },
     { value: "98%", label: "Satisfaction Rate" },
     { value: "10+", label: "Specialists" },
   ]
@@ -363,32 +363,32 @@ export default function Home() {
               </p>
             </div>
             <h2 className="font-serif text-4xl md:text-5xl text-white mb-10 leading-tight">
-              Engineered for{" "}
+              Care That Gives You Something to{" "}
               <span
                 className="bg-clip-text text-transparent"
                 style={{
                   backgroundImage: "linear-gradient(100deg, #A7E86B, #4FC97B)",
                 }}
               >
-                Excellence
+                Smile About
               </span>
             </h2>
             <div className="space-y-2">
               {[
                 {
                   icon: Award,
-                  title: "Board-Certified Specialists",
-                  desc: "Every procedure performed by verified experts with 10+ years of experience.",
+                  title: "You're in Good Hands",
+                  desc: "Experienced dental professionals dedicated to giving you thoughtful care and a smile you can feel proud of.",
                 },
                 {
                   icon: Shield,
-                  title: "State-of-the-Art Technology",
-                  desc: "3D imaging, laser systems, and AI-assisted diagnostics for unmatched precision.",
+                  title: "Care You Can Trust",
+                  desc: "Modern technology and careful treatment designed to keep your smile healthy, comfortable, and protected.",
                 },
                 {
                   icon: Users,
-                  title: "Patient-First Philosophy",
-                  desc: "Personalized treatment plans designed around your unique goals and comfort.",
+                  title: "Here for Your Journey",
+                  desc: "A caring team that listens to your needs and supports you through every step of your smile journey.",
                 },
               ].map((item, i) => (
                 <motion.div
