@@ -14,6 +14,7 @@ import {
   Instagram,
 } from "lucide-react"
 import { BRANCHES, getBranchById } from "@/lib/branches-data"
+import { BranchGallery } from "@/components/branch-gallery"
 
 export function generateStaticParams() {
   return BRANCHES.map((b) => ({ id: b.id }))
@@ -291,6 +292,22 @@ export default async function BranchDetailPage({
                 />
               </div>
             </Card>
+          </div>
+
+          {/* GALLERY */}
+          <div className="mt-10 sm:mt-14">
+            <div className="flex items-center gap-2 mb-5 sm:mb-6">
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{
+                  backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
+                }}
+              />
+              <p className="text-xs uppercase tracking-[0.2em] text-[#A7E86B] font-mono font-semibold">
+                Gallery
+              </p>
+            </div>
+            <BranchGallery branchId={branch.id} />
           </div>
         </div>
       </section>
