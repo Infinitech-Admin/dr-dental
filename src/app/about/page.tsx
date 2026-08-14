@@ -1,7 +1,14 @@
-"use client"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import Link from "next/link"
+"use client";
+import { useRef, useEffect, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  MotionValue,
+} from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 import {
   ArrowRight,
   Target,
@@ -19,16 +26,19 @@ import {
   GraduationCap,
   TrendingUp,
   Heart,
-} from "lucide-react"
-import missionImage from "@/assets/exterior-5.jpg"
-import vissionImage from "@/assets/image.jpg"
+  Flag,
+  Navigation,
+  Clock,
+} from "lucide-react";
+import missionImage from "@/assets/exterior-5.jpg";
+import vissionImage from "@/assets/image.jpg";
 
 const fade = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
   transition: { duration: 0.6 },
-}
+};
 
 const values = [
   {
@@ -51,7 +61,7 @@ const values = [
     title: "Community",
     desc: "Proud to serve Davao City, Tagum, Bajada, Panabo, General Santos, and Digos — getting to know the families who trust us with their care.",
   },
-]
+];
 
 const goals = [
   {
@@ -94,7 +104,7 @@ const goals = [
     title: "Build Lasting Trust",
     desc: "To develop long-term relationships with our patients through ethical practice, clear communication, professionalism, and genuine care.",
   },
-]
+];
 
 // Branch expansion milestones, from the company's development history
 const milestones = [
@@ -131,13 +141,626 @@ const milestones = [
   {
     year: "September 2026",
     place: "Toril, Davao City",
-    note: "A new Toril branch further strengthens our presence and accessibility within Davao City and surrounding communities.",
+    note: "A new Toril branch will further strengthen our presence and accessibility within Davao City and surrounding communities.",
   },
-]
+];
+
+// Time elapsed between consecutive branches — small road-sign captions
+// along the route, one shorter than milestones.length.
+const gapLabels = [
+  "4 years later",
+  "8 months later",
+  "9 months later",
+  "4 months later",
+  "8 months later",
+  "1 month later",
+];
 
 // Shared accent — a vibrant green used for highlights, icons, and dividers
-const ACCENT = "#3D9A63"
-const ACCENT_LIGHT = "#7ED9A0"
+const ACCENT = "#3D9A63";
+const ACCENT_LIGHT = "#7ED9A0";
+
+// Milestones are dated by month, so "is this open yet" is decided at
+// month granularity against the real current date — not hardcoded.
+// A branch is "upcoming" only once its month is strictly after the
+// current month; the same month as today counts as already open.
+function parseMonthYear(label: string): Date {
+  const [monthName, yearStr] = label.split(" ");
+  const month = new Date(`${monthName} 1, 2000`).getMonth();
+  return new Date(Number(yearStr), month, 1);
+}
+
+function useMilestoneStatus() {
+  const [today] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+
+  const upcoming = milestones.map((m) => parseMonthYear(m.year) > today);
+  // "Newest branch" = the most recent one that has actually opened,
+  // not just the last item in the array.
+  let latestOpenIndex = -1;
+  upcoming.forEach((isUpcoming, i) => {
+    if (!isUpcoming) latestOpenIndex = i;
+  });
+
+  return { upcoming, latestOpenIndex };
+}
+
+// ── Road-journey timeline ────────────────────────────────────────────
+// Row height must stay fixed so the hand-authored road path lines up
+// exactly with each marker's row.
+const ROW_H = 240;
+const ROAD_W = 220;
+const X_LEFT = 60;
+const X_RIGHT = 160;
+const TOP_PAD = 50;
+
+function buildRoad(n: number) {
+  const pts = Array.from({ length: n }, (_, i) => ({
+    x: i % 2 === 0 ? X_LEFT : X_RIGHT,
+    y: TOP_PAD + i * ROW_H,
+  }));
+  let d = `M${pts[0].x},${pts[0].y}`;
+  for (let i = 1; i < pts.length; i++) {
+    const p0 = pts[i - 1];
+    const p1 = pts[i];
+    const midY = (p0.y + p1.y) / 2;
+    d += ` C${p0.x},${midY} ${p1.x},${midY} ${p1.x},${p1.y}`;
+  }
+  return { d, pts, height: TOP_PAD * 2 + (n - 1) * ROW_H };
+}
+
+// Tracks which stop the traveling pin is currently nearest to. Shared
+// by the HUD readout and the road markers so both stay in lockstep —
+// a marker only lights up once the HUD agrees you've reached it.
+function useCurrentStopIndex(progress: MotionValue<number>) {
+  const [index, setIndex] = useState(0);
+  useMotionValueEvent(progress, "change", (v) => {
+    const clamped = Math.min(1, Math.max(0, v));
+    const next = Math.round(clamped * (milestones.length - 1));
+    setIndex((prev) => (next !== prev ? next : prev));
+  });
+  return index;
+}
+
+// Whether `ref`'s element currently has any part on screen. Drives the
+// HUD's visibility directly from scroll position rather than CSS
+// `position: sticky` — sticky is bounded by its own containing block,
+// so it inevitably runs out of room and detaches near the end of a
+// long section (and can silently break under an ancestor with a CSS
+// transform, which several Framer Motion elements on this page use).
+// A fixed-position element toggled by real scroll math has neither
+// problem: it can stay pinned for the section's entire length.
+function useIsSectionInView(ref: React.RefObject<HTMLElement | null>) {
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const [active, setActive] = useState(false);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    const next = v > 0 && v < 1;
+    setActive((prev) => (prev !== next ? next : prev));
+  });
+  return active;
+}
+
+// The pin that travels along the curve as the user scrolls — reads
+// getPointAtLength off the actual rendered path, so it always sits
+// exactly on the road rather than approximating with keyframes.
+function TravelingPin({
+  pathRef,
+  progress,
+}: {
+  pathRef: React.RefObject<SVGPathElement | null>;
+  progress: MotionValue<number>;
+}) {
+  const totalLen = useRef(0);
+
+  useEffect(() => {
+    if (pathRef.current) totalLen.current = pathRef.current.getTotalLength();
+  }, [pathRef]);
+
+  const cx = useTransform(progress, (v) => {
+    const p = pathRef.current;
+    if (!p || !totalLen.current) return X_LEFT;
+    return p.getPointAtLength(v * totalLen.current).x;
+  });
+  const cy = useTransform(progress, (v) => {
+    const p = pathRef.current;
+    if (!p || !totalLen.current) return TOP_PAD;
+    return p.getPointAtLength(v * totalLen.current).y;
+  });
+
+  return (
+    <>
+      <motion.circle cx={cx} cy={cy} r={12} fill={ACCENT} fillOpacity={0.18} />
+      <motion.circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill={ACCENT_LIGHT}
+        stroke="#0F3D2E"
+        strokeWidth={2}
+      />
+    </>
+  );
+}
+
+function MilestoneCard({
+  m,
+  align,
+  tag,
+  visited,
+}: {
+  m: (typeof milestones)[number];
+  align: "left" | "right";
+  tag?: "start" | "latest" | "upcoming";
+  visited?: boolean;
+}) {
+  return (
+    <div
+      className={align === "right" ? "ml-auto" : ""}
+      style={{
+        opacity: visited === false ? 0.55 : 1,
+        transition: "opacity 0.4s ease",
+      }}
+    >
+      {tag === "start" && (
+        <span
+          className="mb-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]"
+          style={{ background: "rgba(61,154,99,0.12)", color: "#2F6B48" }}
+        >
+          <Flag size={10} /> Where it started
+        </span>
+      )}
+      {tag === "latest" && (
+        <span
+          className="mb-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]"
+          style={{ background: ACCENT, color: "#F0FDF4" }}
+        >
+          <Sparkles size={10} /> Newest branch
+        </span>
+      )}
+      {tag === "upcoming" && (
+        <span
+          className="mb-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] border"
+          style={{
+            background: "#FFFFFF",
+            color: "#2F6B48",
+            borderColor: ACCENT,
+          }}
+        >
+          <Clock size={10} /> Opening Soon
+        </span>
+      )}
+      <span
+        className="block font-serif text-2xl lg:text-3xl leading-none"
+        style={{ color: ACCENT }}
+      >
+        {m.year}
+      </span>
+      <h3
+        className="mt-2 text-lg lg:text-xl font-semibold"
+        style={{ color: "#0F3D2E" }}
+      >
+        {m.place}
+      </h3>
+      <p
+        className="max-w-sm mt-2 text-sm leading-6"
+        style={{ color: "#4B6B5C" }}
+      >
+        {m.note}
+      </p>
+    </div>
+  );
+}
+
+// A small GPS-style readout that tracks scroll progress — "Stop 3 of 7,
+// Bajada, Davao City" — with a thin progress bar underneath. This is
+// the thing that makes the section read as a live journey rather than
+// a static illustration. NOTE: for the sticky positioning to actually
+// hold while scrolling, this must be rendered as a child of the same
+// tall scroll container as the road itself — not a short wrapper div
+// of its own (that was the earlier bug: a `sticky` element can only
+// stay pinned for as long as its own containing block is on screen).
+function TripHUD({
+  index,
+  progress,
+}: {
+  index: number;
+  progress: MotionValue<number>;
+}) {
+  const barScale = useTransform(progress, [0, 1], [0, 1]);
+  const m = milestones[index];
+
+  return (
+    <div
+      className="flex w-fit items-center gap-3 rounded-full bg-white/90 backdrop-blur px-4 py-2 shadow-[0_8px_24px_rgba(15,61,46,0.12)] border"
+      style={{ borderColor: "rgba(61,154,99,0.25)" }}
+    >
+      <Navigation
+        size={14}
+        style={{ color: ACCENT }}
+        className="flex-shrink-0"
+      />
+      <span
+        className="text-[11px] font-semibold uppercase tracking-[0.1em]"
+        style={{ color: "#2F6B48" }}
+      >
+        Stop {index + 1}/{milestones.length}
+      </span>
+      <span
+        className="hidden sm:inline text-sm font-medium"
+        style={{ color: "#0F3D2E" }}
+      >
+        {m.place}
+      </span>
+      <span className="text-xs" style={{ color: "#4B6B5C" }}>
+        {m.year}
+      </span>
+      <div
+        className="ml-1 h-1 w-14 rounded-full overflow-hidden"
+        style={{ background: "rgba(61,154,99,0.15)" }}
+      >
+        <motion.div
+          className="h-full rounded-full origin-left"
+          style={{ background: ACCENT, scaleX: barScale }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function DesktopRoad() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start 0.8", "end 0.35"],
+  });
+  const currentIndex = useCurrentStopIndex(scrollYProgress);
+  const isActive = useIsSectionInView(wrapRef);
+  const { upcoming, latestOpenIndex } = useMilestoneStatus();
+  const { d, pts, height } = buildRoad(milestones.length);
+
+  return (
+    <div ref={wrapRef} className="hidden md:block relative">
+      {/* Fixed, not sticky — see useIsSectionInView for why. Stays on
+          screen for as long as any part of the road is in view. */}
+      {isActive && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-30">
+          <TripHUD index={currentIndex} progress={scrollYProgress} />
+        </div>
+      )}
+
+      <div className="relative pt-16">
+        <svg
+          width={ROAD_W}
+          height={height}
+          viewBox={`0 0 ${ROAD_W} ${height}`}
+          className="absolute left-1/2 -translate-x-1/2 top-0"
+          fill="none"
+        >
+          <path d={d} stroke="#CFE7D9" strokeWidth={10} strokeLinecap="round" />
+          <path
+            d={d}
+            stroke="#FFFFFF"
+            strokeWidth={1.5}
+            strokeDasharray="6 10"
+            strokeLinecap="round"
+            opacity={0.9}
+          />
+          <motion.path
+            ref={pathRef}
+            d={d}
+            stroke={ACCENT}
+            strokeWidth={4}
+            strokeLinecap="round"
+            style={{ pathLength: scrollYProgress }}
+          />
+          {pts.map((p, i) => {
+            const isLast = i === pts.length - 1;
+            const visited = i <= currentIndex;
+            return (
+              <g key={i}>
+                {isLast && (
+                  <motion.circle
+                    cx={p.x}
+                    cy={p.y}
+                    r={16}
+                    fill="none"
+                    stroke={ACCENT_LIGHT}
+                    strokeWidth={2}
+                    animate={{ r: [12, 20, 12], opacity: [0.7, 0, 0.7] }}
+                    transition={{
+                      duration: 2.2,
+                      repeat: Infinity,
+                      ease: "easeOut",
+                    }}
+                  />
+                )}
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r={9}
+                  fill={visited ? ACCENT : "#F3FBF6"}
+                  stroke={ACCENT}
+                  strokeWidth={2}
+                  style={{ transition: "fill 0.35s ease" }}
+                />
+                <text
+                  x={p.x}
+                  y={p.y + 4}
+                  textAnchor="middle"
+                  fontSize="10"
+                  fontWeight={700}
+                  fill={visited ? "#F0FDF4" : "#0F3D2E"}
+                  style={{ transition: "fill 0.35s ease" }}
+                >
+                  {i + 1}
+                </text>
+              </g>
+            );
+          })}
+          <TravelingPin pathRef={pathRef} progress={scrollYProgress} />
+        </svg>
+
+        {/* interval captions — time elapsed between stops, like small
+          distance markers along a highway */}
+        {gapLabels.map((label, i) => {
+          const midY = (pts[i].y + pts[i + 1].y) / 2;
+          return (
+            <div
+              key={label + i}
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border border-dashed px-2.5 py-1 text-[10px] font-medium"
+              style={{
+                top: midY,
+                borderColor: "rgba(61,154,99,0.35)",
+                color: "#4B6B5C",
+                background: "#F3FBF6",
+              }}
+            >
+              {label}
+            </div>
+          );
+        })}
+
+        <div className="relative z-10">
+          {milestones.map((m, i) => {
+            const isLeftMarker = i % 2 === 0;
+            const visited = i <= currentIndex;
+            const tag: "start" | "latest" | "upcoming" | undefined =
+              i === 0
+                ? "start"
+                : upcoming[i]
+                  ? "upcoming"
+                  : i === latestOpenIndex
+                    ? "latest"
+                    : undefined;
+            return (
+              <motion.div
+                key={m.place}
+                {...fade}
+                transition={{ duration: 0.55, delay: i * 0.05 }}
+                className="grid items-center"
+                style={{
+                  gridTemplateColumns: `1fr ${ROAD_W}px 1fr`,
+                  minHeight: ROW_H,
+                }}
+              >
+                <div className={isLeftMarker ? "" : "text-right pr-10"}>
+                  {!isLeftMarker && (
+                    <MilestoneCard
+                      m={m}
+                      align="right"
+                      visited={visited}
+                      tag={tag}
+                    />
+                  )}
+                </div>
+                <div />
+                <div className={isLeftMarker ? "pl-10" : ""}>
+                  {isLeftMarker && (
+                    <MilestoneCard
+                      m={m}
+                      align="left"
+                      visited={visited}
+                      tag={tag}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileRoad() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start 0.85", "end 0.4"],
+  });
+  const currentIndex = useCurrentStopIndex(scrollYProgress);
+  const isActive = useIsSectionInView(wrapRef);
+  const { upcoming, latestOpenIndex } = useMilestoneStatus();
+
+  const rowH = 180;
+  const topPad = 20;
+  const height = topPad * 2 + (milestones.length - 1) * rowH;
+  const d = `M20,${topPad} L20,${height - topPad}`;
+
+  return (
+    <div ref={wrapRef} className="md:hidden relative pl-10">
+      {isActive && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-30">
+          <TripHUD index={currentIndex} progress={scrollYProgress} />
+        </div>
+      )}
+
+      <div className="relative pt-14">
+        <svg
+          width={40}
+          height={height}
+          viewBox={`0 0 40 ${height}`}
+          className="absolute left-0 top-0"
+          fill="none"
+        >
+          <path d={d} stroke="#CFE7D9" strokeWidth={8} strokeLinecap="round" />
+          <path
+            d={d}
+            stroke="#FFFFFF"
+            strokeWidth={1.2}
+            strokeDasharray="5 8"
+            opacity={0.9}
+          />
+          <motion.path
+            ref={pathRef}
+            d={d}
+            stroke={ACCENT}
+            strokeWidth={3.5}
+            strokeLinecap="round"
+            style={{ pathLength: scrollYProgress }}
+          />
+          {milestones.map((_, i) => {
+            const y = topPad + i * rowH;
+            const visited = i <= currentIndex;
+            return (
+              <circle
+                key={i}
+                cx={20}
+                cy={y}
+                r={6}
+                fill={visited ? ACCENT : "#F3FBF6"}
+                stroke={ACCENT}
+                strokeWidth={1.5}
+                style={{ transition: "fill 0.35s ease" }}
+              />
+            );
+          })}
+          <TravelingPin pathRef={pathRef} progress={scrollYProgress} />
+        </svg>
+
+        <div className="space-y-8">
+          {milestones.map((m, i) => (
+            <motion.div
+              key={m.place}
+              {...fade}
+              transition={{ duration: 0.5, delay: i * 0.05 }}
+              className="relative"
+              style={{
+                minHeight: rowH - 20,
+                opacity: i <= currentIndex ? 1 : 0.55,
+                transition: "opacity 0.4s ease",
+              }}
+            >
+              <span
+                className="block font-serif text-2xl leading-none"
+                style={{ color: ACCENT }}
+              >
+                {m.year}
+              </span>
+              <h3
+                className="mt-2 text-base sm:text-lg font-semibold"
+                style={{ color: "#0F3D2E" }}
+              >
+                {m.place}
+              </h3>
+              <p
+                className="mt-2 text-sm leading-6 max-w-xl"
+                style={{ color: "#4B6B5C" }}
+              >
+                {m.note}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OurStorySection() {
+  return (
+    <section
+      className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32"
+      style={{
+        background:
+          "linear-gradient(135deg, #F3FBF6 0%, #E1F5E9 55%, #F7FBF8 100%)",
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          {...fade}
+          className="max-w-3xl mx-auto text-center mb-14 sm:mb-16 md:mb-20"
+        >
+          <span
+            className="inline-flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.22em] sm:tracking-[0.3em] font-medium mb-4 sm:mb-5 px-3 sm:px-4 py-2 rounded-full"
+            style={{ background: "rgba(61,154,99,0.12)", color: "#2F6B48" }}
+          >
+            <MapPin size={12} />
+            Our Story
+          </span>
+          <h2
+            className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] leading-[1.12]"
+            style={{ color: "#0F3D2E" }}
+          >
+            The Road So Far —
+            <span style={{ color: ACCENT }}> One Branch at a Time</span>
+          </h2>
+          <p
+            className="max-w-2xl mx-auto mt-4 sm:mt-6 text-sm sm:text-[15px] md:text-base leading-6 sm:leading-7"
+            style={{ color: "#4B6B5C" }}
+          >
+            What began in Davao City in 2019 has grown into a trusted dental
+            network serving communities across Mindanao. Scroll to follow the
+            route — each stop is a community we now call home.
+          </p>
+        </motion.div>
+
+        <DesktopRoad />
+        <MobileRoad />
+
+        <motion.div
+          {...fade}
+          className="relative max-w-3xl mx-auto mt-14 sm:mt-16 md:mt-20 lg:mt-24 pt-8 sm:pt-10 text-center"
+          style={{ borderTop: "1px solid rgba(61,154,99,0.25)" }}
+        >
+          <span
+            className="font-serif text-2xl sm:text-3xl"
+            style={{ color: ACCENT }}
+          >
+            Growing Through Trust
+          </span>
+          <p
+            className="mt-4 sm:mt-5 text-sm sm:text-[15px] md:text-base leading-6 sm:leading-7"
+            style={{ color: "#4B6B5C" }}
+          >
+            From one clinic in 2019 to a growing network across Mindanao, Dr.
+            Dental Care Center continues to grow through the trust of the
+            patients and communities we serve. With approximately 150,000
+            patients served, our journey remains focused on delivering quality
+            care, modern dentistry, professional expertise, and a warm,
+            patient-centered experience.
+          </p>
+          <p
+            className="mt-3 sm:mt-4 text-sm sm:text-[15px] leading-6 sm:leading-7"
+            style={{ color: "#4B6B5C" }}
+          >
+            As we expand to new communities, our commitment remains the same:
+            making comprehensive and modern dental care accessible to more
+            families across Mindanao.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 
 export default function About() {
   return (
@@ -243,10 +866,7 @@ export default function About() {
             <motion.div {...fade} className="order-2 md:order-1">
               <span
                 className="inline-flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-[0.25em] sm:tracking-[0.3em] mb-3 sm:mb-4 px-3 py-1 rounded-full"
-                style={{
-                  background: "rgba(61,154,99,0.12)",
-                  color: "#2F6B48",
-                }}
+                style={{ background: "rgba(61,154,99,0.12)", color: "#2F6B48" }}
               >
                 <Target size={12} /> Our Mission
               </span>
@@ -330,10 +950,7 @@ export default function About() {
             <motion.div {...fade}>
               <span
                 className="inline-flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-[0.25em] sm:tracking-[0.3em] mb-3 sm:mb-4 px-3 py-1 rounded-full"
-                style={{
-                  background: "rgba(61,154,99,0.12)",
-                  color: "#2F6B48",
-                }}
+                style={{ background: "rgba(61,154,99,0.12)", color: "#2F6B48" }}
               >
                 <Eye size={12} /> Our Vision
               </span>
@@ -365,265 +982,8 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Our Story / Milestones — Light Green ── */}
-      <section
-        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32"
-        style={{
-          background:
-            "linear-gradient(135deg, #F3FBF6 0%, #E1F5E9 55%, #F7FBF8 100%)",
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* SECTION HEADER */}
-          <motion.div
-            {...fade}
-            className="max-w-3xl mx-auto text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24"
-          >
-            <span
-              className="inline-flex items-center gap-2 text-[10px] sm:text-[11px] uppercase tracking-[0.22em] sm:tracking-[0.3em] font-medium mb-4 sm:mb-5 px-3 sm:px-4 py-2 rounded-full"
-              style={{
-                background: "rgba(61,154,99,0.12)",
-                color: "#2F6B48",
-              }}
-            >
-              <MapPin size={12} />
-              Our Story
-            </span>
-
-            <h2
-              className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] leading-[1.12]"
-              style={{ color: "#0F3D2E" }}
-            >
-              From One Clinic to a Growing
-              <span style={{ color: ACCENT }}> Mindanao Network</span>
-            </h2>
-
-            <p
-              className="max-w-2xl mx-auto mt-4 sm:mt-6 text-sm sm:text-[15px] md:text-base leading-6 sm:leading-7"
-              style={{ color: "#4B6B5C" }}
-            >
-              What began in Davao City in 2019 has grown into a trusted dental
-              network serving communities across Mindanao. Each new branch
-              reflects our commitment to making modern, comprehensive, and
-              compassionate dental care more accessible.
-            </p>
-          </motion.div>
-
-          {/* TIMELINE */}
-          <div className="relative">
-            {(() => {
-              const years = [
-                ...new Set(
-                  milestones.map((item) => item.year.match(/\d{4}/)?.[0]),
-                ),
-              ]
-
-              return (
-                <>
-                  {/* DESKTOP CENTER LINE — z-0, solid color, thicker so it always renders */}
-                  <div
-                    className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 z-0"
-                    style={{
-                      background:
-                        "linear-gradient(to bottom, transparent, #3D9A63 6%, #3D9A63 94%, transparent)",
-                    }}
-                  />
-
-                  {/* MOBILE LEFT LINE — same fix */}
-                  <div
-                    className="md:hidden absolute left-[11px] sm:left-[13px] top-2 bottom-2 w-[2px] z-0"
-                    style={{
-                      background:
-                        "linear-gradient(to bottom, transparent, #3D9A63 5%, #3D9A63 95%, transparent)",
-                    }}
-                  />
-
-                  <div className="relative z-10 space-y-8 sm:space-y-10 md:space-y-0">
-                    {milestones.map((m, i) => {
-                      const year = m.year.match(/\d{4}/)?.[0]
-                      const yearIndex = years.indexOf(year)
-                      const isLeft = yearIndex % 2 === 0
-
-                      return (
-                        <motion.div
-                          key={`${m.year}-${m.place}`}
-                          {...fade}
-                          transition={{
-                            duration: 0.55,
-                            delay: i * 0.07,
-                          }}
-                          className="relative z-10 md:grid md:grid-cols-[minmax(0,1fr)_40px_minmax(0,1fr)] md:items-center"
-                        >
-                          {/* LEFT CONTENT */}
-                          <div
-                            className={`hidden md:block ${
-                              isLeft ? "text-right pr-8 lg:pr-12" : ""
-                            }`}
-                          >
-                            {isLeft && (
-                              <div className="py-8 lg:py-10">
-                                <span
-                                  className="block font-serif text-2xl lg:text-4xl leading-none"
-                                  style={{ color: ACCENT }}
-                                >
-                                  {m.year}
-                                </span>
-
-                                <h3
-                                  className="mt-2 lg:mt-3 text-lg lg:text-xl font-semibold"
-                                  style={{ color: "#0F3D2E" }}
-                                >
-                                  {m.place}
-                                </h3>
-
-                                <p
-                                  className="max-w-lg ml-auto mt-2 lg:mt-3 text-sm leading-6 lg:leading-7"
-                                  style={{ color: "#4B6B5C" }}
-                                >
-                                  {m.note}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* CENTER MARKER */}
-                          <div className="hidden md:flex relative items-center justify-center h-full min-h-[140px] z-10">
-                            <div
-                              className="absolute w-8 h-8 rounded-full"
-                              style={{
-                                background: "#F3FBF6",
-                              }}
-                            />
-
-                            <div
-                              className="absolute w-7 h-7 rounded-full"
-                              style={{
-                                background: "rgba(61,154,99,0.12)",
-                              }}
-                            />
-
-                            <div
-                              className="relative w-3 h-3 rounded-full border-2"
-                              style={{
-                                background: "#F3FBF6",
-                                borderColor: ACCENT,
-                              }}
-                            />
-                          </div>
-
-                          {/* RIGHT CONTENT */}
-                          <div
-                            className={`hidden md:block ${
-                              !isLeft ? "text-left pl-8 lg:pl-12" : ""
-                            }`}
-                          >
-                            {!isLeft && (
-                              <div className="py-8 lg:py-10">
-                                <span
-                                  className="block font-serif text-2xl lg:text-4xl leading-none"
-                                  style={{ color: ACCENT }}
-                                >
-                                  {m.year}
-                                </span>
-
-                                <h3
-                                  className="mt-2 lg:mt-3 text-lg lg:text-xl font-semibold"
-                                  style={{ color: "#0F3D2E" }}
-                                >
-                                  {m.place}
-                                </h3>
-
-                                <p
-                                  className="max-w-lg mt-2 lg:mt-3 text-sm leading-6 lg:leading-7"
-                                  style={{ color: "#4B6B5C" }}
-                                >
-                                  {m.note}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* MOBILE CONTENT */}
-                          <div className="md:hidden relative pl-8 sm:pl-10">
-                            {/* MOBILE DOT */}
-                            <div
-                              className="absolute left-[5px] sm:left-[7px] top-2 w-[13px] h-[13px] rounded-full border-2 z-10"
-                              style={{
-                                background: "#F3FBF6",
-                                borderColor: ACCENT,
-                              }}
-                            />
-
-                            <div className="pb-2">
-                              <span
-                                className="block font-serif text-2xl sm:text-3xl leading-none"
-                                style={{ color: ACCENT }}
-                              >
-                                {m.year}
-                              </span>
-
-                              <h3
-                                className="mt-2 text-base sm:text-lg font-semibold"
-                                style={{ color: "#0F3D2E" }}
-                              >
-                                {m.place}
-                              </h3>
-
-                              <p
-                                className="mt-2 text-sm leading-6 sm:leading-7 max-w-xl"
-                                style={{ color: "#4B6B5C" }}
-                              >
-                                {m.note}
-                              </p>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )
-                    })}
-                  </div>
-                </>
-              )
-            })()}
-          </div>
-
-          {/* CLOSING STATEMENT */}
-          <motion.div
-            {...fade}
-            className="relative max-w-3xl mx-auto mt-14 sm:mt-16 md:mt-20 lg:mt-24 pt-8 sm:pt-10 text-center"
-            style={{
-              borderTop: "1px solid rgba(61,154,99,0.25)",
-            }}
-          >
-            <span
-              className="font-serif text-2xl sm:text-3xl"
-              style={{ color: ACCENT }}
-            >
-              Growing Through Trust
-            </span>
-
-            <p
-              className="mt-4 sm:mt-5 text-sm sm:text-[15px] md:text-base leading-6 sm:leading-7"
-              style={{ color: "#4B6B5C" }}
-            >
-              From one clinic in 2019 to a growing network across Mindanao, Dr.
-              Dental Care Center continues to grow through the trust of the
-              patients and communities we serve. With approximately 150,000
-              patients served, our journey remains focused on delivering quality
-              care, modern dentistry, professional expertise, and a warm,
-              patient-centered experience.
-            </p>
-
-            <p
-              className="mt-3 sm:mt-4 text-sm sm:text-[15px] leading-6 sm:leading-7"
-              style={{ color: "#4B6B5C" }}
-            >
-              As we expand to new communities, our commitment remains the same:
-              making comprehensive and modern dental care accessible to more
-              families across Mindanao.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      {/* ── Our Story / Milestones — Road Journey ── */}
+      <OurStorySection />
 
       {/* ── Values — Green ── */}
       <section
@@ -671,12 +1031,12 @@ export default function About() {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow =
-                      "0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(126,217,160,0.4)"
-                    e.currentTarget.style.borderColor = "rgba(126,217,160,0.4)"
+                      "0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(126,217,160,0.4)";
+                    e.currentTarget.style.borderColor = "rgba(126,217,160,0.4)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "none"
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
                   }}
                 >
                   <div
@@ -718,10 +1078,7 @@ export default function About() {
           >
             <span
               className="inline-flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-[0.25em] sm:tracking-[0.3em] mb-3 sm:mb-4 px-3 py-1 rounded-full"
-              style={{
-                background: "rgba(61,154,99,0.12)",
-                color: "#2F6B48",
-              }}
+              style={{ background: "rgba(61,154,99,0.12)", color: "#2F6B48" }}
             >
               <Target size={12} /> Our Goals
             </span>
@@ -864,13 +1221,13 @@ export default function About() {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =
-                  "0 6px 32px rgba(61,154,99,0.55)"
-                e.currentTarget.style.transform = "translateY(-1px)"
+                  "0 6px 32px rgba(61,154,99,0.55)";
+                e.currentTarget.style.transform = "translateY(-1px)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow =
-                  "0 4px 24px rgba(61,154,99,0.35)"
-                e.currentTarget.style.transform = "translateY(0)"
+                  "0 4px 24px rgba(61,154,99,0.35)";
+                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
               Book Free Consultation
@@ -880,5 +1237,5 @@ export default function About() {
         </motion.div>
       </section>
     </div>
-  )
+  );
 }
