@@ -1,14 +1,14 @@
-"use client";
-import { useRef, useEffect, useState } from "react";
+"use client"
+import { useRef, useEffect, useState } from "react"
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValueEvent,
   MotionValue,
-} from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+} from "framer-motion"
+import Image from "next/image"
+import Link from "next/link"
 import {
   ArrowRight,
   Target,
@@ -29,16 +29,16 @@ import {
   Flag,
   Navigation,
   Clock,
-} from "lucide-react";
-import missionImage from "@/assets/exterior-5.jpg";
-import vissionImage from "@/assets/image.jpg";
+} from "lucide-react"
+import missionImage from "@/assets/exterior-5.jpg"
+import vissionImage from "@/assets/image.jpg"
 
 const fade = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
   transition: { duration: 0.6 },
-};
+}
 
 const values = [
   {
@@ -61,7 +61,7 @@ const values = [
     title: "Community",
     desc: "Proud to serve Davao City, Tagum, Bajada, Panabo, General Santos, and Digos — getting to know the families who trust us with their care.",
   },
-];
+]
 
 const goals = [
   {
@@ -104,7 +104,7 @@ const goals = [
     title: "Build Lasting Trust",
     desc: "To develop long-term relationships with our patients through ethical practice, clear communication, professionalism, and genuine care.",
   },
-];
+]
 
 // Branch expansion milestones, from the company's development history
 const milestones = [
@@ -143,7 +143,7 @@ const milestones = [
     place: "Toril, Davao City",
     note: "A new Toril branch will further strengthen our presence and accessibility within Davao City and surrounding communities.",
   },
-];
+]
 
 // Time elapsed between consecutive branches — small road-sign captions
 // along the route, one shorter than milestones.length.
@@ -154,74 +154,74 @@ const gapLabels = [
   "4 months later",
   "8 months later",
   "1 month later",
-];
+]
 
 // Shared accent — a vibrant green used for highlights, icons, and dividers
-const ACCENT = "#3D9A63";
-const ACCENT_LIGHT = "#7ED9A0";
+const ACCENT = "#3D9A63"
+const ACCENT_LIGHT = "#7ED9A0"
 
 // Milestones are dated by month, so "is this open yet" is decided at
 // month granularity against the real current date — not hardcoded.
 // A branch is "upcoming" only once its month is strictly after the
 // current month; the same month as today counts as already open.
 function parseMonthYear(label: string): Date {
-  const [monthName, yearStr] = label.split(" ");
-  const month = new Date(`${monthName} 1, 2000`).getMonth();
-  return new Date(Number(yearStr), month, 1);
+  const [monthName, yearStr] = label.split(" ")
+  const month = new Date(`${monthName} 1, 2000`).getMonth()
+  return new Date(Number(yearStr), month, 1)
 }
 
 function useMilestoneStatus() {
   const [today] = useState(() => {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), 1);
-  });
+    const now = new Date()
+    return new Date(now.getFullYear(), now.getMonth(), 1)
+  })
 
-  const upcoming = milestones.map((m) => parseMonthYear(m.year) > today);
+  const upcoming = milestones.map((m) => parseMonthYear(m.year) > today)
   // "Newest branch" = the most recent one that has actually opened,
   // not just the last item in the array.
-  let latestOpenIndex = -1;
+  let latestOpenIndex = -1
   upcoming.forEach((isUpcoming, i) => {
-    if (!isUpcoming) latestOpenIndex = i;
-  });
+    if (!isUpcoming) latestOpenIndex = i
+  })
 
-  return { upcoming, latestOpenIndex };
+  return { upcoming, latestOpenIndex }
 }
 
 // ── Road-journey timeline ────────────────────────────────────────────
 // Row height must stay fixed so the hand-authored road path lines up
 // exactly with each marker's row.
-const ROW_H = 240;
-const ROAD_W = 220;
-const X_LEFT = 60;
-const X_RIGHT = 160;
-const TOP_PAD = 50;
+const ROW_H = 240
+const ROAD_W = 220
+const X_LEFT = 60
+const X_RIGHT = 160
+const TOP_PAD = 50
 
 function buildRoad(n: number) {
   const pts = Array.from({ length: n }, (_, i) => ({
     x: i % 2 === 0 ? X_LEFT : X_RIGHT,
     y: TOP_PAD + i * ROW_H,
-  }));
-  let d = `M${pts[0].x},${pts[0].y}`;
+  }))
+  let d = `M${pts[0].x},${pts[0].y}`
   for (let i = 1; i < pts.length; i++) {
-    const p0 = pts[i - 1];
-    const p1 = pts[i];
-    const midY = (p0.y + p1.y) / 2;
-    d += ` C${p0.x},${midY} ${p1.x},${midY} ${p1.x},${p1.y}`;
+    const p0 = pts[i - 1]
+    const p1 = pts[i]
+    const midY = (p0.y + p1.y) / 2
+    d += ` C${p0.x},${midY} ${p1.x},${midY} ${p1.x},${p1.y}`
   }
-  return { d, pts, height: TOP_PAD * 2 + (n - 1) * ROW_H };
+  return { d, pts, height: TOP_PAD * 2 + (n - 1) * ROW_H }
 }
 
 // Tracks which stop the traveling pin is currently nearest to. Shared
 // by the HUD readout and the road markers so both stay in lockstep —
 // a marker only lights up once the HUD agrees you've reached it.
 function useCurrentStopIndex(progress: MotionValue<number>) {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(0)
   useMotionValueEvent(progress, "change", (v) => {
-    const clamped = Math.min(1, Math.max(0, v));
-    const next = Math.round(clamped * (milestones.length - 1));
-    setIndex((prev) => (next !== prev ? next : prev));
-  });
-  return index;
+    const clamped = Math.min(1, Math.max(0, v))
+    const next = Math.round(clamped * (milestones.length - 1))
+    setIndex((prev) => (next !== prev ? next : prev))
+  })
+  return index
 }
 
 // Whether `ref`'s element currently has any part on screen. Drives the
@@ -236,13 +236,13 @@ function useIsSectionInView(ref: React.RefObject<HTMLElement | null>) {
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
-  });
-  const [active, setActive] = useState(false);
+  })
+  const [active, setActive] = useState(false)
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const next = v > 0 && v < 1;
-    setActive((prev) => (prev !== next ? next : prev));
-  });
-  return active;
+    const next = v > 0 && v < 1
+    setActive((prev) => (prev !== next ? next : prev))
+  })
+  return active
 }
 
 // The pin that travels along the curve as the user scrolls — reads
@@ -252,25 +252,25 @@ function TravelingPin({
   pathRef,
   progress,
 }: {
-  pathRef: React.RefObject<SVGPathElement | null>;
-  progress: MotionValue<number>;
+  pathRef: React.RefObject<SVGPathElement | null>
+  progress: MotionValue<number>
 }) {
-  const totalLen = useRef(0);
+  const totalLen = useRef(0)
 
   useEffect(() => {
-    if (pathRef.current) totalLen.current = pathRef.current.getTotalLength();
-  }, [pathRef]);
+    if (pathRef.current) totalLen.current = pathRef.current.getTotalLength()
+  }, [pathRef])
 
   const cx = useTransform(progress, (v) => {
-    const p = pathRef.current;
-    if (!p || !totalLen.current) return X_LEFT;
-    return p.getPointAtLength(v * totalLen.current).x;
-  });
+    const p = pathRef.current
+    if (!p || !totalLen.current) return X_LEFT
+    return p.getPointAtLength(v * totalLen.current).x
+  })
   const cy = useTransform(progress, (v) => {
-    const p = pathRef.current;
-    if (!p || !totalLen.current) return TOP_PAD;
-    return p.getPointAtLength(v * totalLen.current).y;
-  });
+    const p = pathRef.current
+    if (!p || !totalLen.current) return TOP_PAD
+    return p.getPointAtLength(v * totalLen.current).y
+  })
 
   return (
     <>
@@ -284,7 +284,7 @@ function TravelingPin({
         strokeWidth={2}
       />
     </>
-  );
+  )
 }
 
 function MilestoneCard({
@@ -293,10 +293,10 @@ function MilestoneCard({
   tag,
   visited,
 }: {
-  m: (typeof milestones)[number];
-  align: "left" | "right";
-  tag?: "start" | "latest" | "upcoming";
-  visited?: boolean;
+  m: (typeof milestones)[number]
+  align: "left" | "right"
+  tag?: "start" | "latest" | "upcoming"
+  visited?: boolean
 }) {
   return (
     <div
@@ -353,7 +353,7 @@ function MilestoneCard({
         {m.note}
       </p>
     </div>
-  );
+  )
 }
 
 // A small GPS-style readout that tracks scroll progress — "Stop 3 of 7,
@@ -368,39 +368,39 @@ function TripHUD({
   index,
   progress,
 }: {
-  index: number;
-  progress: MotionValue<number>;
+  index: number
+  progress: MotionValue<number>
 }) {
-  const barScale = useTransform(progress, [0, 1], [0, 1]);
-  const m = milestones[index];
+  const barScale = useTransform(progress, [0, 1], [0, 1])
+  const m = milestones[index]
 
   return (
     <div
-      className="flex w-fit items-center gap-3 rounded-full bg-white/90 backdrop-blur px-4 py-2 shadow-[0_8px_24px_rgba(15,61,46,0.12)] border"
+      className="flex w-fit max-w-[92vw] items-center gap-2 sm:gap-3 rounded-full bg-white/90 backdrop-blur px-3 py-1.5 sm:px-4 sm:py-2 shadow-[0_8px_24px_rgba(15,61,46,0.12)] border"
       style={{ borderColor: "rgba(61,154,99,0.25)" }}
     >
       <Navigation
-        size={14}
+        size={13}
         style={{ color: ACCENT }}
         className="flex-shrink-0"
       />
       <span
-        className="text-[11px] font-semibold uppercase tracking-[0.1em]"
+        className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] whitespace-nowrap"
         style={{ color: "#2F6B48" }}
       >
         Stop {index + 1}/{milestones.length}
       </span>
       <span
-        className="hidden sm:inline text-sm font-medium"
+        className="hidden sm:inline text-sm font-medium truncate max-w-[140px]"
         style={{ color: "#0F3D2E" }}
       >
         {m.place}
       </span>
-      <span className="text-xs" style={{ color: "#4B6B5C" }}>
+      <span className="text-xs whitespace-nowrap" style={{ color: "#4B6B5C" }}>
         {m.year}
       </span>
       <div
-        className="ml-1 h-1 w-14 rounded-full overflow-hidden"
+        className="ml-1 h-1 w-10 sm:w-14 rounded-full overflow-hidden flex-shrink-0"
         style={{ background: "rgba(61,154,99,0.15)" }}
       >
         <motion.div
@@ -409,23 +409,23 @@ function TripHUD({
         />
       </div>
     </div>
-  );
+  )
 }
 
 function DesktopRoad() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const pathRef = useRef<SVGPathElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const pathRef = useRef<SVGPathElement>(null)
   const { scrollYProgress } = useScroll({
     target: wrapRef,
     offset: ["start 0.8", "end 0.35"],
-  });
-  const currentIndex = useCurrentStopIndex(scrollYProgress);
-  const isActive = useIsSectionInView(wrapRef);
-  const { upcoming, latestOpenIndex } = useMilestoneStatus();
-  const { d, pts, height } = buildRoad(milestones.length);
+  })
+  const currentIndex = useCurrentStopIndex(scrollYProgress)
+  const isActive = useIsSectionInView(wrapRef)
+  const { upcoming, latestOpenIndex } = useMilestoneStatus()
+  const { d, pts, height } = buildRoad(milestones.length)
 
   return (
-    <div ref={wrapRef} className="hidden md:block relative">
+    <div ref={wrapRef} className="hidden lg:block relative">
       {/* Fixed, not sticky — see useIsSectionInView for why. Stays on
           screen for as long as any part of the road is in view. */}
       {isActive && (
@@ -460,8 +460,8 @@ function DesktopRoad() {
             style={{ pathLength: scrollYProgress }}
           />
           {pts.map((p, i) => {
-            const isLast = i === pts.length - 1;
-            const visited = i <= currentIndex;
+            const isLast = i === pts.length - 1
+            const visited = i <= currentIndex
             return (
               <g key={i}>
                 {isLast && (
@@ -501,7 +501,7 @@ function DesktopRoad() {
                   {i + 1}
                 </text>
               </g>
-            );
+            )
           })}
           <TravelingPin pathRef={pathRef} progress={scrollYProgress} />
         </svg>
@@ -509,7 +509,7 @@ function DesktopRoad() {
         {/* interval captions — time elapsed between stops, like small
           distance markers along a highway */}
         {gapLabels.map((label, i) => {
-          const midY = (pts[i].y + pts[i + 1].y) / 2;
+          const midY = (pts[i].y + pts[i + 1].y) / 2
           return (
             <div
               key={label + i}
@@ -523,13 +523,13 @@ function DesktopRoad() {
             >
               {label}
             </div>
-          );
+          )
         })}
 
         <div className="relative z-10">
           {milestones.map((m, i) => {
-            const isLeftMarker = i % 2 === 0;
-            const visited = i <= currentIndex;
+            const isLeftMarker = i % 2 === 0
+            const visited = i <= currentIndex
             const tag: "start" | "latest" | "upcoming" | undefined =
               i === 0
                 ? "start"
@@ -537,7 +537,7 @@ function DesktopRoad() {
                   ? "upcoming"
                   : i === latestOpenIndex
                     ? "latest"
-                    : undefined;
+                    : undefined
             return (
               <motion.div
                 key={m.place}
@@ -549,7 +549,7 @@ function DesktopRoad() {
                   minHeight: ROW_H,
                 }}
               >
-                <div className={isLeftMarker ? "" : "text-right pr-10"}>
+                <div className={isLeftMarker ? "" : "text-right pr-6"}>
                   {!isLeftMarker && (
                     <MilestoneCard
                       m={m}
@@ -560,7 +560,7 @@ function DesktopRoad() {
                   )}
                 </div>
                 <div />
-                <div className={isLeftMarker ? "pl-10" : ""}>
+                <div className={isLeftMarker ? "pl-6" : ""}>
                   {isLeftMarker && (
                     <MilestoneCard
                       m={m}
@@ -571,34 +571,75 @@ function DesktopRoad() {
                   )}
                 </div>
               </motion.div>
-            );
+            )
           })}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function MobileRoad() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const pathRef = useRef<SVGPathElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const pathRef = useRef<SVGPathElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+
   const { scrollYProgress } = useScroll({
     target: wrapRef,
     offset: ["start 0.85", "end 0.4"],
-  });
-  const currentIndex = useCurrentStopIndex(scrollYProgress);
-  const isActive = useIsSectionInView(wrapRef);
-  const { upcoming, latestOpenIndex } = useMilestoneStatus();
+  })
+  const currentIndex = useCurrentStopIndex(scrollYProgress)
+  const isActive = useIsSectionInView(wrapRef)
+  const { upcoming, latestOpenIndex } = useMilestoneStatus()
 
-  const rowH = 180;
-  const topPad = 20;
-  const height = topPad * 2 + (milestones.length - 1) * rowH;
-  const d = `M20,${topPad} L20,${height - topPad}`;
+  const [dotY, setDotY] = useState<number[]>([])
+  const [totalHeight, setTotalHeight] = useState(0)
 
+  useEffect(() => {
+    const measure = () => {
+      if (!listRef.current) return
+      const containerTop = listRef.current.getBoundingClientRect().top
+      const ys = itemRefs.current.map((el) => {
+        if (!el) return 0
+        const r = el.getBoundingClientRect()
+        return r.top - containerTop + r.height / 2
+      })
+      setDotY(ys)
+      setTotalHeight(listRef.current.offsetHeight)
+    }
+
+    measure()
+    const ro = new ResizeObserver(measure)
+    if (listRef.current) ro.observe(listRef.current)
+    itemRefs.current.forEach((el) => el && ro.observe(el))
+    window.addEventListener("resize", measure)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener("resize", measure)
+    }
+  }, [])
+
+  const topPad = 8
+  const bottomPad = 8
+  const height = Math.max(totalHeight, 1)
+  const roadX = 16
+  const first = dotY[0] ?? topPad
+  const last = dotY[dotY.length - 1] ?? height - bottomPad
+  const d = dotY.length
+    ? `M${roadX},${first} L${roadX},${last}`
+    : `M${roadX},${topPad} L${roadX},${height - bottomPad}`
+
+  // NOTE: no horizontal padding on wrapRef anymore — the road (SVG)
+  // is positioned at the container's true left-0, and it's the card
+  // list (`listRef`) that gets pushed right with its own padding.
+  // Padding on wrapRef didn't reserve any space for the road, since
+  // the SVG's absolute-position ancestor is the child `pt-14` div,
+  // not wrapRef — so left-0 landed at the same x as the cards.
   return (
-    <div ref={wrapRef} className="md:hidden relative pl-10">
+    <div ref={wrapRef} className="lg:hidden relative">
       {isActive && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-30">
+        <div className="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-30 px-2">
           <TripHUD index={currentIndex} progress={scrollYProgress} />
         </div>
       )}
@@ -610,6 +651,7 @@ function MobileRoad() {
           viewBox={`0 0 40 ${height}`}
           className="absolute left-0 top-0"
           fill="none"
+          preserveAspectRatio="none"
         >
           <path d={d} stroke="#CFE7D9" strokeWidth={8} strokeLinecap="round" />
           <path
@@ -628,61 +670,121 @@ function MobileRoad() {
             style={{ pathLength: scrollYProgress }}
           />
           {milestones.map((_, i) => {
-            const y = topPad + i * rowH;
-            const visited = i <= currentIndex;
+            const y = dotY[i] ?? topPad
+            const visited = i <= currentIndex
             return (
               <circle
                 key={i}
-                cx={20}
+                cx={roadX}
                 cy={y}
                 r={6}
                 fill={visited ? ACCENT : "#F3FBF6"}
                 stroke={ACCENT}
                 strokeWidth={1.5}
-                style={{ transition: "fill 0.35s ease" }}
+                style={{ transition: "fill 0.35s ease, cy 0.2s ease" }}
               />
-            );
+            )
           })}
-          <TravelingPin pathRef={pathRef} progress={scrollYProgress} />
+          {dotY.length > 0 && (
+            <TravelingPin pathRef={pathRef} progress={scrollYProgress} />
+          )}
         </svg>
 
-        <div className="space-y-8">
-          {milestones.map((m, i) => (
-            <motion.div
-              key={m.place}
-              {...fade}
-              transition={{ duration: 0.5, delay: i * 0.05 }}
-              className="relative"
-              style={{
-                minHeight: rowH - 20,
-                opacity: i <= currentIndex ? 1 : 0.55,
-                transition: "opacity 0.4s ease",
-              }}
-            >
-              <span
-                className="block font-serif text-2xl leading-none"
-                style={{ color: ACCENT }}
+        {/* pl-10/sm:pl-12 reserves the gutter the road actually lives in */}
+        <div ref={listRef} className="space-y-8 sm:space-y-10 pl-10 sm:pl-12">
+          {milestones.map((m, i) => {
+            const visited = i <= currentIndex
+            const tag: "start" | "latest" | "upcoming" | undefined =
+              i === 0
+                ? "start"
+                : upcoming[i]
+                  ? "upcoming"
+                  : i === latestOpenIndex
+                    ? "latest"
+                    : undefined
+            return (
+              <motion.div
+                key={m.place}
+                ref={(el) => {
+                  itemRefs.current[i] = el
+                }}
+                {...fade}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
+                className="relative"
+                style={{
+                  opacity: visited ? 1 : 0.55,
+                  transition: "opacity 0.4s ease",
+                }}
               >
-                {m.year}
-              </span>
-              <h3
-                className="mt-2 text-base sm:text-lg font-semibold"
-                style={{ color: "#0F3D2E" }}
-              >
-                {m.place}
-              </h3>
-              <p
-                className="mt-2 text-sm leading-6 max-w-xl"
-                style={{ color: "#4B6B5C" }}
-              >
-                {m.note}
-              </p>
-            </motion.div>
-          ))}
+                {tag === "start" && (
+                  <span
+                    className="mb-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]"
+                    style={{
+                      background: "rgba(61,154,99,0.12)",
+                      color: "#2F6B48",
+                    }}
+                  >
+                    <Flag size={10} /> Where it started
+                  </span>
+                )}
+                {tag === "latest" && (
+                  <span
+                    className="mb-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]"
+                    style={{ background: ACCENT, color: "#F0FDF4" }}
+                  >
+                    <Sparkles size={10} /> Newest branch
+                  </span>
+                )}
+                {tag === "upcoming" && (
+                  <span
+                    className="mb-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] border"
+                    style={{
+                      background: "#FFFFFF",
+                      color: "#2F6B48",
+                      borderColor: ACCENT,
+                    }}
+                  >
+                    <Clock size={10} /> Opening Soon
+                  </span>
+                )}
+                <span
+                  className="block font-serif text-xl sm:text-2xl leading-none"
+                  style={{ color: ACCENT }}
+                >
+                  {m.year}
+                </span>
+                <h3
+                  className="mt-2 text-base sm:text-lg font-semibold"
+                  style={{ color: "#0F3D2E" }}
+                >
+                  {m.place}
+                </h3>
+                <p
+                  className="mt-2 text-sm leading-6 max-w-xl pr-1"
+                  style={{ color: "#4B6B5C" }}
+                >
+                  {m.note}
+                </p>
+
+                {i < gapLabels.length && (
+                  <div
+                    className="mt-4 inline-flex items-center rounded-full border border-dashed px-2.5 py-1 text-[10px] font-medium"
+                    style={{
+                      borderColor: "rgba(61,154,99,0.35)",
+                      color: "#4B6B5C",
+                      background: "#F3FBF6",
+                    }}
+                  >
+                    {gapLabels[i]}
+                  </div>
+                )}
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function OurStorySection() {
@@ -759,7 +861,7 @@ function OurStorySection() {
         </motion.div>
       </div>
     </section>
-  );
+  )
 }
 
 export default function About() {
@@ -1031,12 +1133,12 @@ export default function About() {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow =
-                      "0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(126,217,160,0.4)";
-                    e.currentTarget.style.borderColor = "rgba(126,217,160,0.4)";
+                      "0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(126,217,160,0.4)"
+                    e.currentTarget.style.borderColor = "rgba(126,217,160,0.4)"
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                    e.currentTarget.style.boxShadow = "none"
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"
                   }}
                 >
                   <div
@@ -1221,13 +1323,13 @@ export default function About() {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =
-                  "0 6px 32px rgba(61,154,99,0.55)";
-                e.currentTarget.style.transform = "translateY(-1px)";
+                  "0 6px 32px rgba(61,154,99,0.55)"
+                e.currentTarget.style.transform = "translateY(-1px)"
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow =
-                  "0 4px 24px rgba(61,154,99,0.35)";
-                e.currentTarget.style.transform = "translateY(0)";
+                  "0 4px 24px rgba(61,154,99,0.35)"
+                e.currentTarget.style.transform = "translateY(0)"
               }}
             >
               Book Free Consultation
@@ -1237,5 +1339,5 @@ export default function About() {
         </motion.div>
       </section>
     </div>
-  );
+  )
 }

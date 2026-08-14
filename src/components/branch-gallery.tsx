@@ -66,18 +66,23 @@ export function BranchGallery({ branchId }: { branchId: string }) {
 
   // empty state
   if (images.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-3 py-16 text-[#7A9B7E]">
-        <ImageOff size={28} />
-        <p className="text-sm font-mono">
-          No photos available for this branch yet.
-        </p>
-      </div>
-    )
+    return null
   }
 
   return (
-    <>
+    <div className="mt-10 sm:mt-14">
+      <div className="flex items-center gap-2 mb-5 sm:mb-6">
+        <span
+          className="w-1.5 h-1.5 rounded-full"
+          style={{
+            backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
+          }}
+        />
+        <p className="text-xs uppercase tracking-[0.2em] text-[#A7E86B] font-mono font-semibold">
+          Gallery
+        </p>
+      </div>
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
         {images.map((src, i) => (
           <button
@@ -157,6 +162,6 @@ export function BranchGallery({ branchId }: { branchId: string }) {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

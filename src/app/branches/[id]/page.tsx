@@ -75,14 +75,6 @@ export default async function BranchDetailPage({
             className="object-cover opacity-70 mix-blend-luminosity"
           />
         </div>
-        <div
-          className="absolute inset-0 opacity-10 pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(#0B3D26 1px, transparent 1px), linear-gradient(90deg, #0B3D26 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
           <Link
@@ -295,20 +287,7 @@ export default async function BranchDetailPage({
           </div>
 
           {/* GALLERY */}
-          <div className="mt-10 sm:mt-14">
-            <div className="flex items-center gap-2 mb-5 sm:mb-6">
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{
-                  backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
-                }}
-              />
-              <p className="text-xs uppercase tracking-[0.2em] text-[#A7E86B] font-mono font-semibold">
-                Gallery
-              </p>
-            </div>
-            <BranchGallery branchId={branch.id} />
-          </div>
+          <BranchGallery branchId={branch.id} />
         </div>
       </section>
     </div>

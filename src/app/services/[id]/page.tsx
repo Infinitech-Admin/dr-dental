@@ -307,14 +307,6 @@ export default function ServiceDetail() {
                 "radial-gradient(circle, rgba(79,201,123,0.28), transparent 70%)",
             }}
           />
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage:
-                "linear-gradient(#A7E86B 1px, transparent 1px), linear-gradient(90deg, #A7E86B 1px, transparent 1px)",
-              backgroundSize: "44px 44px",
-            }}
-          />
         </div>
 
         <div className="relative max-w-5xl mx-auto px-6">

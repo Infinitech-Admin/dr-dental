@@ -40,14 +40,6 @@ export default function BranchesPage() {
               "radial-gradient(circle, rgba(167,232,107,0.35), transparent 70%)",
           }}
         />
-        <div
-          className="absolute inset-0 opacity-[0.035] pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(#0B3D26 1px, transparent 1px), linear-gradient(90deg, #0B3D26 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <span className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#1F9552]/25 shadow-sm">

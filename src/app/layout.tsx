@@ -1,9 +1,10 @@
-import type React from "react";
-import type { Metadata } from "next";
-import ClientLayout from "./ClientLayout";
-import ServiceWorkerProvider from "@/components/ServiceWorkerProvider";
+import type React from "react"
+import type { Metadata } from "next"
+import ClientLayout from "./ClientLayout"
+import ServiceWorkerProvider from "@/components/ServiceWorkerProvider"
+import { Analytics } from "@vercel/analytics/next"
 import "leaflet/dist/leaflet.css"
-import "./globals.css";
+import "./globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://drdentalcarecenter.com"),
@@ -59,8 +60,7 @@ export const metadata: Metadata = {
     alternateLocale: ["en_US"],
     url: "https://drdentalcarecenter.com",
     siteName: "Dr. Dental Care Center",
-    title:
-      "Dr. Dental Care Center - Premium Dental Care in Davao",
+    title: "Dr. Dental Care Center - Premium Dental Care in Davao",
     description:
       "World-class dental services in Davao, Philippines. Trusted by thousands for general dentistry treatments.",
     images: [
@@ -172,7 +172,7 @@ export const metadata: Metadata = {
     "msapplication-TileColor": "#1a6fa8",
     "msapplication-config": "/browserconfig.xml",
   },
-};
+}
 
 export const viewport = {
   themeColor: "#0a2540",
@@ -181,12 +181,12 @@ export const viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: "cover",
-};
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   const businessSchema = {
     "@context": "https://schema.org",
@@ -200,10 +200,7 @@ export default function RootLayout({
     ],
     description:
       "Premium dental clinic in Davao, Philippines. Offering general dentistry, cosmetic dentistry, orthodontics, and dental implants",
-    medicalSpecialty: [
-      "Dentistry",
-      "Orthodontics",
-    ],
+    medicalSpecialty: ["Dentistry", "Orthodontics"],
     priceRange: "₱₱-₱₱₱",
     currenciesAccepted: "PHP",
     paymentAccepted: "Cash, Credit Card, Debit Card, GCash, Maya, PhilHealth",
@@ -282,7 +279,7 @@ export default function RootLayout({
         name: "Dental Appointment",
       },
     },
-  };
+  }
 
   const organizationSchema = {
     "@context": "https://schema.org",
@@ -313,7 +310,7 @@ export default function RootLayout({
       "@type": "QuantitativeValue",
       value: "10-25",
     },
-  };
+  }
 
   const websiteSchema = {
     "@context": "https://schema.org",
@@ -330,12 +327,13 @@ export default function RootLayout({
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://drdentalcarecenter.com/search?q={search_term_string}",
+        urlTemplate:
+          "https://drdentalcarecenter.com/search?q={search_term_string}",
       },
       "query-input": "required name=search_term_string",
     },
     inLanguage: "en-PH",
-  };
+  }
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -360,7 +358,7 @@ export default function RootLayout({
         item: "https://drdentalcarecenter.com/book",
       },
     ],
-  };
+  }
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -415,15 +413,14 @@ export default function RootLayout({
         },
       },
     ],
-  };
+  }
 
   const medicalServiceSchema = {
     "@context": "https://schema.org",
     "@type": "MedicalBusiness",
     "@id": "https://drdentalcarecenter.com/#services",
     name: "Dr. Dental Care Center Services",
-    description:
-      "Comprehensive dental services in Davao, Philippines",
+    description: "Comprehensive dental services in Davao, Philippines",
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Dental Services",
@@ -461,7 +458,7 @@ export default function RootLayout({
       ],
     },
     inLanguage: "en-PH",
-  };
+  }
 
   return (
     <html lang="en-PH">
@@ -541,10 +538,7 @@ export default function RootLayout({
           name="twitter:image"
           content="https://drdentalcarecenter.com/og-image.jpg"
         />
-        <meta
-          name="twitter:image:alt"
-          content="Dr. Dental Care Center"
-        />
+        <meta name="twitter:image:alt" content="Dr. Dental Care Center" />
 
         {/* Performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -559,10 +553,7 @@ export default function RootLayout({
 
         {/* Geographic */}
         <meta name="geo.region" content="PH-BAN" />
-        <meta
-          name="geo.placename"
-          content="Davao City, Davao, Philippines"
-        />
+        <meta name="geo.placename" content="Davao City, Davao, Philippines" />
         <meta name="geo.position" content="13.7565;121.0583" />
         <meta name="ICBM" content="13.7565, 121.0583" />
 
@@ -583,8 +574,16 @@ export default function RootLayout({
           type="application/xml"
           href="https://drdentalcarecenter.com/sitemap.xml"
         />
-        <link rel="alternate" hrefLang="en-ph" href="https://drdentalcarecenter.com" />
-        <link rel="alternate" hrefLang="en" href="https://drdentalcarecenter.com/en" />
+        <link
+          rel="alternate"
+          hrefLang="en-ph"
+          href="https://drdentalcarecenter.com"
+        />
+        <link
+          rel="alternate"
+          hrefLang="en"
+          href="https://drdentalcarecenter.com/en"
+        />
         <link
           rel="alternate"
           hrefLang="x-default"
@@ -595,7 +594,8 @@ export default function RootLayout({
       <body className="text-white font-sans antialiased">
         <ServiceWorkerProvider />
         <ClientLayout>{children}</ClientLayout>
+        <Analytics />
       </body>
     </html>
-  );
+  )
 }
