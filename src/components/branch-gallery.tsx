@@ -1,144 +1,215 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
-import { X, ChevronLeft, ChevronRight, ImageOff, Expand } from "lucide-react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Expand,
+  X,
+} from "lucide-react"
 
-export function BranchGallery({ branchId }: { branchId: string }) {
+interface BranchGalleryProps {
+  branchId: string
+}
+
+export function BranchGallery({ branchId }: BranchGalleryProps) {
   const [images, setImages] = useState<string[] | null>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    fetch(`/api/branch-images/${branchId}`)
-      .then((res) => res.json())
+
+    setImages(null)
+    setActiveIndex(null)
+
+    fetch(`/api/branches/${branchId}/images/clinic`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to load clinic images")
+        }
+
+        return response.json()
+      })
       .then((data) => {
-        if (!cancelled) setImages(data.images ?? [])
+        if (!cancelled) {
+          setImages(Array.isArray(data.images) ? data.images : [])
+        }
       })
       .catch(() => {
-        if (!cancelled) setImages([])
+        if (!cancelled) {
+          setImages([])
+        }
       })
+
     return () => {
       cancelled = true
     }
   }, [branchId])
 
-  const close = useCallback(() => setActiveIndex(null), [])
+  const close = useCallback(() => {
+    setActiveIndex(null)
+  }, [])
+
   const showPrev = useCallback(() => {
-    setActiveIndex((i) =>
-      i === null || !images ? i : (i - 1 + images.length) % images.length,
-    )
-  }, [images])
-  const showNext = useCallback(() => {
-    setActiveIndex((i) => (i === null || !images ? i : (i + 1) % images.length))
+    setActiveIndex((index) => {
+      if (index === null || images === null || images.length === 0) {
+        return index
+      }
+
+      return (index - 1 + images.length) % images.length
+    })
   }, [images])
 
-  // keyboard nav + scroll lock while lightbox is open
+  const showNext = useCallback(() => {
+    setActiveIndex((index) => {
+      if (index === null || images === null || images.length === 0) {
+        return index
+      }
+
+      return (index + 1) % images.length
+    })
+  }, [images])
+
+  // Keyboard navigation + scroll lock
   useEffect(() => {
-    if (activeIndex === null) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close()
-      if (e.key === "ArrowLeft") showPrev()
-      if (e.key === "ArrowRight") showNext()
+    if (activeIndex === null) {
+      return
     }
-    document.addEventListener("keydown", onKey)
-    const prevOverflow = document.body.style.overflow
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "Escape":
+          close()
+          break
+        case "ArrowLeft":
+          showPrev()
+          break
+        case "ArrowRight":
+          showNext()
+          break
+      }
+    }
+
+    const previousOverflow = document.body.style.overflow
+
+    document.addEventListener("keydown", handleKeyDown)
     document.body.style.overflow = "hidden"
+
     return () => {
-      document.removeEventListener("keydown", onKey)
-      document.body.style.overflow = prevOverflow
+      document.removeEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = previousOverflow
     }
   }, [activeIndex, close, showPrev, showNext])
 
-  // loading skeleton
+  // Loading state
   if (images === null) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-        {Array.from({ length: 8 }).map((_, i) => (
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, index) => (
           <div
-            key={i}
-            className="aspect-square rounded-xl bg-[#0E4A2D] animate-pulse"
+            key={index}
+            className="aspect-square animate-pulse rounded-xl bg-[#0E4A2D]"
           />
         ))}
       </div>
     )
   }
 
-  // empty state
+  // No clinic images
   if (images.length === 0) {
     return null
   }
 
   return (
-    <div className="mt-10 sm:mt-14">
-      <div className="flex items-center gap-2 mb-5 sm:mb-6">
+    <section className="mt-10 sm:mt-14">
+      {/* Header */}
+      <div className="mb-5 flex items-center gap-2 sm:mb-6">
         <span
-          className="w-1.5 h-1.5 rounded-full"
+          aria-hidden="true"
+          className="h-1.5 w-1.5 rounded-full"
           style={{
-            backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
+            backgroundImage:
+              "linear-gradient(135deg, #1F9552, #4FC97B)",
           }}
         />
-        <p className="text-xs uppercase tracking-[0.2em] text-[#A7E86B] font-mono font-semibold">
+
+        <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[#A7E86B]">
           Gallery
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-        {images.map((src, i) => (
+      {/* Gallery Grid */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4">
+        {images.map((src, index) => (
           <button
             key={src}
-            onClick={() => setActiveIndex(i)}
-            className="group relative aspect-square overflow-hidden rounded-xl bg-[#0E4A2D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC97B]"
+            type="button"
+            onClick={() => setActiveIndex(index)}
+            aria-label={`View clinic photo ${index + 1}`}
+            className="group relative aspect-square overflow-hidden rounded-xl bg-[#0E4A2D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC97B] focus-visible:ring-offset-2"
           >
             <Image
               src={src}
-              alt=""
+              alt={`Clinic photo ${index + 1}`}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-              className="object-cover transition duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
+
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/30">
               <Expand
                 size={20}
-                className="text-white opacity-0 group-hover:opacity-100 transition"
+                aria-hidden="true"
+                className="text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
             </div>
           </button>
         ))}
       </div>
 
-      {/* LIGHTBOX */}
+      {/* Lightbox */}
       {activeIndex !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Clinic image gallery"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 px-4 backdrop-blur-sm"
           onClick={close}
         >
+          {/* Close */}
           <button
+            type="button"
             onClick={close}
-            aria-label="Close"
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/80 hover:text-white transition p-2 rounded-full hover:bg-white/10"
+            aria-label="Close gallery"
+            className="absolute right-4 top-4 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:right-6 sm:top-6"
           >
             <X size={26} />
           </button>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              showPrev()
-            }}
-            aria-label="Previous image"
-            className="absolute left-2 sm:left-6 text-white/80 hover:text-white transition p-2 rounded-full hover:bg-white/10"
-          >
-            <ChevronLeft size={32} />
-          </button>
+          {/* Previous */}
+          {images.length > 1 && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation()
+                showPrev()
+              }}
+              aria-label="Previous image"
+              className="absolute left-2 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:left-6"
+            >
+              <ChevronLeft size={32} />
+            </button>
+          )}
 
+          {/* Image */}
           <div
-            className="relative w-full max-w-4xl aspect-[4/3] sm:aspect-video"
-            onClick={(e) => e.stopPropagation()}
+            className="relative aspect-[4/3] w-full max-w-4xl sm:aspect-video"
+            onClick={(event) => event.stopPropagation()}
           >
             <Image
               src={images[activeIndex]}
-              alt=""
+              alt={`Clinic photo ${activeIndex + 1}`}
               fill
               sizes="100vw"
               className="object-contain"
@@ -146,22 +217,27 @@ export function BranchGallery({ branchId }: { branchId: string }) {
             />
           </div>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              showNext()
-            }}
-            aria-label="Next image"
-            className="absolute right-2 sm:right-6 text-white/80 hover:text-white transition p-2 rounded-full hover:bg-white/10"
-          >
-            <ChevronRight size={32} />
-          </button>
+          {/* Next */}
+          {images.length > 1 && (
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation()
+                showNext()
+              }}
+              aria-label="Next image"
+              className="absolute right-2 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:right-6"
+            >
+              <ChevronRight size={32} />
+            </button>
+          )}
 
-          <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 text-white/70 text-xs sm:text-sm font-mono">
+          {/* Counter */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-xs text-white/70 sm:bottom-6 sm:text-sm">
             {activeIndex + 1} / {images.length}
           </div>
         </div>
       )}
-    </div>
+    </section>
   )
 }

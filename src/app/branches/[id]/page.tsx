@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { BRANCHES, getBranchById } from "@/lib/branches-data"
 import { BranchGallery } from "@/components/branch-gallery"
+import { BranchTeam } from "@/components/branch-team"
 
 export function generateStaticParams() {
   return BRANCHES.map((b) => ({ id: b.id }))
@@ -285,6 +286,9 @@ export default async function BranchDetailPage({
               </div>
             </Card>
           </div>
+          
+          {/* TEAM */}
+          <BranchTeam branchId={branch.id} />
 
           {/* GALLERY */}
           <BranchGallery branchId={branch.id} />

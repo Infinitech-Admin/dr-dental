@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/authStore"
 
 import HeroSection from "@/components/sections/Hero"
 import Testimonials from "@/components/sections/Testimonials"
+import EventsGallery from "@/components/event-gallery"
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -45,6 +46,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      <EventsGallery/>
       <Testimonials />
     </div>
   )

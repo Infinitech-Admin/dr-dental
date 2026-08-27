@@ -397,7 +397,7 @@ export default function Home() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.12, duration: 0.5 }}
-                  className="flex gap-4 p-4 rounded-2xl hover:bg-white/[0.06] transition-colors duration-300"
+                  className="flex gap-4 p-4 rounded-2xl transition-colors duration-300"
                 >
                   <div
                     className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
