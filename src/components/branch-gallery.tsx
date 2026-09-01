@@ -2,45 +2,93 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
-import {
-  ChevronLeft,
-  ChevronRight,
-  Expand,
-  X,
-} from "lucide-react"
+import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react"
+
+interface BranchImage {
+  id: number
+  branch_id: string
+  type: "clinic" | "team"
+  url: string
+  alt: string | null
+  sort_order: number
+}
 
 interface BranchGalleryProps {
-  branchId: string
+  branchId: number
 }
 
 export function BranchGallery({ branchId }: BranchGalleryProps) {
-  const [images, setImages] = useState<string[] | null>(null)
+  const [images, setImages] = useState<BranchImage[] | null>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+
+  const loadImages = useCallback(async () => {
+    try {
+      setImages(null)
+      setActiveIndex(null)
+
+      const params = new URLSearchParams({
+        branch_id: String(branchId),
+        type: "clinic",
+      })
+
+      const response = await fetch(`/api/branch-images?${params.toString()}`, {
+        method: "GET",
+        cache: "no-store",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to load clinic images")
+      }
+
+      const data = await response.json()
+
+      setImages(Array.isArray(data?.images) ? data.images : [])
+    } catch (error) {
+      console.error("Failed to load clinic images:", error)
+      setImages([])
+    }
+  }, [branchId])
 
   useEffect(() => {
     let cancelled = false
 
-    setImages(null)
-    setActiveIndex(null)
+    const run = async () => {
+      try {
+        setImages(null)
+        setActiveIndex(null)
 
-    fetch(`/api/branches/${branchId}/images/clinic`)
-      .then((response) => {
+        const params = new URLSearchParams({
+          branch_id: String(branchId),
+          type: "clinic",
+        })
+
+        const response = await fetch(
+          `/api/branch-images?${params.toString()}`,
+          {
+            method: "GET",
+            cache: "no-store",
+          },
+        )
+
         if (!response.ok) {
           throw new Error("Failed to load clinic images")
         }
 
-        return response.json()
-      })
-      .then((data) => {
+        const data = await response.json()
+
         if (!cancelled) {
-          setImages(Array.isArray(data.images) ? data.images : [])
+          setImages(Array.isArray(data?.images) ? data.images : [])
         }
-      })
-      .catch(() => {
+      } catch (error) {
+        console.error("Failed to load clinic images:", error)
+
         if (!cancelled) {
           setImages([])
         }
-      })
+      }
+    }
+
+    run()
 
     return () => {
       cancelled = true
@@ -53,7 +101,7 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
 
   const showPrev = useCallback(() => {
     setActiveIndex((index) => {
-      if (index === null || images === null || images.length === 0) {
+      if (index === null || images === null || images.length <= 1) {
         return index
       }
 
@@ -63,7 +111,7 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
 
   const showNext = useCallback(() => {
     setActiveIndex((index) => {
-      if (index === null || images === null || images.length === 0) {
+      if (index === null || images === null || images.length <= 1) {
         return index
       }
 
@@ -71,7 +119,6 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
     })
   }, [images])
 
-  // Keyboard navigation + scroll lock
   useEffect(() => {
     if (activeIndex === null) {
       return
@@ -94,15 +141,16 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
     const previousOverflow = document.body.style.overflow
 
     document.addEventListener("keydown", handleKeyDown)
+
     document.body.style.overflow = "hidden"
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown)
+
       document.body.style.overflow = previousOverflow
     }
   }, [activeIndex, close, showPrev, showNext])
 
-  // Loading state
   if (images === null) {
     return (
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4">
@@ -116,21 +164,18 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
     )
   }
 
-  // No clinic images
   if (images.length === 0) {
     return null
   }
 
   return (
     <section className="mt-10 sm:mt-14">
-      {/* Header */}
       <div className="mb-5 flex items-center gap-2 sm:mb-6">
         <span
           aria-hidden="true"
           className="h-1.5 w-1.5 rounded-full"
           style={{
-            backgroundImage:
-              "linear-gradient(135deg, #1F9552, #4FC97B)",
+            backgroundImage: "linear-gradient(135deg, #1F9552, #4FC97B)",
           }}
         />
 
@@ -139,19 +184,18 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
         </p>
       </div>
 
-      {/* Gallery Grid */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4">
-        {images.map((src, index) => (
+        {images.map((image, index) => (
           <button
-            key={src}
+            key={image.id}
             type="button"
             onClick={() => setActiveIndex(index)}
             aria-label={`View clinic photo ${index + 1}`}
             className="group relative aspect-square overflow-hidden rounded-xl bg-[#0E4A2D] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4FC97B] focus-visible:ring-offset-2"
           >
             <Image
-              src={src}
-              alt={`Clinic photo ${index + 1}`}
+              src={image.url}
+              alt={image.alt ?? `Clinic photo ${index + 1}`}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
               className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -168,7 +212,6 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
         ))}
       </div>
 
-      {/* Lightbox */}
       {activeIndex !== null && (
         <div
           role="dialog"
@@ -177,17 +220,15 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 px-4 backdrop-blur-sm"
           onClick={close}
         >
-          {/* Close */}
           <button
             type="button"
             onClick={close}
             aria-label="Close gallery"
-            className="absolute right-4 top-4 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:right-6 sm:top-6"
+            className="absolute right-4 top-4 z-10 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:right-6 sm:top-6"
           >
             <X size={26} />
           </button>
 
-          {/* Previous */}
           {images.length > 1 && (
             <button
               type="button"
@@ -196,20 +237,19 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
                 showPrev()
               }}
               aria-label="Previous image"
-              className="absolute left-2 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:left-6"
+              className="absolute left-2 z-10 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:left-6"
             >
               <ChevronLeft size={32} />
             </button>
           )}
 
-          {/* Image */}
           <div
             className="relative aspect-[4/3] w-full max-w-4xl sm:aspect-video"
             onClick={(event) => event.stopPropagation()}
           >
             <Image
-              src={images[activeIndex]}
-              alt={`Clinic photo ${activeIndex + 1}`}
+              src={images[activeIndex].url}
+              alt={images[activeIndex].alt ?? `Clinic photo ${activeIndex + 1}`}
               fill
               sizes="100vw"
               className="object-contain"
@@ -217,7 +257,6 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
             />
           </div>
 
-          {/* Next */}
           {images.length > 1 && (
             <button
               type="button"
@@ -226,13 +265,12 @@ export function BranchGallery({ branchId }: BranchGalleryProps) {
                 showNext()
               }}
               aria-label="Next image"
-              className="absolute right-2 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:right-6"
+              className="absolute right-2 z-10 rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white sm:right-6"
             >
               <ChevronRight size={32} />
             </button>
           )}
 
-          {/* Counter */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 font-mono text-xs text-white/70 sm:bottom-6 sm:text-sm">
             {activeIndex + 1} / {images.length}
           </div>

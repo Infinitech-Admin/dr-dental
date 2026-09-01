@@ -12,7 +12,21 @@ const EVENT_LABELS: Record<string, string> = {
   vloggers: "Vloggers",
 }
 
-type EventData = { id: string; images: string[] }
+type EventImage = {
+  id: number
+  url: string
+  alt: string
+  sort_order: number
+}
+
+type EventData = {
+  id: string
+  event_id: string
+  title: string
+  description: string | null
+  date: string | null
+  images: EventImage[]
+}
 
 export default function EventsGallery() {
   const [events, setEvents] = useState<EventData[]>([])
@@ -26,15 +40,22 @@ export default function EventsGallery() {
       .then((data) => {
         const fetched: EventData[] = data.events ?? []
         setEvents(fetched)
-        if (fetched.length > 0) setActiveEvent(fetched[0].id)
+        if (fetched.length > 0 && !activeEvent) {
+          setActiveEvent(fetched[0].event_id)
+        }
       })
       .catch(() => setEvents([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [activeEvent])
+
+  const currentEvent = useMemo(
+    () => events.find((e) => e.event_id === activeEvent),
+    [events, activeEvent],
+  )
 
   const images = useMemo(
-    () => events.find((e) => e.id === activeEvent)?.images ?? [],
-    [events, activeEvent],
+    () => currentEvent?.images?.map((img) => img.url) ?? [],
+    [currentEvent],
   )
 
   const close = useCallback(() => setActiveIndex(null), [])
@@ -61,8 +82,8 @@ export default function EventsGallery() {
     return () => window.removeEventListener("keydown", onKey)
   }, [activeIndex, close, prev, next])
 
-  const switchEvent = (id: string) => {
-    setActiveEvent(id)
+  const switchEvent = (eventId: string) => {
+    setActiveEvent(eventId)
     setActiveIndex(null)
   }
 
@@ -123,14 +144,15 @@ export default function EventsGallery() {
             {/* MOBILE LAYOUT: Cover Cards */}
             <div className="block sm:hidden space-y-4">
               {events.map((event) => {
-                const frontImage = event.images[0]
-                const label = EVENT_LABELS[event.id] ?? event.id
+                const frontImage = event.images?.[0]?.url
+                const label = EVENT_LABELS[event.event_id] ?? event.title
                 if (!frontImage) return null
 
                 return (
                   <button
-                    key={event.id}
-                    onClick={() => openMobileGallery(event.id)}
+                    key={event.event_id}
+                    type="button"
+                    onClick={() => openMobileGallery(event.event_id)}
                     className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-[#C8E6C9] shadow-md text-left group active:scale-[0.98] transition-transform"
                   >
                     <Image
@@ -166,12 +188,13 @@ export default function EventsGallery() {
             <div className="hidden sm:block">
               <div className="flex flex-wrap justify-center gap-3 mb-12">
                 {events.map((event) => {
-                  const isActive = event.id === activeEvent
-                  const label = EVENT_LABELS[event.id] ?? event.id
+                  const isActive = event.event_id === activeEvent
+                  const label = EVENT_LABELS[event.event_id] ?? event.title
                   return (
                     <button
-                      key={event.id}
-                      onClick={() => switchEvent(event.id)}
+                      key={event.event_id}
+                      type="button"
+                      onClick={() => switchEvent(event.event_id)}
                       className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 border ${
                         isActive
                           ? "text-white border-transparent shadow-md"
@@ -244,6 +267,7 @@ export default function EventsGallery() {
             onClick={close}
           >
             <button
+              type="button"
               onClick={close}
               aria-label="Close"
               className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all"
@@ -252,6 +276,7 @@ export default function EventsGallery() {
             </button>
 
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 prev()
@@ -269,19 +294,22 @@ export default function EventsGallery() {
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.25 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-4xl max-h-[75vh] sm:max-h-[85vh] aspect-square sm:aspect-auto rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-white/10 shadow-2xl flex items-center justify-center"
+              className="relative w-full max-w-4xl h-[70vh] sm:h-[80vh] rounded-xl sm:rounded-2xl overflow-hidden flex items-center justify-center"
             >
-              <Image
-                src={images[activeIndex]}
-                alt={`Photo ${activeIndex + 1}`}
-                fill
-                sizes="(max-width: 1024px) 100vw, 80vw"
-                className="object-contain"
-                priority
-              />
+              {images[activeIndex] && (
+                <Image
+                  src={images[activeIndex]}
+                  alt={`Photo ${activeIndex + 1}`}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 80vw"
+                  className="object-contain"
+                  priority
+                />
+              )}
             </motion.div>
 
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 next()
@@ -293,7 +321,11 @@ export default function EventsGallery() {
             </button>
 
             <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/40 px-3.5 py-1.5 rounded-full backdrop-blur-sm text-white/90 text-xs sm:text-sm font-medium tracking-wide">
-              <span>{EVENT_LABELS[activeEvent ?? ""] ?? activeEvent}</span>
+              <span>
+                {EVENT_LABELS[activeEvent ?? ""] ??
+                  currentEvent?.title ??
+                  activeEvent}
+              </span>
               <span className="text-white/40">•</span>
               <span>
                 {activeIndex + 1} / {images.length}

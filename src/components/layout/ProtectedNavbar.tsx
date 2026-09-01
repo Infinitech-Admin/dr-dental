@@ -20,6 +20,8 @@ import {
   Menu,
   X,
   LogOut,
+  ImagePlus,
+  Megaphone,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -65,6 +67,8 @@ export default function ProtectedNav({ userRole = "user" }: ProtectedNavProps) {
       items: [
         { path: "/admin/services", icon: ClipboardList, label: "Services" },
         { path: "/admin/testimonials", icon: Star, label: "Testimonials" },
+        { path: "/admin/branches", icon: ImagePlus, label: "Branches" },
+        { path: "/admin/events", icon: Megaphone, label: "Events" },
       ],
     },
     {
@@ -358,7 +362,9 @@ export default function ProtectedNav({ userRole = "user" }: ProtectedNavProps) {
                 >
                   {label}
                 </span>
-                {active && <div className="w-1 h-1 rounded-full bg-emerald-600" />}
+                {active && (
+                  <div className="w-1 h-1 rounded-full bg-emerald-600" />
+                )}
               </Link>
             )
           })}

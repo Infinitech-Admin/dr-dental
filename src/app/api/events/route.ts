@@ -1,79 +1,65 @@
-import { NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
+import { getAuthToken } from "@/lib/auth"
+import { NextRequest, NextResponse } from "next/server"
 
-const VALID_EXTENSIONS = new Set([
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".webp",
-    ".avif",
-    ".gif",
-])
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-export const dynamic = "force-dynamic"
-
-export async function GET() {
-    const eventsDirectory = path.join(
-        process.cwd(),
-        "public",
-        "images",
-        "events"
-    )
-
+// GET ALL EVENTS
+export async function GET(request: NextRequest) {
     try {
-        const eventIds = fs
-            .readdirSync(eventsDirectory, { withFileTypes: true })
-            .filter((entry) => entry.isDirectory())
-            .map((entry) => entry.name)
+        const token = getAuthToken(request)
 
-        const events = eventIds.map((eventId) => {
-            // Images are directly inside:
-            // public/images/events/{eventId}/
-            const eventDirectory = path.join(
-                eventsDirectory,
-                eventId
-            )
-
-            let images: string[] = []
-
-            try {
-                images = fs
-                    .readdirSync(eventDirectory, { withFileTypes: true })
-                    .filter(
-                        (entry) =>
-                            entry.isFile() &&
-                            VALID_EXTENSIONS.has(
-                                path.extname(entry.name).toLowerCase()
-                            )
-                    )
-                    .map((entry) => entry.name)
-                    .sort((a, b) =>
-                        a.localeCompare(b, undefined, {
-                            numeric: true,
-                            sensitivity: "base",
-                        })
-                    )
-                    .map(
-                        (file) =>
-                            `/images/events/${encodeURIComponent(eventId)}/${encodeURIComponent(file)}`
-                    )
-            } catch {
-                images = []
-            }
-
-            return {
-                id: eventId,
-                images,
-            }
+        const res = await fetch(`${API_URL}/api/events`, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                Authorization: token ? `Bearer ${token}` : "",
+            },
+            cache: "no-store",
         })
 
-        return NextResponse.json({ events })
-    } catch (error) {
-        console.error("Failed to read events:", error)
+        const data = await res.json()
 
+        return NextResponse.json(data, {
+            status: res.status,
+        })
+    } catch (err) {
         return NextResponse.json(
-            { events: [] },
+            {
+                message: "Failed to get events",
+                err,
+            },
+            { status: 500 }
+        )
+    }
+}
+
+// CREATE EVENT
+export async function POST(request: NextRequest) {
+    try {
+        const token = getAuthToken(request)
+
+        const formData = await request.formData()
+
+        const res = await fetch(`${API_URL}/api/events`, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                Authorization: token ? `Bearer ${token}` : "",
+            },
+            body: formData,
+        })
+
+        const data = await res.json()
+
+        return NextResponse.json(data, {
+            status: res.status,
+        })
+    } catch (err) {
+        return NextResponse.json(
+            {
+                message: "Failed to create event",
+                err,
+            },
             { status: 500 }
         )
     }
