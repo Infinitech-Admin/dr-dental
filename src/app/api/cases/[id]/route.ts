@@ -43,7 +43,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     formData.append("_method", "PUT")
 
     const res = await fetch(`${API_URL}/api/cases/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         Accept: "application/json",
         Authorization: token ? `Bearer ${token}` : "",

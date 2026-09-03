@@ -14,7 +14,7 @@ import {
   LayoutDashboard,
   Users,
   Package,
-  MessageSquare,
+  Smile,
   Star,
   Bell,
   Menu,
@@ -65,7 +65,8 @@ export default function ProtectedNav({ userRole = "user" }: ProtectedNavProps) {
     {
       title: "CMS",
       items: [
-        { path: "/admin/services", icon: ClipboardList, label: "Services" },
+        { path: "/admin/services", icon: ClipboardList, label: "Services" }, 
+        { path: "/admin/dental-cases", icon: Smile, label: "Smile Gallery" },
         { path: "/admin/testimonials", icon: Star, label: "Testimonials" },
         { path: "/admin/branches", icon: ImagePlus, label: "Branches" },
         { path: "/admin/events", icon: Megaphone, label: "Events" },

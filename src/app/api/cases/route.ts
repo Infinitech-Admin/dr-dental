@@ -6,22 +6,32 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL
 // GET ALL CASES
 export async function GET(request: NextRequest) {
   try {
-    const token = getAuthToken(request)
+    const searchParams = request.nextUrl.searchParams.toString()
+    const targetUrl = `${API_URL}/api/cases${searchParams ? `?${searchParams}` : ""}`
 
-    const res = await fetch(`${API_URL}/api/cases`, {
+    const res = await fetch(targetUrl, {
       method: "GET",
       headers: {
         Accept: "application/json",
-        Authorization: token ? `Bearer ${token}` : "",
       },
       cache: "no-store",
     })
 
+    if (!res.ok) {
+      const errorText = await res.text()
+      return NextResponse.json(
+        { message: "Backend error", details: errorText },
+        { status: res.status }
+      )
+    }
+
     const data = await res.json()
     return NextResponse.json(data, { status: res.status })
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    console.error("API Route Proxy Error:", err)
     return NextResponse.json(
-      { message: "Failed to fetch cases", err },
+      { message: "Failed to fetch cases from proxy", error: err.message },
       { status: 500 }
     )
   }

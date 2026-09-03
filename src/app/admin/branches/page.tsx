@@ -102,6 +102,7 @@ export default function BranchesPage() {
   const [uploadType, setUploadType] = useState<ImageType>("clinic")
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [deletingImageId, setDeletingImageId] = useState<number | null>(null)
+  const [deleteImageId, setDeleteImageId] = useState<number | null>(null)
 
   const [deleteBranchId, setDeleteBranchId] = useState<string | null>(null)
   const [deletingBranch, setDeletingBranch] = useState(false)
@@ -226,18 +227,16 @@ export default function BranchesPage() {
     setSelectedFiles((files) => files.filter((_, i) => i !== index))
   }
 
-  async function deleteExistingImage(imageId: number) {
-    if (!editingBranch) return
+  async function confirmDeleteImage() {
+    if (deleteImageId === null) return
 
+    const imageId = deleteImageId
     setDeletingImageId(imageId)
 
     try {
-      const response = await fetch(
-        `/api/branches/${encodeURIComponent(
-          editingBranch.branch_id,
-        )}/images/${imageId}`,
-        { method: "DELETE" },
-      )
+      const response = await fetch(`/api/branch-images/${imageId}`, {
+        method: "DELETE",
+      })
 
       const data = await response.json()
 
@@ -246,7 +245,11 @@ export default function BranchesPage() {
       }
 
       setExistingImages((images) => images.filter((img) => img.id !== imageId))
-      toast({ title: "Image deleted", description: "Image removed." })
+      toast({
+        title: "Image deleted",
+        description: "Image removed successfully.",
+      })
+      setDeleteImageId(null)
     } catch (error) {
       toast({
         title: "Delete failed",
@@ -759,7 +762,7 @@ export default function BranchesPage() {
                             </span>
                             <button
                               type="button"
-                              onClick={() => deleteExistingImage(img.id)}
+                              onClick={() => setDeleteImageId(img.id)}
                               disabled={deletingImageId === img.id}
                               className="absolute top-1 right-1 rounded-full bg-red-500/90 hover:bg-red-600 text-white p-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition disabled:opacity-100"
                             >
@@ -888,6 +891,46 @@ export default function BranchesPage() {
           </DialogContent>
         </Dialog>
 
+        {/* Delete Image Confirmation */}
+        <Dialog
+          open={deleteImageId !== null}
+          onOpenChange={(open) => {
+            if (!open && deletingImageId === null) {
+              setDeleteImageId(null)
+            }
+          }}
+        >
+          <DialogContent className="w-[95vw] sm:max-w-md rounded-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-black">Delete Image</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete this image? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter className="flex flex-col-reverse sm:flex-row justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setDeleteImageId(null)}
+                disabled={deletingImageId !== null}
+                className="bg-transparent text-black"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={confirmDeleteImage}
+                disabled={deletingImageId !== null}
+              >
+                {deletingImageId !== null ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : null}
+                Confirm Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* Delete Branch Confirmation */}
         <Dialog
           open={deleteBranchId !== null}
@@ -901,8 +944,7 @@ export default function BranchesPage() {
             <DialogHeader>
               <DialogTitle className="text-black">Delete Branch</DialogTitle>
               <DialogDescription>
-                This will delete the branch and all of its images. This action
-                cannot be undone.
+                This will delete branch <span className="font-semibold text-slate-900">{deleteBranchId}</span> and all of its images. This action cannot be undone.
               </DialogDescription>
             </DialogHeader>
 
@@ -915,16 +957,15 @@ export default function BranchesPage() {
               >
                 Cancel
               </Button>
-
               <Button
                 variant="destructive"
                 onClick={handleDeleteBranch}
                 disabled={deletingBranch}
               >
-                {deletingBranch && (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                )}
-                Delete Branch
+                {deletingBranch ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : null}
+                Confirm Delete
               </Button>
             </DialogFooter>
           </DialogContent>
