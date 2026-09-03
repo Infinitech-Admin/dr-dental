@@ -787,6 +787,184 @@ function MobileRoad() {
   )
 }
 
+const team = [
+  {
+    name: "Dr. [Full Name]",
+    role: "Founder & Lead Dentist",
+    specialty: "General & Restorative Dentistry",
+    image: null, // e.g. "/team/dr-name.jpg"
+  },
+  {
+    name: "Dr. [Full Name]",
+    role: "Orthodontic Specialist",
+    specialty: "Braces & Clear Aligners",
+    image: null,
+  },
+  {
+    name: "Dr. [Full Name]",
+    role: "Cosmetic Dentistry Lead",
+    specialty: "Veneers & Smile Design",
+    image: null,
+  },
+  {
+    name: "Dr. [Full Name]",
+    role: "Oral Surgeon",
+    specialty: "Extractions & Implants",
+    image: null,
+  },
+]
+
+function TeamSection() {
+  return (
+    <section
+      className="relative overflow-hidden py-12 sm:py-16 md:py-20"
+      style={{
+        background:
+          "linear-gradient(160deg, #0F3D2E 0%, #123D2C 55%, #0F3D2E 100%)",
+      }}
+    >
+      {/* scan-line sweep, consistent with hero/trust-bar language */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          animate={{ y: ["0%", "100%"] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
+          className="absolute left-0 w-full h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, rgba(126,217,160,0.5) 30%, rgba(126,217,160,0.7) 50%, rgba(126,217,160,0.5) 70%, transparent)",
+            boxShadow: "0 0 12px 1px rgba(126,217,160,0.5)",
+          }}
+        />
+        <div className="absolute top-8 right-8 w-14 h-14 border-t-2 border-r-2 border-[#7ED9A0]/25 rounded-tr-md hidden sm:block" />
+        <div className="absolute bottom-8 left-8 w-14 h-14 border-b-2 border-l-2 border-[#7ED9A0]/20 rounded-bl-md hidden sm:block" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Eyebrow, glow-line style */}
+        <motion.div
+          {...fade}
+          className="flex items-center justify-center gap-3 mb-3"
+        >
+          <span
+            className="h-px w-8"
+            style={{
+              background: "linear-gradient(90deg, transparent, #7ED9A0)",
+              boxShadow: "0 0 8px 1px rgba(126,217,160,0.5)",
+            }}
+          />
+          <span className="text-[#7ED9A0] text-xs md:text-sm font-medium uppercase tracking-[0.35em]">
+            Meet The Team
+          </span>
+          <span
+            className="h-px w-8"
+            style={{
+              background: "linear-gradient(90deg, #7ED9A0, transparent)",
+              boxShadow: "0 0 8px 1px rgba(126,217,160,0.5)",
+            }}
+          />
+        </motion.div>
+
+        <motion.h2
+          {...fade}
+          className="font-serif text-3xl sm:text-4xl md:text-5xl text-white text-center mb-10 sm:mb-14 leading-tight"
+        >
+          The Specialists Behind{" "}
+          <span
+            className="bg-clip-text text-transparent"
+            style={{
+              backgroundImage:
+                "linear-gradient(120deg, #D9F2C4, #7ED9A0, #3D9A63)",
+            }}
+          >
+            Every Smile
+          </span>
+        </motion.h2>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+          {team.map((member, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.6 }}
+              className="group relative text-center bg-white/[0.02] border border-white/5 rounded-2xl p-3 sm:p-4 backdrop-blur-sm flex flex-col justify-between"
+            >
+              {/* portrait photo card, larger & more compact spacing */}
+              <div className="relative w-full max-w-[260px] mx-auto mb-3 sm:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+                <div
+                  className="relative w-full h-full rounded-xl overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-1"
+                  style={{
+                    border: "1px solid rgba(126,217,160,0.4)",
+                    boxShadow:
+                      "0 0 0 1px rgba(126,217,160,0.08), 0 0 30px 2px rgba(126,217,160,0.18), 0 20px 40px -12px rgba(0,0,0,0.5)",
+                    background: "linear-gradient(135deg, #123D2C, #0F3D2E)",
+                  }}
+                >
+                  {member.image ? (
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-5xl font-serif text-white">
+                      {member.name.replace("Dr. ", "").charAt(0)}
+                    </div>
+                  )}
+
+                  {/* bottom gradient scrim */}
+                  <div
+                    className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, transparent, rgba(15,61,46,0.65))",
+                    }}
+                  />
+
+                  {/* corner accents */}
+                  <div className="absolute top-2.5 right-2.5 w-4 h-4 border-t-2 border-r-2 border-[#7ED9A0]/60 rounded-tr-sm" />
+                  <div className="absolute bottom-2.5 left-2.5 w-4 h-4 border-b-2 border-l-2 border-[#7ED9A0]/40 rounded-bl-sm" />
+
+                  {/* soft border glow intensifies on hover */}
+                  <div
+                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      boxShadow:
+                        "inset 0 0 0 1px rgba(126,217,160,0.6), 0 0 40px 4px rgba(126,217,160,0.25)",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-0.5 sm:space-y-1">
+                <h3 className="text-white font-medium text-sm sm:text-base md:text-lg leading-snug">
+                  {member.name}
+                </h3>
+                <p className="text-[#7ED9A0] text-[10px] sm:text-xs uppercase tracking-[0.15em] font-semibold">
+                  {member.role}
+                </p>
+                <p className="text-[#B9D6C2] text-[11px] sm:text-xs leading-relaxed line-clamp-2 px-1">
+                  {member.specialty}
+                </p>
+              </div>
+
+              <span
+                className="block mx-auto mt-2.5 sm:mt-3 h-[2px] w-5 transition-all duration-300 group-hover:w-8"
+                style={{
+                  background: "#7ED9A0",
+                  boxShadow: "0 0 8px 1px rgba(126,217,160,0.6)",
+                }}
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function OurStorySection() {
   return (
     <section
@@ -1083,6 +1261,9 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* ── Team section ── */}
+      <TeamSection />
 
       {/* ── Our Story / Milestones — Road Journey ── */}
       <OurStorySection />
