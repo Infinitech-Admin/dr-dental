@@ -1,28 +1,23 @@
 "use client"
 
-import Link from "next/link"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import heroBg from "@/assets/hero-bg.jpg"
-import branchBg from "@/assets/branch-bg.jpg"
-import equipment from "@/assets/equipment-2.jpg"
-import exterior from "@/assets/exterior-2.jpg"
+import Link from "next/link"
 import dynamic from "next/dynamic"
+import { motion } from "framer-motion"
 import {
-  ArrowRight,
   Shield,
   Award,
   Users,
-  Star,
   Sparkles,
-  Smile,
-  Heart,
-  Zap,
-  GraduationCap,
-  Stethoscope,
   MapPin,
+  ArrowRight,
 } from "lucide-react"
-import { motion } from "framer-motion"
+import { Button } from "@/components/ui/button"
+
+import heroBg from "@/assets/hero-bg.jpg"
+import branchBg from "@/assets/branch-bg.jpg"
+import exterior from "@/assets/exterior-2.jpg"
+import { HeroBackground } from "@/components/HeroBackground"
 
 const BranchesMap = dynamic(() => import("../BranchMap"), {
   ssr: false,
@@ -52,244 +47,278 @@ const slideRight = {
   transition: { duration: 0.6 },
 }
 
-type Stat = { value: string; label: string }
+const stats = [
+  { value: "6+", label: "Years Experience" },
+  { value: "150K+", label: "Patients Treated" },
+  { value: "98%", label: "Satisfaction Rate" },
+  { value: "10+", label: "Specialists" },
+]
+
+const whyChooseUsItems = [
+  {
+    icon: Award,
+    title: "You're in Good Hands",
+    desc: "Experienced dental professionals dedicated to giving you thoughtful care and a smile you can feel proud of.",
+  },
+  {
+    icon: Shield,
+    title: "Care You Can Trust",
+    desc: "Modern technology and careful treatment designed to keep your smile healthy, comfortable, and protected.",
+  },
+  {
+    icon: Users,
+    title: "Here for Your Journey",
+    desc: "A caring team that listens to your needs and supports you through every step of your smile journey.",
+  },
+]
 
 export default function Home() {
-  const stats: Stat[] = [
-    { value: "6+", label: "Years Experience" },
-    { value: "150K+", label: "Patients Treated" },
-    { value: "98%", label: "Satisfaction Rate" },
-    { value: "10+", label: "Specialists" },
-  ]
-
   return (
     <div className="bg-[#0B3D26]">
-      {/* ── Hero ── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* mesh gradient base */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(120% 90% at 15% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(90% 80% at 85% 15%, #CFF3D6 0%, transparent 60%), linear-gradient(160deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
-          }}
+      {/* ── Hero Section ── */}
+<section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden px-4 sm:px-6 md:px-12 py-20">
+  <HeroBackground
+    videoSrc="/videos/sm-gensan-opening/hero.mp4"
+    fallbackImage={heroBg}
+  />
+
+  {/* ── Legibility gradient: dark green left → light/transparent right (Adjusted for mobile readability) ── */}
+  <div
+    className="absolute inset-0 z-[1] pointer-events-none"
+    style={{
+      backgroundImage:
+        "linear-gradient(90deg, rgba(6,38,23,0.98) 0%, rgba(11,61,38,0.92) 50%, rgba(11,61,38,0.75) 80%, rgba(11,61,38,0.4) 100%)",
+    }}
+  />
+  <div
+    className="absolute inset-0 z-[1] pointer-events-none md:hidden"
+    style={{
+      backgroundImage:
+        "linear-gradient(180deg, rgba(6,38,23,0.4) 0%, rgba(6,38,23,0.8) 100%)",
+    }}
+  />
+
+  {/* ── Futuristic glowing accents (Hidden on very small screens to avoid overflow) ── */}
+  <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden hidden sm:block">
+    {/* Horizontal scan-line sweeping top to bottom */}
+    <motion.div
+      animate={{ y: ["0%", "100%"] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+      className="absolute left-0 w-full h-px"
+      style={{
+        background:
+          "linear-gradient(90deg, transparent, rgba(167,232,107,0.5) 30%, rgba(167,232,107,0.7) 50%, rgba(167,232,107,0.5) 70%, transparent)",
+        boxShadow: "0 0 12px 1px rgba(167,232,107,0.5)",
+      }}
+    />
+
+    {/* Corner brackets, top-left — pushed below nav */}
+    <div className="absolute top-28 left-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-[#A7E86B]/40 rounded-tl-md" />
+    {/* Corner brackets, bottom-left */}
+    <div className="absolute bottom-10 left-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-[#A7E86B]/25 rounded-bl-md" />
+
+    {/* Thin vertical glow line, far right edge, pulsing */}
+    <motion.div
+      animate={{ opacity: [0.2, 0.6, 0.2] }}
+      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute top-0 right-0 w-px h-full"
+      style={{
+        background:
+          "linear-gradient(180deg, transparent, rgba(167,232,107,0.5) 40%, rgba(79,201,123,0.5) 60%, transparent)",
+        boxShadow: "0 0 20px 2px rgba(167,232,107,0.3)",
+      }}
+    />
+  </div>
+
+  <div className="relative max-w-6xl w-full mx-auto z-10 pt-16 sm:pt-20">
+    <div className="max-w-2xl text-left">
+      {/* Eyebrow with glowing vertical line */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8"
+      >
+        <motion.span
+          initial={{ height: 0 }}
+          animate={{ height: 20 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-[2px] bg-[#A7E86B]"
+          style={{ boxShadow: "0 0 8px 1px rgba(167,232,107,0.8)" }}
         />
-        {/* hero background image, faded into the mesh — kept visible enough that the tooth motif reads */}
-        <div className="absolute inset-0 opacity-[0.75] mix-blend-multiply pointer-events-none">
-          <Image src={heroBg} alt="" fill priority className="object-cover" />
-        </div>
+        <span className="text-[#A7E86B] text-xs sm:text-sm font-medium uppercase tracking-[0.25em] sm:tracking-[0.35em]">
+          Dr. Dental Care Center
+        </span>
+      </motion.div>
 
-        {/* single ambient blob — one accent, not two competing ones */}
-        <motion.div
-          animate={{ scale: [1, 1.12, 1], rotate: [0, 12, 0] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-24 right-[-10%] w-[650px] h-[650px] rounded-full blur-[110px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(31,149,82,0.4), rgba(167,232,107,0.12) 70%)",
-          }}
-        />
+      <motion.h1
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className="font-serif text-3xl sm:text-5xl md:text-7xl text-white mb-2 leading-[1.1] tracking-tight drop-shadow-md"
+      >
+        Your Journey to a
+      </motion.h1>
+      <motion.h1
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.25 }}
+        className="font-serif text-3xl sm:text-5xl md:text-7xl mb-4 leading-[1.1] tracking-tight bg-clip-text text-transparent"
+        style={{
+          backgroundImage:
+            "linear-gradient(120deg, #D9F2C4, #A7E86B 45%, #4FC97B)",
+        }}
+      >
+        Perfect Smile
+      </motion.h1>
 
-        {/* signature: a smile line that draws itself in, connecting headline to photo */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none hidden md:block"
-          viewBox="0 0 1600 900"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="smileGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#1F9552" stopOpacity="0" />
-              <stop offset="45%" stopColor="#2FAE63" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#A7E86B" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <motion.path
-            d="M -60 260 Q 620 520 900 400 T 1660 190"
-            fill="none"
-            stroke="url(#smileGrad)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 1.6, ease: "easeInOut", delay: 0.4 }}
-          />
-        </svg>
+      {/* Glowing line that draws in under the headline */}
+      <motion.div
+        initial={{ width: 0, opacity: 0 }}
+        animate={{ width: "5rem", opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="h-[2px] mb-6 sm:mb-8"
+        style={{
+          background:
+            "linear-gradient(90deg, #A7E86B, rgba(167,232,107,0))",
+          boxShadow: "0 0 10px 1px rgba(167,232,107,0.6)",
+        }}
+      />
 
-        <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-20 grid lg:grid-cols-2 gap-14 items-center">
-          <motion.div {...fade}>
-            <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#1F9552]/25 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#1F9552] to-[#A7E86B] animate-pulse" />
-              <p className="text-[#145C36] text-xs font-semibold uppercase tracking-[0.25em]">
-                Dr. Dental Care Center
-              </p>
-            </div>
+      <motion.p
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.35 }}
+        className="text-[#CFEAD4] text-sm sm:text-lg md:text-xl max-w-xl mb-8 sm:mb-10 font-light leading-relaxed drop-shadow"
+      >
+        Experience premium dental care with our expert team across
+        Mindanao. Compassionate, modern, and dedicated to your oral
+        health.
+      </motion.p>
 
-            <h1 className="font-serif text-5xl md:text-7xl leading-[1.05] mb-6">
-              <span className="text-[#0B2E1C]">Quality Dental Care</span>
-              <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(100deg, #145C36 0%, #1F9552 40%, #4FC97B 70%, #A7E86B 100%)",
-                }}
-              >
-                You Can Trust
-              </span>
-            </h1>
-
-            <p className="text-[#2E4E38] text-lg leading-relaxed max-w-lg mb-4">
-              Providing reliable and compassionate dental care for over 6 years.
-              Our team is dedicated to helping every patient achieve a healthier
-              smile through personalized treatments and modern dental solutions.
-            </p>
-
-            <p className="text-[#2E4E38]/80 text-lg leading-relaxed max-w-lg mb-10">
-              Your journey to better oral health starts with a dental team that
-              cares, listens, and puts your comfort first.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link href="/book">
-                <Button
-                  size="lg"
-                  className="relative text-white font-medium px-8 border-0 shadow-[0_10px_30px_-8px_rgba(31,149,82,0.6)] hover:shadow-[0_14px_38px_-6px_rgba(31,149,82,0.75)] hover:-translate-y-0.5 transition-all duration-300"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(120deg, #1F9552 0%, #2FAE63 55%, #4FC97B 100%)",
-                  }}
-                >
-                  Book Appointment <ArrowRight className="ml-2" size={18} />
-                </Button>
-              </Link>
-
-              <Link href="/services">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-white/60 backdrop-blur-sm border-[#1F9552]/40 text-[#145C36] hover:bg-white hover:border-[#1F9552] font-medium px-8 transition-all"
-                >
-                  Explore Services
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-
-          <motion.div
-            {...fade}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="hidden lg:block relative"
-          >
-            <div
-              className="absolute -inset-3 rounded-[2rem] blur-sm opacity-70"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, #1F9552, #A7E86B, #145C36)",
-              }}
-            />
-            <div className="relative rounded-[1.75rem] overflow-hidden border-4 border-white shadow-2xl shadow-[#0B3D26]/20">
-              <Image
-                src={equipment}
-                alt="Dr. Dental Care Center equipment"
-                width={600}
-                height={450}
-                className="w-full h-auto"
-              />
-            </div>
-
-            {/* floating credential rail — two real stats, not one padded card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-              className="absolute -bottom-8 -left-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#C8E6C9] flex items-stretch overflow-hidden"
-            >
-              <div className="flex items-center gap-3 px-5 py-4">
-                <div
-                  className="w-10 h-10 rounded-xl grid place-items-center shrink-0"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(135deg, #1F9552, #4FC97B)",
-                  }}
-                >
-                  <Smile size={18} className="text-white" />
-                </div>
-                <div>
-                  <p className="font-serif text-xl text-[#0B2E1C] leading-none">
-                    {stats[0].value}
-                  </p>
-                  <p className="text-[#4C6B4C] text-[11px] mt-1 whitespace-nowrap">
-                    {stats[0].label}
-                  </p>
-                </div>
-              </div>
-
-              <div className="w-px bg-[#C8E6C9]" />
-
-              <div className="flex items-center gap-3 px-5 py-4">
-                <div
-                  className="w-10 h-10 rounded-xl grid place-items-center shrink-0"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(135deg, #4FC97B, #A7E86B)",
-                  }}
-                >
-                  <Heart size={18} className="text-white" />
-                </div>
-                <div>
-                  <p className="font-serif text-xl text-[#0B2E1C] leading-none">
-                    {stats[2].value}
-                  </p>
-                  <p className="text-[#4C6B4C] text-[11px] mt-1 whitespace-nowrap">
-                    {stats[2].label}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Trust Bar ── */}
-      <section className="relative py-14 overflow-hidden">
-        <div
-          className="absolute inset-0"
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.45 }}
+        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6"
+      >
+        <Button
+          asChild
+          size="lg"
+          className="w-full sm:w-auto text-[#0B3D26] font-semibold rounded-full px-8 py-6 text-base transition-all duration-300 hover:scale-105"
           style={{
             backgroundImage:
-              "radial-gradient(80% 120% at 0% 0%, rgba(79,201,123,0.25), transparent 60%), radial-gradient(80% 120% at 100% 100%, rgba(167,232,107,0.18), transparent 60%), linear-gradient(120deg, #0B3D26, #103F27 50%, #0B3D26)",
+              "linear-gradient(135deg, #D9F2C4, #A7E86B 55%, #4FC97B)",
+            boxShadow: "0 0 24px 2px rgba(167,232,107,0.45)",
           }}
-        />
-        <div className="relative max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((s, i) => (
-            <motion.div
-              key={i}
-              {...fade}
-              transition={{ delay: i * 0.1 }}
-              className="text-center rounded-2xl bg-white/[0.06] backdrop-blur-sm border border-white/10 py-6 px-3 hover:bg-white/[0.1] hover:-translate-y-1 transition-all duration-300"
-            >
-              <p
-                className="text-4xl font-bold font-serif bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: "linear-gradient(120deg, #A7E86B, #4FC97B)",
-                }}
-              >
-                {s.value}
-              </p>
-              <p className="text-[#CFEAD4] text-sm mt-2 tracking-wide">
-                {s.label}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+        >
+          <Link href="/book">
+            Book Your Consultation
+          </Link>
+        </Button>
+
+        <Link
+          href="/services"
+          className="group inline-flex items-center justify-center sm:justify-start gap-2 text-white text-sm font-medium tracking-wide py-2"
+        >
+          Explore Our Services
+          <ArrowRight
+            size={16}
+            className="text-[#A7E86B] transition-transform duration-300 group-hover:translate-x-1 shrink-0"
+            style={{
+              filter: "drop-shadow(0 0 4px rgba(167,232,107,0.6))",
+            }}
+          />
+        </Link>
+      </motion.div>
+    </div>
+  </div>
+</section>
+
+{/* ── Trust Bar ── */}
+<section className="relative overflow-hidden py-8 md:py-12">
+  <div
+    className="absolute inset-0"
+    style={{
+      backgroundImage:
+        "radial-gradient(80% 120% at 0% 0%, rgba(79,201,123,0.25), transparent 60%), radial-gradient(80% 120% at 100% 100%, rgba(167,232,107,0.18), transparent 60%), linear-gradient(120deg, #0B3D26, #103F27 50%, #0B3D26)",
+    }}
+  />
+
+  {/* ── glowing accents, matching hero ── */}
+  <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden hidden sm:block">
+    {/* scan-line sweep */}
+    <motion.div
+      animate={{ y: ["0%", "100%"] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+      className="absolute left-0 w-full h-px"
+      style={{
+        background:
+          "linear-gradient(90deg, transparent, rgba(167,232,107,0.5) 30%, rgba(167,232,107,0.7) 50%, rgba(167,232,107,0.5) 70%, transparent)",
+        boxShadow: "0 0 12px 1px rgba(167,232,107,0.5)",
+      }}
+    />
+    {/* corner brackets echoing hero */}
+    <div className="absolute top-6 left-6 w-10 h-10 border-t-2 border-l-2 border-[#A7E86B]/30 rounded-tl-md" />
+    <div className="absolute bottom-6 right-6 w-10 h-10 border-b-2 border-r-2 border-[#A7E86B]/25 rounded-br-md" />
+  </div>
+
+  <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+    {/* Stat row with glowing dividers instead of card grid */}
+    <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-y-6">
+      {stats.map((s, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.1, duration: 0.6 }}
+          className="relative text-center px-2 sm:px-4 py-2 group"
+        >
+          {/* vertical glow divider (skip first item per row depending on viewport) */}
+          {i !== 0 && (
+            <span
+              className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent, rgba(167,232,107,0.35), transparent)",
+              }}
+            />
+          )}
+
+          <p
+            className="text-3xl sm:text-4xl md:text-5xl font-bold font-serif bg-clip-text text-transparent transition-transform duration-300 group-hover:scale-105"
+            style={{
+              backgroundImage:
+                "linear-gradient(120deg, #D9F2C4, #A7E86B, #4FC97B)",
+            }}
+          >
+            {s.value}
+          </p>
+
+          {/* small glow underline */}
+          <span
+            className="block mx-auto mt-2 sm:mt-3 mb-2 sm:mb-3 h-[2px] w-6 transition-all duration-300 group-hover:w-10"
+            style={{
+              background: "#A7E86B",
+              boxShadow: "0 0 8px 1px rgba(167,232,107,0.6)",
+            }}
+          />
+
+          <p className="text-[#CFEAD4] text-[11px] sm:text-xs md:text-sm tracking-[0.15em] uppercase font-medium">
+            {s.label}
+          </p>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ── Branches ── */}
       <section
         className="relative py-28 overflow-hidden"
         style={{ background: "#F1FAEE" }}
       >
-        {/* section background image */}
         <div className="absolute inset-0">
           <Image
             src={branchBg}
@@ -298,7 +327,6 @@ export default function Home() {
             className="object-cover opacity-50"
           />
         </div>
-
         <div
           className="absolute top-0 right-0 w-[550px] h-[550px] rounded-full blur-[120px] opacity-60"
           style={{
@@ -374,23 +402,7 @@ export default function Home() {
               </span>
             </h2>
             <div className="space-y-2">
-              {[
-                {
-                  icon: Award,
-                  title: "You're in Good Hands",
-                  desc: "Experienced dental professionals dedicated to giving you thoughtful care and a smile you can feel proud of.",
-                },
-                {
-                  icon: Shield,
-                  title: "Care You Can Trust",
-                  desc: "Modern technology and careful treatment designed to keep your smile healthy, comfortable, and protected.",
-                },
-                {
-                  icon: Users,
-                  title: "Here for Your Journey",
-                  desc: "A caring team that listens to your needs and supports you through every step of your smile journey.",
-                },
-              ].map((item, i) => (
+              {whyChooseUsItems.map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: 20 }}
