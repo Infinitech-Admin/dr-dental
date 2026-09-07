@@ -7,6 +7,15 @@ import { Card } from "@/components/ui/card"
 import { MapPin, Clock, ArrowRight, Loader2 } from "lucide-react"
 import branchBg from "@/assets/branch-bg.jpg"
 
+type BranchImage = {
+  id: number
+  branch_id: string
+  type: string
+  url: string
+  alt: string
+  sort_order: number
+}
+
 type Branch = {
   id: number
   branch_id: string
@@ -21,6 +30,37 @@ type Branch = {
   blurb: string | null
   facebook: string | null
   instagram: string | null
+  images?: BranchImage[]
+}
+
+const getClinicImageUrl = (images?: BranchImage[]): string => {
+  const fallbackImage =
+    "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80"
+
+  if (!images || images.length === 0) return fallbackImage
+
+  // Find the first clinic type image or sort by sort_order
+  const clinicImages = images
+    .filter((img) => img.type === "clinic")
+    .sort((a, b) => a.sort_order - b.sort_order)
+
+  const selectedImage = clinicImages[0] || images[0]
+
+  if (!selectedImage?.url) return fallbackImage
+
+  let imagePath = selectedImage.url
+
+  if (
+    imagePath.startsWith("http://") ||
+    imagePath.startsWith("https://") ||
+    imagePath.startsWith("blob:")
+  ) {
+    return imagePath
+  }
+
+  const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+  return `${API_BASE_URL}/${imagePath.replace(/^\/+/, "")}`
 }
 
 export default function BranchesPage() {
@@ -189,91 +229,112 @@ export default function BranchesPage() {
           {/* Branches */}
           {!loading && !error && branches.length > 0 && (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-              {branches.map((branch) => (
-                <Link
-                  key={branch.id}
-                  href={`/branches/${branch.branch_id}`}
-                  className="group"
-                >
-                  <Card className="relative h-full p-5 sm:p-6 bg-white border-0 rounded-2xl overflow-hidden shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_-12px_rgba(79,201,123,0.4)]">
-                    {/* Top gradient stripe */}
-                    <div
-                      className="absolute top-0 left-0 right-0 h-1"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
-                      }}
-                    />
+              {branches.map((branch) => {
+                const coverImageUrl = getClinicImageUrl(branch.images)
 
-                    {/* Hover glow */}
-                    <div
-                      className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500"
-                      style={{
-                        background:
-                          "radial-gradient(circle, rgba(79,201,123,0.5), transparent 70%)",
-                      }}
-                    />
+                return (
+                  <Link
+                    key={branch.id}
+                    href={`/branches/${branch.branch_id}`}
+                    className="group"
+                  >
+                    <Card className="gap-0 p-0 relative h-full bg-white border-0 rounded-2xl overflow-hidden shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_-12px_rgba(79,201,123,0.4)] flex flex-col">
+                      {/* Clinic Cover Image */}
+                      <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-[#0A291A]">
+                        <Image
+                          src={coverImageUrl}
+                          alt={branch.name}
+                          fill
+                          unoptimized={coverImageUrl.startsWith("http")}
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
 
-                    <div className="relative flex items-start justify-between gap-3 mb-4">
-                      <div>
-                        <p
-                          className="text-xs uppercase tracking-[0.35em] font-semibold mb-3 bg-clip-text text-transparent"
+                        {/* Top gradient stripe */}
+                        <div
+                          className="absolute top-0 left-0 right-0 h-1 z-10"
                           style={{
                             backgroundImage:
-                              "linear-gradient(100deg, #145C36, #4FC97B)",
+                              "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
                           }}
-                        >
-                          {branch.area}
-                        </p>
-
-                        <h2 className="font-serif text-3xl leading-tight font-semibold text-[#0B2E1C]">
-                          {branch.name}
-                        </h2>
-                      </div>
-
-                      <div
-                        className="shrink-0 mt-1 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                        style={{
-                          backgroundImage:
-                            "linear-gradient(135deg, #1F9552, #4FC97B)",
-                          boxShadow: "0 6px 16px -4px rgba(31,149,82,0.5)",
-                        }}
-                      >
-                        <ArrowRight
-                          size={15}
-                          className="text-white transition-transform group-hover:translate-x-0.5"
                         />
                       </div>
-                    </div>
 
-                    <p className="relative mt-5 text-base leading-8 text-[#4C6B4C]">
-                      {branch.blurb}
-                    </p>
+                      <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
+                        <div>
+                          {/* Hover glow */}
+                          <div
+                            className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+                            style={{
+                              background:
+                                "radial-gradient(circle, rgba(79,201,123,0.5), transparent 70%)",
+                            }}
+                          />
 
-                    <div className="relative space-y-2.5 border-t border-[#DCEFD6] pt-4 mt-5">
-                      <div className="flex gap-2 text-xs sm:text-sm text-[#2E4E38]">
-                        <MapPin
-                          size={15}
-                          className="text-[#1F9552] shrink-0 mt-0.5"
-                        />
+                          <div className="relative flex items-start justify-between gap-3 mb-4">
+                            <div>
+                              <p
+                                className="text-xs uppercase tracking-[0.35em] font-semibold mb-3 bg-clip-text text-transparent"
+                                style={{
+                                  backgroundImage:
+                                    "linear-gradient(100deg, #145C36, #4FC97B)",
+                                }}
+                              >
+                                {branch.area}
+                              </p>
 
-                        <span className="font-mono break-words">
-                          {branch.address}
-                        </span>
+                              <h2 className="font-serif text-3xl leading-tight font-semibold text-[#0B2E1C]">
+                                {branch.name}
+                              </h2>
+                            </div>
+
+                            <div
+                              className="shrink-0 mt-1 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                              style={{
+                                backgroundImage:
+                                  "linear-gradient(135deg, #1F9552, #4FC97B)",
+                                boxShadow:
+                                  "0 6px 16px -4px rgba(31,149,82,0.5)",
+                              }}
+                            >
+                              <ArrowRight
+                                size={15}
+                                className="text-white transition-transform group-hover:translate-x-0.5"
+                              />
+                            </div>
+                          </div>
+
+                          <p className="relative mt-5 text-base leading-8 text-[#4C6B4C]">
+                            {branch.blurb}
+                          </p>
+                        </div>
+
+                        <div className="relative space-y-2.5 border-t border-[#DCEFD6] pt-4 mt-5">
+                          <div className="flex gap-2 text-xs sm:text-sm text-[#2E4E38]">
+                            <MapPin
+                              size={15}
+                              className="text-[#1F9552] shrink-0 mt-0.5"
+                            />
+
+                            <span className="font-mono break-words">
+                              {branch.address}
+                            </span>
+                          </div>
+
+                          <div className="flex gap-2 text-xs sm:text-sm text-[#2E4E38]">
+                            <Clock
+                              size={15}
+                              className="text-[#1F9552] shrink-0 mt-0.5"
+                            />
+
+                            <span className="font-mono">{branch.hours}</span>
+                          </div>
+                        </div>
                       </div>
-
-                      <div className="flex gap-2 text-xs sm:text-sm text-[#2E4E38]">
-                        <Clock
-                          size={15}
-                          className="text-[#1F9552] shrink-0 mt-0.5"
-                        />
-
-                        <span className="font-mono">{branch.hours}</span>
-                      </div>
-                    </div>
-                  </Card>
-                </Link>
-              ))}
+                    </Card>
+                  </Link>
+                )
+              })}
             </div>
           )}
         </div>
