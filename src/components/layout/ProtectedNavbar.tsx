@@ -69,6 +69,7 @@ export default function ProtectedNav({ userRole = "user" }: ProtectedNavProps) {
         { path: "/admin/dental-cases", icon: Smile, label: "Smile Gallery" },
         { path: "/admin/testimonials", icon: Star, label: "Testimonials" },
         { path: "/admin/branches", icon: ImagePlus, label: "Branches" },
+        { path: "/admin/teams", icon: ImagePlus, label: "Our Teams" },
         { path: "/admin/events", icon: Megaphone, label: "Events" },
       ],
     },
