@@ -45,11 +45,6 @@ export function HeroBackground({ videoSrc, fallbackImage }: HeroBackgroundProps)
           className="object-cover"
         />
       )}
-
-      {/* subtle green tint overlay */}
-      <div 
-        className="absolute inset-0 pointer-events-none bg-[#0B3D26]/30" 
-      />
     </div>
   )
 }
