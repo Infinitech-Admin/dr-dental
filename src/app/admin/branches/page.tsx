@@ -38,7 +38,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useAdminRoute } from "@/hooks/use-protected-route"
 import ProtectedNav from "@/components/layout/ProtectedNavbar"
 
-type ImageType = "clinic" | "team"
+type ImageType = "clinic"
 
 interface BranchImage {
   id: number
@@ -420,8 +420,6 @@ export default function BranchesPage() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full bg-gradient-to-br from-slate-50 via-emerald-50 to-white">
-      <ProtectedNav userRole="admin" />
-
       <main className="flex-1 min-w-0 bg-[#f4f8ff] p-4 sm:p-6 md:p-8">
         <div className="mb-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">
@@ -467,10 +465,6 @@ export default function BranchesPage() {
                     branch.images?.filter((image) => image.type === "clinic")
                       .length ?? 0
 
-                  const teamCount =
-                    branch.images?.filter((image) => image.type === "team")
-                      .length ?? 0
-
                   const thumbnail = branch.images?.[0]?.url
 
                   return (
@@ -510,7 +504,6 @@ export default function BranchesPage() {
 
                           <div className="flex gap-3 mt-1 text-[11px] text-slate-400">
                             <span>Clinic {clinicCount}</span>
-                            <span>Team {teamCount}</span>
                           </div>
                         </div>
                       </div>
@@ -794,7 +787,6 @@ export default function BranchesPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="clinic">Clinic</SelectItem>
-                          <SelectItem value="team">Team</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

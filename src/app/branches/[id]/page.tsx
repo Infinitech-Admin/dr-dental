@@ -41,6 +41,16 @@ interface BranchImage {
   sort_order: number
 }
 
+interface Team {
+  id: number
+  branchId: string | null
+  branchName: string | null
+  name: string
+  position: string | null
+  image: string | null
+  sortOrder: number
+}
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 async function getBranch(slug: string): Promise<Branch | null> {
@@ -69,6 +79,7 @@ async function getBranch(slug: string): Promise<Branch | null> {
     return data?.branch ?? null
   } catch (error) {
     console.error("Failed to fetch branch:", error)
+
     return null
   }
 }
@@ -104,6 +115,43 @@ async function getBranchImages(
   }
 }
 
+/**
+ * Fetch team members for a specific branch.
+ *
+ * API:
+ * GET /api/teams?branch_id=sm-gensan
+ */
+async function getBranchTeam(branchId: string): Promise<Team[]> {
+  try {
+    if (!branchId) {
+      return []
+    }
+
+    const params = new URLSearchParams({
+      branch_id: branchId,
+    })
+
+    const response = await fetch(
+      `${API_URL}/api/teams?${params.toString()}`,
+      {
+        cache: "no-store",
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch branch team")
+    }
+
+    const data = await response.json()
+
+    return Array.isArray(data?.teams) ? data.teams : []
+  } catch (error) {
+    console.error("Failed to fetch branch team:", error)
+
+    return []
+  }
+}
+
 export default async function BranchDetailPage({
   params,
 }: {
@@ -111,15 +159,23 @@ export default async function BranchDetailPage({
 }) {
   const { id: slug } = await params
 
+  // Fetch branch first because we need branch.branch_id
+  // to fetch the team members.
   const branch = await getBranch(slug)
 
   if (!branch) {
     notFound()
   }
 
-  const [clinicImages, teamImages] = await Promise.all([
+  /**
+   * Fetch clinic gallery and team members.
+   *
+   * branch.id       = numeric database ID
+   * branch.branch_id = branch slug, e.g. "sm-gensan"
+   */
+  const [clinicImages, team] = await Promise.all([
     getBranchImages(branch.id, "clinic"),
-    getBranchImages(branch.id, "team"),
+    getBranchTeam(branch.branch_id),
   ])
 
   const info = [
@@ -226,7 +282,9 @@ export default async function BranchDetailPage({
           </p>
 
           <h1 className="py-1 font-serif text-3xl font-semibold sm:text-5xl md:text-6xl">
-            <span className="text-[#0B2E1C]">{branch.name} </span>
+            <span className="text-[#0B2E1C]">
+              {branch.name}{" "}
+            </span>
 
             <span
               className="bg-clip-text text-transparent"
@@ -443,7 +501,7 @@ export default async function BranchDetailPage({
           </div>
 
           {/* TEAM */}
-          <BranchTeam branchId={branch.id} />
+          <BranchTeam team={team} />
 
           {/* GALLERY */}
           <BranchGallery branchId={branch.id} />
