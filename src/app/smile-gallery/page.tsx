@@ -79,17 +79,17 @@ function BeforeAfterSlider({
             }
       }
     >
-      {/* Before Layer (Always fully visible underneath) */}
+      {/* After Layer  */}
       <div className="absolute inset-0">
-        <Image src={formatImagePath(before)} alt={`${title} before treatment`} fill className="object-cover" draggable={false} unoptimized />
+        <Image src={formatImagePath(after)} alt={`${title} before treatment`} fill className="object-cover" draggable={false} unoptimized />
         <span className="absolute bottom-3 left-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white/80 bg-black/40 backdrop-blur-sm rounded-full px-2.5 py-1 pointer-events-none z-10">
           Before
         </span>
       </div>
 
-      {/* After Layer (Clipped dynamically by the handle position) */}
+      {/* Before Layer (Clipped dynamically by the handle position) */}
       <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
-        <Image src={formatImagePath(after)} alt={`${title} after treatment`} fill className="object-cover" draggable={false} unoptimized />
+        <Image src={formatImagePath(before)} alt={`${title} after treatment`} fill className="object-cover" draggable={false} unoptimized />
       </div>
 
       {/* After Label (Detached from clipping so it displays no matter what) */}
