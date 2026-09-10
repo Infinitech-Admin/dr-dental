@@ -177,7 +177,12 @@ export default function CasesPage() {
 
   /* ───────────────── UI ───────────────── */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-white text-slate-800">
+    <div className="min-h-screen"
+      style={{
+        background:
+          "linear-gradient(135deg, #0F3D2E 0%, #14532D 55%, #1B6B45 100%)",
+      }}
+    >
       <main className="min-h-screen bg-[#f4f8ff] pt-[12px] pb-12 px-4">
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pt-2">
@@ -219,11 +224,10 @@ export default function CasesPage() {
               <button
                 key={c}
                 onClick={() => setCategory(c)}
-                className={`px-4 h-10 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  category === c
+                className={`px-4 h-10 rounded-xl text-sm font-medium transition-all duration-200 ${category === c
                     ? "bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-md shadow-emerald-500/20"
                     : "bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
-                }`}
+                  }`}
               >
                 {c}
               </button>

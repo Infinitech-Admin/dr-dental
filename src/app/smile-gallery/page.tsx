@@ -44,7 +44,7 @@ function BeforeAfterSlider({
 
   const onPointerDown = (e: React.PointerEvent) => {
     setDragging(true)
-    ;(e.target as Element).setPointerCapture?.(e.pointerId)
+      ; (e.target as Element).setPointerCapture?.(e.pointerId)
     updateFromClientX(e.clientX)
   }
   const onPointerMove = (e: React.PointerEvent) => {
@@ -73,10 +73,10 @@ function BeforeAfterSlider({
         compact
           ? undefined
           : {
-              borderRadius: "1rem",
-              border: "1px solid rgba(167,232,107,0.25)",
-              boxShadow: "0 0 40px 2px rgba(167,232,107,0.1), 0 24px 48px -20px rgba(0,0,0,0.6)",
-            }
+            borderRadius: "1rem",
+            border: "1px solid rgba(167,232,107,0.25)",
+            boxShadow: "0 0 40px 2px rgba(167,232,107,0.1), 0 24px 48px -20px rgba(0,0,0,0.6)",
+          }
       }
     >
       {/* After Layer  */}
@@ -252,7 +252,7 @@ export default function SmileGalleryPage() {
         })
         if (!res.ok) throw new Error("Failed to load cases")
         const data = await res.json()
-        
+
         const items = Array.isArray(data) ? data : data.data || []
         setCases(items)
       } catch (err) {
@@ -279,44 +279,74 @@ export default function SmileGalleryPage() {
   }
 
   return (
-    <div style={{ background: "#0B3D26" }}>
+    <div className="min-h-screen"
+      style={{
+        background:
+          "radial-gradient(110% 90% at 15% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(90% 80% at 85% 10%, #CFF3D6 0%, transparent 60%), linear-gradient(160deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
+      }}
+    >
       {/* ── Header ── */}
-      <section className="relative pt-24 sm:pt-28 pb-10 px-4 sm:px-6 overflow-hidden">
+      <section className="relative pt-28 sm:pt-32 pb-12 overflow-hidden">
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none bg-clip-text text-transparent"
           style={{
-            backgroundImage: "radial-gradient(70% 60% at 20% 0%, rgba(79,201,123,0.2), transparent 60%)",
+            background:
+              "radial-gradient(110% 90% at 15% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(90% 80% at 85% 10%, #CFF3D6 0%, transparent 60%), linear-gradient(160deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
           }}
         />
-        <div className="relative max-w-3xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <span className="h-px w-6" style={{ background: "linear-gradient(90deg, transparent, #A7E86B)" }} />
-            <span className="text-[#A7E86B] text-xs font-medium uppercase tracking-[0.3em]">Smile Gallery</span>
-            <span className="h-px w-6" style={{ background: "linear-gradient(90deg, #A7E86B, transparent)" }} />
-          </div>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white mb-3 leading-tight">
-            Real results, real patients
+        <div className="relative max-w-4xl mx-auto text-center">
+          <span className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#1F9552]/25 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#1F9552] to-[#A7E86B] animate-pulse" />
+
+            <span className="text-[#145C36] text-xs font-semibold uppercase tracking-[0.35em]">
+              Smile Gallery
+            </span>
+          </span>
+
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[0.95] tracking-tight">
+            <span className="text-[#0B2E1C]">Real Results,</span>{" "}
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  "linear-gradient(100deg, #145C36 0%, #1F9552 40%, #4FC97B 70%, #A7E86B 100%)",
+              }}
+            >
+              Real Patients
+            </span>
           </h1>
-          <p className="text-[#CFEAD4] text-sm sm:text-base font-light leading-relaxed">
+
+          <p className="mt-8 max-w-2xl mx-auto text-lg sm:text-xl leading-8 text-[#2E4E38]/80">
             Drag the handle on any case to explore the transformation details.
           </p>
         </div>
       </section>
 
       {/* ── Filter chips ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-8">
-        <div className="flex flex-wrap justify-center gap-2">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-wrap justify-center gap-2 py-10">
           {categories.map((cat) => {
             const active = filter === cat
+
             return (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
-                className="text-xs px-3.5 py-1.5 rounded-full transition-all duration-200"
+                className="text-xs px-4 py-2 rounded-full transition-all duration-200"
                 style={
                   active
-                    ? { background: "linear-gradient(135deg, #D9F2C4, #A7E86B)", color: "#0B3D26", fontWeight: 600 }
-                    : { background: "rgba(255,255,255,0.05)", color: "#CFEAD4", border: "1px solid rgba(167,232,107,0.2)" }
+                    ? {
+                      background: "#145C36",
+                      color: "#FFFFFF",
+                      fontWeight: 600,
+                      boxShadow: "0 4px 12px rgba(20,92,54,0.18)",
+                    }
+                    : {
+                      background: "rgba(255,255,255,0.8)",
+                      color: "#145C36",
+                      border: "1px solid rgba(20,92,54,0.15)",
+                      boxShadow: "0 2px 8px rgba(20,60,35,0.05)",
+                    }
                 }
               >
                 {cat}

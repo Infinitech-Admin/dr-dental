@@ -31,7 +31,12 @@ const clinicGalleryImages = [
 
 export default function ClinicGalleryHome() {
   return (
-    <section className="relative py-8 bg-[#03110a] overflow-hidden px-4 sm:px-6 lg:px-8">
+    <section className="relative py-8 overflow-hidden px-4 sm:px-6 lg:px-8"
+      style={{
+        background:
+          "linear-gradient(135deg, #0F3D2E 0%, #14532D 55%, #1B6B45 100%)",
+      }}
+    >
       {/* Background glow effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px]" />

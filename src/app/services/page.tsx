@@ -229,30 +229,49 @@ export default function ServicesPage() {
   }
 
   return (
-    <section className="relative min-h-screen bg-[#03110a] overflow-hidden px-4 sm:px-8 py-20 sm:py-32 md:px-16">
-      {/* Ambient mesh glow */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/4 h-[350px] w-[350px] sm:h-[500px] sm:w-[500px] rounded-full bg-emerald-500/10 blur-[100px] sm:blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 h-[300px] w-[300px] sm:h-[400px] sm:w-[400px] rounded-full bg-green-400/10 blur-[80px] sm:blur-[100px]" />
+    <section
+      className="relative min-h-screen overflow-hidden px-4 pb-20 pt-28 sm:px-8 sm:pb-28 sm:pt-32 md:px-16"
+      style={{
+        background:
+          "radial-gradient(110% 90% at 15% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(90% 80% at 85% 10%, #CFF3D6 0%, transparent 60%), linear-gradient(160deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0 opacity-40">
+        <div className="absolute -left-24 top-20 h-72 w-72 rounded-full bg-white/60 blur-3xl" />
+        <div className="absolute right-0 top-96 h-96 w-96 rounded-full bg-[#A7E86B]/20 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative">
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 sm:mb-24 text-center"
+          className="mb-14 text-center sm:mb-20 pb-12"
+          style={{
+            background:
+              "radial-gradient(110% 90% at 15% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(90% 80% at 85% 10%, #CFF3D6 0%, transparent 60%), linear-gradient(160deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
+          }}
         >
-          <span className="inline-block rounded-full border border-emerald-500/30 bg-emerald-500/5 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-emerald-400">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#1F9552]/25 bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-[#145C36] shadow-sm backdrop-blur-sm">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-[#1F9552]" />
             Our Services
           </span>
 
-          <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">
-            Comprehensive Dental <span className="text-emerald-400">Care</span>
+          <h1 className="mt-6 font-serif text-4xl font-semibold leading-[0.98] tracking-tight text-[#0B2E1C] sm:text-5xl lg:text-6xl">
+            Comprehensive Dental{" "}
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  "linear-gradient(100deg, #145C36 0%, #1F9552 45%, #78D58C 100%)",
+              }}
+            >
+              Care
+            </span>
           </h1>
 
-          <p className="mt-5 text-sm sm:text-base text-white/50 max-w-xl mx-auto px-2 leading-relaxed">
+          <p className="mt-8 max-w-2xl mx-auto text-lg sm:text-xl leading-8 text-[#2E4E38]/80">
             Explore our full range of treatments across every branch — tap a
             category to see what&apos;s included.
           </p>
@@ -262,7 +281,7 @@ export default function ServicesPage() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-400/30 border-t-emerald-400" />
-            <p className="mt-4 text-xs text-white/40">
+            <p className="mt-4 text-xs text-[#557761]">
               Loading dental services...
             </p>
           </div>
@@ -270,11 +289,11 @@ export default function ServicesPage() {
 
         {/* ERROR */}
         {!loading && error && (
-          <div className="mx-auto max-w-lg rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
-            <p className="text-sm text-red-300">{error}</p>
+          <div className="mx-auto max-w-lg rounded-2xl border border-red-200 bg-white/70 p-6 text-center shadow-sm">
+            <p className="text-sm text-red-700">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="mt-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-medium text-emerald-300 hover:bg-emerald-500/20"
+              className="mt-4 rounded-lg border border-[#145C36]/20 bg-[#145C36] px-4 py-2 text-xs font-medium text-white hover:bg-[#1F9552]"
             >
               Try Again
             </button>
@@ -284,7 +303,7 @@ export default function ServicesPage() {
         {/* EMPTY */}
         {!loading && !error && services.length === 0 && (
           <div className="py-20 text-center">
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-[#557761]">
               No dental services are currently available.
             </p>
           </div>
@@ -292,7 +311,7 @@ export default function ServicesPage() {
 
         {/* CATEGORY GRID */}
         {!loading && !error && activeCategories.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mx-auto max-w-6xl">
             {activeCategories.map((cat, i) => {
               const Icon = cat.icon
               const categoryServices = servicesByCategory[cat.name] || []
@@ -306,9 +325,9 @@ export default function ServicesPage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -4 }}
-                  className="group relative text-left rounded-2xl border border-emerald-500/20 bg-white/[0.02] backdrop-blur-sm transition-all hover:border-emerald-400/50 hover:bg-emerald-500/[0.04] overflow-hidden w-full cursor-pointer flex flex-col shadow-lg"
+                  className="group relative flex w-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#1F9552]/15 bg-white/75 text-left shadow-[0_12px_32px_rgba(20,92,54,0.08)] backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-[#1F9552]/40 hover:shadow-[0_20px_40px_rgba(20,92,54,0.14)]"
                 >
-                  <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-[#020b07]">
+                  <div className="relative h-48 w-full overflow-hidden bg-[#D9F2C4] sm:h-52">
                     <Image
                       src={cat.image}
                       alt={cat.name}
@@ -316,24 +335,28 @@ export default function ServicesPage() {
                       unoptimized={cat.image.startsWith("http")}
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#03110a] via-transparent to-transparent opacity-90" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#123D2C]/80 via-transparent to-transparent opacity-90" />
 
-                    <div className="absolute top-4 left-4 z-10 flex items-center justify-center h-10 w-10 rounded-xl bg-[#03110a]/80 backdrop-blur-md border border-emerald-500/30 shadow-md">
-                      <Icon className="h-5 w-5 text-emerald-400" />
+                    <div className="absolute left-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-[#A7E86B]/50 shadow-md backdrop-blur-md"
+                      style={{
+                        background: "rgba(11,46,28,0.86)",
+                      }}
+                    >
+                      <Icon className="h-5 w-5 text-[#A7E86B]" />
                     </div>
                   </div>
 
-                  <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
+                  <div className="flex flex-1 flex-col justify-between p-6 sm:p-7">
                     <div>
-                      <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+                      <h3 className="mb-2 text-lg font-semibold text-[#0B2E1C] transition-colors group-hover:text-[#1F9552]">
                         {cat.name}
                       </h3>
-                      <p className="text-sm text-white/50 leading-relaxed">
+                      <p className="text-sm leading-relaxed text-[#557761]">
                         {cat.description}
                       </p>
                     </div>
 
-                    <div className="mt-6 flex items-center text-xs text-emerald-400 font-medium">
+                    <div className="mt-6 flex items-center text-xs font-semibold text-[#1F9552]">
                       {categoryServices.length}{" "}
                       {categoryServices.length === 1 ? "service" : "services"}
                       <span className="ml-1 transition-transform group-hover:translate-x-1">
@@ -357,16 +380,16 @@ export default function ServicesPage() {
           }
         }}
       >
-        <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] bg-[#04140c] border border-emerald-500/30 p-0 overflow-hidden rounded-2xl flex flex-col">
+        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col overflow-hidden rounded-2xl border border-[#1F9552]/25 bg-[#F4FDF4] p-0 shadow-2xl">
           <AnimatePresence>
             {activeCategoryObject && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="relative flex flex-col h-full overflow-hidden"
+                className="relative flex h-full flex-col overflow-hidden"
               >
-                <div className="relative border-b border-emerald-500/20 shrink-0 overflow-hidden">
-                  <div className="relative w-full h-40 sm:h-48">
+                <div className="relative shrink-0 overflow-hidden border-b border-[#1F9552]/20">
+                  <div className="relative h-40 w-full sm:h-48">
                     <Image
                       src={activeCategoryObject.image}
                       alt={activeCategoryObject.name}
@@ -376,49 +399,49 @@ export default function ServicesPage() {
                       )}
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#04140c] via-[#04140c]/70 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B2E1C] via-[#0B2E1C]/60 to-transparent" />
                   </div>
 
-                  <div className="absolute bottom-0 inset-x-0 p-6 sm:p-8 flex items-end gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 backdrop-blur-md border border-emerald-500/40 shadow-lg">
+                  <div className="absolute inset-x-0 bottom-0 flex items-end gap-4 p-6 sm:p-8">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#A7E86B]/40 bg-[#145C36]/80 shadow-lg backdrop-blur-md">
                       {(() => {
                         const Icon = activeCategoryObject.icon
-                        return <Icon className="h-6 w-6 text-emerald-300" />
+                        return <Icon className="h-6 w-6 text-[#A7E86B]" />
                       })()}
                     </div>
 
                     <div className="min-w-0 pr-2">
-                      <h2 className="text-xl sm:text-2xl font-bold text-white truncate drop-shadow-sm">
+                      <h2 className="truncate text-xl font-bold text-white drop-shadow-sm sm:text-2xl">
                         {activeCategoryObject.name}
                       </h2>
-                      <p className="mt-1 text-xs sm:text-sm text-white/70 leading-relaxed font-normal">
+                      <p className="mt-1 text-xs font-normal leading-relaxed text-white/70 sm:text-sm">
                         {activeCategoryObject.description}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                <div className="grid flex-1 grid-cols-1 gap-5 overflow-y-auto p-6 sm:grid-cols-2 sm:gap-6 sm:p-8">
                   {activeServices.map((service, i) => (
                     <motion.div
                       key={service.id}
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      className="group relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 hover:border-emerald-400/40 hover:bg-emerald-500/[0.04] transition-colors"
+                      className="group relative flex flex-col justify-between rounded-xl border border-[#1F9552]/15 bg-white/75 p-5 shadow-sm transition-colors hover:border-[#1F9552]/40 hover:bg-white sm:p-6"
                     >
                       <div>
                         <div className="flex items-start gap-3">
-                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" />
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1F9552]" />
                           <div className="min-w-0 flex-1">
-                            <h4 className="text-sm font-semibold text-white">
+                            <h4 className="text-sm font-semibold text-[#0B2E1C]">
                               {service.name}
                             </h4>
-                            <p className="mt-2 text-xs sm:text-sm text-white/50 leading-relaxed">
+                            <p className="mt-2 text-xs leading-relaxed text-[#557761] sm:text-sm">
                               {service.description}
                             </p>
                             <div className="mt-4">
-                              <span className="text-sm font-semibold text-emerald-400">
+                              <span className="text-sm font-semibold text-[#1F9552]">
                                 {formatPrice(service.price)}
                               </span>
                             </div>
@@ -431,7 +454,7 @@ export default function ServicesPage() {
                           String(service.id),
                         )}&service=${encodeURIComponent(service.name)}`}
                         onClick={() => setActiveCategoryName(null)}
-                        className="mt-5 self-start inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20 hover:text-emerald-200 transition-colors whitespace-nowrap"
+                        className="mt-5 inline-flex self-start items-center gap-1.5 whitespace-nowrap rounded-lg border border-[#145C36]/25 bg-[#145C36]/5 px-3.5 py-2 text-xs font-semibold text-[#145C36] transition-colors hover:bg-[#145C36] hover:text-white"
                       >
                         <CalendarCheck className="h-3.5 w-3.5" />
                         Book Now
