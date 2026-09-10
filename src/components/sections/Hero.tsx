@@ -74,99 +74,97 @@ const whyChooseUsItems = [
 
 export default function Home() {
   return (
-    <div className="bg-white">
-
+    <div className="bg-[#0B3D26]">
       {/* ── Hero Section ── */}
-      <section
-        className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden px-4 sm:px-6 md:px-12 py-20"
-        style={{
-          background:
-            "linear-gradient(135deg, #041F13 0%, #073B26 38%, #0B5A3A 72%, #14734A 100%)",
-        }}
-      >
-        {/* <HeroBackground
+      <section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden px-4 sm:px-6 md:px-12 py-20">
+        <HeroBackground
           videoSrc="/videos/sm-gensan-opening/hero.mp4"
           fallbackImage={heroBg}
-        /> */}
+        />
 
-        {/* ── Subtle background glow ── */}
+        {/* ── Subtle green overlay for text legibility ── */}
         <div
-          className="pointer-events-none absolute inset-0 z-[1]"
+          className="absolute inset-0 z-[1] pointer-events-none"
           style={{
-            background:
-              "radial-gradient(circle at 75% 35%, rgba(167,232,107,0.10), transparent 35%), radial-gradient(circle at 20% 80%, rgba(79,201,123,0.08), transparent 35%)",
+            backgroundImage:
+              "linear-gradient(90deg, rgba(6,38,23,0.72) 0%, rgba(11,61,38,0.52) 30%, rgba(11,61,38,0.28) 70%, rgba(11,61,38,0.10) 100%)",
           }}
         />
 
-        {/* ── Futuristic glowing accents ── */}
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none md:hidden"
+          style={{
+            backgroundImage:
+              "linear-gradient(180deg, rgba(6,38,23,0.08) 0%, rgba(6,38,23,0.25) 100%)",
+          }}
+        />
+
+        {/* ── Futuristic glowing accents (Hidden on very small screens to avoid overflow) ── */}
         <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden hidden sm:block">
-          {/* Horizontal scan-line */}
+          {/* Horizontal scan-line sweeping top to bottom */}
           <motion.div
             animate={{ y: ["0%", "100%"] }}
             transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
             className="absolute left-0 w-full h-px"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(167,232,107,0.35) 30%, rgba(167,232,107,0.6) 50%, rgba(167,232,107,0.35) 70%, transparent)",
-              boxShadow: "0 0 12px 1px rgba(167,232,107,0.35)",
+                "linear-gradient(90deg, transparent, rgba(167,232,107,0.5) 30%, rgba(167,232,107,0.7) 50%, rgba(167,232,107,0.5) 70%, transparent)",
+              boxShadow: "0 0 12px 1px rgba(167,232,107,0.5)",
             }}
           />
 
-          {/* Corner brackets */}
-          <div className="absolute top-28 left-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-[#A7E86B]/35 rounded-tl-md" />
+          {/* Corner brackets, top-left — pushed below nav */}
+          <div className="absolute top-28 left-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-[#A7E86B]/40 rounded-tl-md" />
+          {/* Corner brackets, bottom-left */}
+          <div className="absolute bottom-10 left-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-[#A7E86B]/25 rounded-bl-md" />
 
-          <div className="absolute bottom-10 left-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-[#A7E86B]/20 rounded-bl-md" />
-
-          <div className="absolute top-28 right-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-r-2 border-[#A7E86B]/35 rounded-tr-md" />
-
-          <div className="absolute bottom-10 right-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-[#A7E86B]/20 rounded-br-md" />
-
-          {/* Right accent */}
+          {/* Thin vertical glow line, far right edge, pulsing */}
           <motion.div
-            animate={{ opacity: [0.2, 0.55, 0.2] }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute right-0 top-0 h-full w-px"
+            animate={{ opacity: [0.2, 0.6, 0.2] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-0 right-0 w-px h-full"
             style={{
               background:
-                "linear-gradient(180deg, transparent, rgba(167,232,107,0.65) 50%, transparent)",
-              boxShadow: "0 0 12px rgba(167,232,107,0.2)",
+                "linear-gradient(180deg, transparent, rgba(167,232,107,0.5) 40%, rgba(79,201,123,0.5) 60%, transparent)",
+              boxShadow: "0 0 20px 2px rgba(167,232,107,0.3)",
             }}
           />
         </div>
 
         <div className="relative max-w-6xl w-full mx-auto z-10 pt-16 sm:pt-20">
-          <div className="w-full flex flex-col items-center text-center">
-            {/* Eyebrow */}
+          <div className="max-w-3xl text-left">
+            {/* Eyebrow with glowing vertical line */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
+              className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8"
             >
-              <span className="text-[#A7E86B] text-xs sm:text-sm font-medium uppercase tracking-[0.25em] sm:tracking-[0.35em]">
+              <motion.span
+                initial={{ height: 0 }}
+                animate={{ height: 20 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="w-[2px] bg-[#A7E86B]"
+                style={{ boxShadow: "0 0 8px 1px rgba(167,232,107,0.8)" }}
+              />
+              <span className="text-[#A7E86B] text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] sm:tracking-[0.35em]">
                 Dr. Dental Care Center
               </span>
             </motion.div>
 
-            {/* Main Heading */}
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="font-serif text-3xl sm:text-5xl md:text-7xl text-white mb-2 leading-[1.1] tracking-tight drop-shadow-md"
+              className="font-serif font-bold text-3xl sm:text-5xl md:text-7xl text-white mb-2 leading-[1.1] tracking-tight drop-shadow-md"
             >
               Your Journey to a
             </motion.h1>
-
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="font-serif text-3xl sm:text-5xl md:text-7xl mb-4 leading-[1.1] tracking-tight bg-clip-text text-transparent"
+              className="font-serif font-bold text-3xl sm:text-5xl md:text-7xl mb-4 leading-[1.1] tracking-tight bg-clip-text text-transparent"
               style={{
                 backgroundImage:
                   "linear-gradient(120deg, #D9F2C4, #A7E86B 45%, #4FC97B)",
@@ -175,7 +173,7 @@ export default function Home() {
               Perfect Smile
             </motion.h1>
 
-            {/* Glowing Line */}
+            {/* Glowing line that draws in under the headline */}
             <motion.div
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: "5rem", opacity: 1 }}
@@ -188,24 +186,22 @@ export default function Home() {
               }}
             />
 
-            {/* Description */}
             <motion.p
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35 }}
-              className="text-[#CFEAD4] text-sm sm:text-lg md:text-xl max-w-xl mb-8 sm:mb-10 font-light leading-relaxed drop-shadow"
+              className="text-[#CFEAD4] text-sm sm:text-lg md:text-xl max-w-xl mb-8 sm:mb-10 font-semibold leading-relaxed drop-shadow"
             >
               Experience premium dental care with our expert team across
               Mindanao. Compassionate, modern, and dedicated to your oral
               health.
             </motion.p>
 
-            {/* Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.45 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6"
             >
               <Button
                 asChild
@@ -222,7 +218,7 @@ export default function Home() {
 
               <Link
                 href="/services"
-                className="group inline-flex items-center justify-center gap-2 text-white text-sm font-medium tracking-wide py-2"
+                className="group inline-flex items-center justify-center sm:justify-start gap-2 text-white text-sm font-medium tracking-wide py-2"
               >
                 Explore Our Services
                 <ArrowRight
