@@ -8,15 +8,15 @@ import { useAuthStore } from "@/store/authStore"
  */
 export function useProtectedRoute() {
   const router = useRouter()
-  const { isLoggedIn } = useAuthStore()
+  const { isLoggedIn, _hasHydrated } = useAuthStore()
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (_hasHydrated && !isLoggedIn) {
       router.replace("/login")
     }
-  }, [isLoggedIn, router])
+  }, [_hasHydrated, isLoggedIn, router])
 
-  return { isLoggedIn }
+  return { isLoggedIn, isHydrated: _hasHydrated }
 }
 
 /**
@@ -25,16 +25,20 @@ export function useProtectedRoute() {
  */
 export function useAdminRoute() {
   const router = useRouter()
-  const { isLoggedIn, user } = useAuthStore()
+  const { isLoggedIn, user, _hasHydrated } = useAuthStore()
   const isAdmin = user?.role === "admin"
 
   useEffect(() => {
+    if (!_hasHydrated) {
+      return
+    }
+
     if (!isLoggedIn) {
       router.replace("/login")
     } else if (!isAdmin) {
       router.replace("/")
     }
-  }, [isLoggedIn, isAdmin, router])
+  }, [_hasHydrated, isLoggedIn, isAdmin, router])
 
-  return { isLoggedIn, isAdmin }
+  return { isLoggedIn, isAdmin, isHydrated: _hasHydrated }
 }

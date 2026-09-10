@@ -81,7 +81,7 @@ const EMPTY_FORM = {
 }
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"]
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024
 
 export default function BranchesPage() {
   useAdminRoute()
@@ -103,6 +103,8 @@ export default function BranchesPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [deletingImageId, setDeletingImageId] = useState<number | null>(null)
   const [deleteImageId, setDeleteImageId] = useState<number | null>(null)
+  const [draggedImageId, setDraggedImageId] = useState<number | null>(null)
+  const [savingImageOrder, setSavingImageOrder] = useState(false)
 
   const [deleteBranchId, setDeleteBranchId] = useState<string | null>(null)
   const [deletingBranch, setDeletingBranch] = useState(false)
@@ -202,7 +204,7 @@ export default function BranchesPage() {
         return
       }
       if (file.size > MAX_IMAGE_SIZE) {
-        errors.push(`${file.name}: maximum size is 5MB.`)
+        errors.push(`${file.name}: maximum size is 10MB.`)
         return
       }
       valid.push(file)
@@ -225,6 +227,92 @@ export default function BranchesPage() {
 
   function removeSelectedFile(index: number) {
     setSelectedFiles((files) => files.filter((_, i) => i !== index))
+  }
+
+  function handleImageDragStart(
+    event: React.DragEvent<HTMLDivElement>,
+    imageId: number,
+  ) {
+    setDraggedImageId(imageId)
+    event.dataTransfer.effectAllowed = "move"
+    event.dataTransfer.setData("text/plain", String(imageId))
+  }
+
+  function handleImageDragEnd() {
+    setDraggedImageId(null)
+  }
+
+  async function handleImageDrop(
+    event: React.DragEvent<HTMLDivElement>,
+    targetImageId: number,
+  ) {
+    event.preventDefault()
+
+    const sourceImageId = Number(event.dataTransfer.getData("text/plain"))
+    if (!sourceImageId || sourceImageId === targetImageId) {
+      setDraggedImageId(null)
+      return
+    }
+
+    const previousImages = existingImages
+    const sourceIndex = previousImages.findIndex(
+      (image) => image.id === sourceImageId,
+    )
+    const targetIndex = previousImages.findIndex(
+      (image) => image.id === targetImageId,
+    )
+
+    if (sourceIndex === -1 || targetIndex === -1) {
+      setDraggedImageId(null)
+      return
+    }
+
+    const reorderedImages = [...previousImages]
+    const [movedImage] = reorderedImages.splice(sourceIndex, 1)
+    reorderedImages.splice(targetIndex, 0, movedImage)
+    const orderedImages = reorderedImages.map((image, index) => ({
+      ...image,
+      sort_order: index,
+    }))
+
+    setExistingImages(orderedImages)
+    setDraggedImageId(null)
+    setSavingImageOrder(true)
+
+    try {
+      const responses = await Promise.all(
+        orderedImages.map((image) =>
+          fetch(`/api/branch-images/${image.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ sort_order: image.sort_order }),
+          }),
+        ),
+      )
+
+      const failedResponse = responses.find((response) => !response.ok)
+      if (failedResponse) {
+        const data = await failedResponse.json().catch(() => null)
+        throw new Error(data?.message || "Failed to save image order")
+      }
+
+      toast({
+        title: "Image order saved",
+        description: "Branch images were rearranged successfully.",
+      })
+    } catch (error) {
+      setExistingImages(previousImages)
+      toast({
+        title: "Unable to save image order",
+        description:
+          error instanceof Error ? error.message : "Failed to save image order",
+        variant: "destructive",
+      })
+    } finally {
+      setSavingImageOrder(false)
+    }
   }
 
   async function confirmDeleteImage() {
@@ -280,7 +368,13 @@ export default function BranchesPage() {
     const data = await response.json()
 
     if (!response.ok) {
-      throw new Error(data?.message || "Failed to upload images")
+      const validationMessage = data?.errors
+        ? Object.values(data.errors).flat().join(" ")
+        : null
+
+      throw new Error(
+        validationMessage || data?.message || "Failed to upload images",
+      )
     }
   }
 
@@ -330,7 +424,7 @@ export default function BranchesPage() {
       }
 
       const branchId: string | undefined =
-        editingBranch?.branch_id ?? data?.branch?.branch_id ?? data?.branch_id
+        data?.branch?.branch_id ?? data?.branch_id ?? editingBranch?.branch_id
 
       if (branchId && selectedFiles.length > 0) {
         try {
@@ -736,13 +830,22 @@ export default function BranchesPage() {
                   {editingBranch && existingImages.length > 0 && (
                     <div className="space-y-2">
                       <p className="text-xs text-slate-500">
-                        Existing images — hover to remove
+                        Existing images — slide to rearrange, or click the X to delete.
                       </p>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         {existingImages.map((img) => (
                           <div
                             key={img.id}
-                            className="group relative aspect-square rounded-lg overflow-hidden border border-gray-200"
+                            draggable={!savingImageOrder}
+                            onDragStart={(event) =>
+                              handleImageDragStart(event, img.id)
+                            }
+                            onDragOver={(event) => event.preventDefault()}
+                            onDrop={(event) => handleImageDrop(event, img.id)}
+                            onDragEnd={handleImageDragEnd}
+                            className={`group relative aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-grab active:cursor-grabbing ${
+                              draggedImageId === img.id ? "opacity-50" : ""
+                            }`}
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -765,6 +868,11 @@ export default function BranchesPage() {
                                 <X className="w-3 h-3" />
                               )}
                             </button>
+                            {savingImageOrder && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+                                <Loader2 className="h-5 w-5 animate-spin text-white" />
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -816,7 +924,7 @@ export default function BranchesPage() {
                   />
 
                   <p className="text-xs text-slate-400">
-                    JPG, PNG or WEBP, up to 5MB each — multiple allowed.
+                    JPG, PNG or WEBP, up to 10MB each — multiple allowed.
                     {editingBranch
                       ? " New images upload when you save changes."
                       : " Images upload right after the branch is created."}

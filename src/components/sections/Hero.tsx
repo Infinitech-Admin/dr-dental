@@ -74,83 +74,85 @@ const whyChooseUsItems = [
 
 export default function Home() {
   return (
-    <div className="bg-[#0B3D26]">
+    <div className="bg-white">
+
       {/* ── Hero Section ── */}
-      <section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden px-4 sm:px-6 md:px-12 py-20">
-        <HeroBackground
+      <section
+        className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden px-4 sm:px-6 md:px-12 py-20"
+        style={{
+          background:
+            "linear-gradient(135deg, #041F13 0%, #073B26 38%, #0B5A3A 72%, #14734A 100%)",
+        }}
+      >
+        {/* <HeroBackground
           videoSrc="/videos/sm-gensan-opening/hero.mp4"
           fallbackImage={heroBg}
-        />
+        /> */}
 
-        {/* ── Legibility gradient: dark green left → light/transparent right (Adjusted for mobile readability) ── */}
+        {/* ── Subtle background glow ── */}
         <div
-          className="absolute inset-0 z-[1] pointer-events-none"
+          className="pointer-events-none absolute inset-0 z-[1]"
           style={{
-            backgroundImage:
-              "linear-gradient(90deg, rgba(6,38,23,0.98) 0%, rgba(11,61,38,0.92) 30%, rgba(11,61,38,0.75) 80%, rgba(11,61,38,0.4) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 z-[1] pointer-events-none md:hidden"
-          style={{
-            backgroundImage:
-              "linear-gradient(180deg, rgba(6,38,23,0.1) 0%, rgba(6,38,23,0.4) 100%)",
+            background:
+              "radial-gradient(circle at 75% 35%, rgba(167,232,107,0.10), transparent 35%), radial-gradient(circle at 20% 80%, rgba(79,201,123,0.08), transparent 35%)",
           }}
         />
 
-        {/* ── Futuristic glowing accents (Hidden on very small screens to avoid overflow) ── */}
+        {/* ── Futuristic glowing accents ── */}
         <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden hidden sm:block">
-          {/* Horizontal scan-line sweeping top to bottom */}
+          {/* Horizontal scan-line */}
           <motion.div
             animate={{ y: ["0%", "100%"] }}
             transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
             className="absolute left-0 w-full h-px"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(167,232,107,0.5) 30%, rgba(167,232,107,0.7) 50%, rgba(167,232,107,0.5) 70%, transparent)",
-              boxShadow: "0 0 12px 1px rgba(167,232,107,0.5)",
+                "linear-gradient(90deg, transparent, rgba(167,232,107,0.35) 30%, rgba(167,232,107,0.6) 50%, rgba(167,232,107,0.35) 70%, transparent)",
+              boxShadow: "0 0 12px 1px rgba(167,232,107,0.35)",
             }}
           />
 
-          {/* Corner brackets, top-left — pushed below nav */}
-          <div className="absolute top-28 left-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-[#A7E86B]/40 rounded-tl-md" />
-          {/* Corner brackets, bottom-left */}
-          <div className="absolute bottom-10 left-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-[#A7E86B]/25 rounded-bl-md" />
+          {/* Corner brackets */}
+          <div className="absolute top-28 left-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-[#A7E86B]/35 rounded-tl-md" />
 
-          {/* Thin vertical glow line, far right edge, pulsing */}
+          <div className="absolute bottom-10 left-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-[#A7E86B]/20 rounded-bl-md" />
+
+          <div className="absolute top-28 right-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-r-2 border-[#A7E86B]/35 rounded-tr-md" />
+
+          <div className="absolute bottom-10 right-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-[#A7E86B]/20 rounded-br-md" />
+
+          {/* Right accent */}
           <motion.div
-            animate={{ opacity: [0.2, 0.6, 0.2] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-0 right-0 w-px h-full"
+            animate={{ opacity: [0.2, 0.55, 0.2] }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute right-0 top-0 h-full w-px"
             style={{
               background:
-                "linear-gradient(180deg, transparent, rgba(167,232,107,0.5) 40%, rgba(79,201,123,0.5) 60%, transparent)",
-              boxShadow: "0 0 20px 2px rgba(167,232,107,0.3)",
+                "linear-gradient(180deg, transparent, rgba(167,232,107,0.65) 50%, transparent)",
+              boxShadow: "0 0 12px rgba(167,232,107,0.2)",
             }}
           />
         </div>
 
         <div className="relative max-w-6xl w-full mx-auto z-10 pt-16 sm:pt-20">
-          <div className="max-w-2xl text-left">
-            {/* Eyebrow with glowing vertical line */}
+          <div className="w-full flex flex-col items-center text-center">
+            {/* Eyebrow */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8"
+              className="flex items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
             >
-              <motion.span
-                initial={{ height: 0 }}
-                animate={{ height: 20 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="w-[2px] bg-[#A7E86B]"
-                style={{ boxShadow: "0 0 8px 1px rgba(167,232,107,0.8)" }}
-              />
               <span className="text-[#A7E86B] text-xs sm:text-sm font-medium uppercase tracking-[0.25em] sm:tracking-[0.35em]">
                 Dr. Dental Care Center
               </span>
             </motion.div>
 
+            {/* Main Heading */}
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -159,6 +161,7 @@ export default function Home() {
             >
               Your Journey to a
             </motion.h1>
+
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -172,7 +175,7 @@ export default function Home() {
               Perfect Smile
             </motion.h1>
 
-            {/* Glowing line that draws in under the headline */}
+            {/* Glowing Line */}
             <motion.div
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: "5rem", opacity: 1 }}
@@ -185,6 +188,7 @@ export default function Home() {
               }}
             />
 
+            {/* Description */}
             <motion.p
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -196,11 +200,12 @@ export default function Home() {
               health.
             </motion.p>
 
+            {/* Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.45 }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
             >
               <Button
                 asChild
@@ -217,7 +222,7 @@ export default function Home() {
 
               <Link
                 href="/services"
-                className="group inline-flex items-center justify-center sm:justify-start gap-2 text-white text-sm font-medium tracking-wide py-2"
+                className="group inline-flex items-center justify-center gap-2 text-white text-sm font-medium tracking-wide py-2"
               >
                 Explore Our Services
                 <ArrowRight
