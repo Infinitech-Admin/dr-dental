@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
   Wrench,
@@ -16,28 +16,28 @@ import {
   Ear,
   CalendarCheck,
   FolderOpen,
-} from "lucide-react"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+} from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 // ---------- TYPES ----------
 
 type Service = {
-  id: number | string
-  name: string
-  description: string
-  category: string
-  price: number | string | null
-  status?: string
-  image?: string | null
-}
+  id: number | string;
+  name: string;
+  description: string;
+  category: string;
+  price: number | string | null;
+  status?: string;
+  image?: string | null;
+};
 
 type Category = {
-  id?: number | string
-  name: string
-  description: string
-  icon: React.ElementType
-  image: string
-}
+  id?: number | string;
+  name: string;
+  description: string;
+  icon: React.ElementType;
+  image: string;
+};
 
 // Map category names or fallback keys to Lucide icons
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -51,13 +51,13 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "Oral Surgery": Scissors,
   "Pediatric Dentistry": Baby,
   "TMJ Treatment": Ear,
-}
+};
 
 // ---------- IMAGE HELPER ----------
 
 const getImageUrl = (imagePath: unknown): string => {
   if (typeof imagePath !== "string" || imagePath.trim() === "") {
-    return "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"
+    return "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80";
   }
 
   if (
@@ -65,48 +65,48 @@ const getImageUrl = (imagePath: unknown): string => {
     imagePath.startsWith("https://") ||
     imagePath.startsWith("blob:")
   ) {
-    return imagePath
+    return imagePath;
   }
 
   const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-  return `${API_BASE_URL}/${imagePath.replace(/^\/+/, "")}`
-}
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  return `${API_BASE_URL}/${imagePath.replace(/^\/+/, "")}`;
+};
 
 // ---------- COMPONENT ----------
 
 export default function ServicesPage() {
-  const [services, setServices] = useState<Service[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
+  const [services, setServices] = useState<Service[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [activeCategoryName, setActiveCategoryName] = useState<string | null>(
     null,
-  )
+  );
 
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // ---------- FETCH CATEGORIES & SERVICES ----------
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true)
-        setError(null)
+        setLoading(true);
+        setError(null);
 
         // 1. Fetch Categories
         const catResponse = await fetch("/api/service-categories", {
           method: "GET",
           headers: { Accept: "application/json" },
           cache: "no-store",
-        })
+        });
 
         if (!catResponse.ok) {
-          throw new Error(`Failed to fetch categories (${catResponse.status})`)
+          throw new Error(`Failed to fetch categories (${catResponse.status})`);
         }
 
-        const catData = await catResponse.json()
+        const catData = await catResponse.json();
         const rawCategories = Array.isArray(catData)
           ? catData
-          : catData.data || []
+          : catData.data || [];
 
         const mappedCategories: Category[] = rawCategories.map((cat: any) => ({
           id: cat.id,
@@ -114,30 +114,30 @@ export default function ServicesPage() {
           description: cat.description || "",
           image: getImageUrl(cat.image),
           icon: ICON_MAP[cat.name] || FolderOpen,
-        }))
+        }));
 
-        setCategories(mappedCategories)
+        setCategories(mappedCategories);
 
         // 2. Fetch Services (with pagination handling)
-        const allServices: Service[] = []
-        let page = 1
-        let lastPage = 1
+        const allServices: Service[] = [];
+        let page = 1;
+        let lastPage = 1;
 
         do {
           const response = await fetch(`/api/services?page=${page}`, {
             method: "GET",
             headers: { Accept: "application/json" },
             cache: "no-store",
-          })
+          });
 
           if (!response.ok) {
-            throw new Error(`Failed to fetch services (${response.status})`)
+            throw new Error(`Failed to fetch services (${response.status})`);
           }
 
-          const data = await response.json()
+          const data = await response.json();
 
           if (!Array.isArray(data.data)) {
-            throw new Error("Invalid services response")
+            throw new Error("Invalid services response");
           }
 
           const pageServices: Service[] = data.data.map((service: any) => ({
@@ -151,73 +151,73 @@ export default function ServicesPage() {
                 : Number(service.price),
             status: service.status,
             image: service.image ?? null,
-          }))
+          }));
 
-          allServices.push(...pageServices)
-          lastPage = Number(data.last_page) || 1
-          page++
-        } while (page <= lastPage)
+          allServices.push(...pageServices);
+          lastPage = Number(data.last_page) || 1;
+          page++;
+        } while (page <= lastPage);
 
-        setServices(allServices)
+        setServices(allServices);
       } catch (err) {
-        console.error("Failed to fetch data:", err)
+        console.error("Failed to fetch data:", err);
         setError(
           err instanceof Error
             ? err.message
             : "Unable to load data. Please try again.",
-        )
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   // ---------- GROUP SERVICES BY CATEGORY ----------
 
   const servicesByCategory = services.reduce<Record<string, Service[]>>(
     (groups, service) => {
-      const category = String(service.category || "").trim()
+      const category = String(service.category || "").trim();
 
-      if (!category) return groups
+      if (!category) return groups;
 
       if (!groups[category]) {
-        groups[category] = []
+        groups[category] = [];
       }
 
-      groups[category].push(service)
-      return groups
+      groups[category].push(service);
+      return groups;
     },
     {},
-  )
+  );
 
   // Filter categories that actually have services available
   const activeCategories = categories.filter((cat) => {
-    return (servicesByCategory[cat.name]?.length ?? 0) > 0
-  })
+    return (servicesByCategory[cat.name]?.length ?? 0) > 0;
+  });
 
   // ---------- ACTIVE DETAILS ----------
 
   const activeCategoryObject = activeCategoryName
     ? categories.find((c) => c.name === activeCategoryName)
-    : null
+    : null;
 
   const activeServices = activeCategoryName
     ? servicesByCategory[activeCategoryName] || []
-    : []
+    : [];
 
   // ---------- PRICE FORMATTER ----------
 
   const formatPrice = (price: number | string | null) => {
     if (price === null || price === undefined || price === "") {
-      return "Price upon consultation"
+      return "Price upon consultation";
     }
 
-    const numericPrice = Number(price)
+    const numericPrice = Number(price);
 
     if (Number.isNaN(numericPrice)) {
-      return "Price upon consultation"
+      return "Price upon consultation";
     }
 
     return new Intl.NumberFormat("en-PH", {
@@ -225,8 +225,8 @@ export default function ServicesPage() {
       currency: "PHP",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(numericPrice)
-  }
+    }).format(numericPrice);
+  };
 
   return (
     <section
@@ -313,8 +313,8 @@ export default function ServicesPage() {
         {!loading && !error && activeCategories.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mx-auto max-w-6xl">
             {activeCategories.map((cat, i) => {
-              const Icon = cat.icon
-              const categoryServices = servicesByCategory[cat.name] || []
+              const Icon = cat.icon;
+              const categoryServices = servicesByCategory[cat.name] || [];
 
               return (
                 <motion.button
@@ -337,7 +337,8 @@ export default function ServicesPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#123D2C]/80 via-transparent to-transparent opacity-90" />
 
-                    <div className="absolute left-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-[#A7E86B]/50 shadow-md backdrop-blur-md"
+                    <div
+                      className="absolute left-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-[#A7E86B]/50 shadow-md backdrop-blur-md"
                       style={{
                         background: "rgba(11,46,28,0.86)",
                       }}
@@ -365,7 +366,7 @@ export default function ServicesPage() {
                     </div>
                   </div>
                 </motion.button>
-              )
+              );
             })}
           </div>
         )}
@@ -376,7 +377,7 @@ export default function ServicesPage() {
         open={!!activeCategoryName}
         onOpenChange={(open) => {
           if (!open) {
-            setActiveCategoryName(null)
+            setActiveCategoryName(null);
           }
         }}
       >
@@ -405,8 +406,8 @@ export default function ServicesPage() {
                   <div className="absolute inset-x-0 bottom-0 flex items-end gap-4 p-6 sm:p-8">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#A7E86B]/40 bg-[#145C36]/80 shadow-lg backdrop-blur-md">
                       {(() => {
-                        const Icon = activeCategoryObject.icon
-                        return <Icon className="h-6 w-6 text-[#A7E86B]" />
+                        const Icon = activeCategoryObject.icon;
+                        return <Icon className="h-6 w-6 text-[#A7E86B]" />;
                       })()}
                     </div>
 
@@ -440,11 +441,11 @@ export default function ServicesPage() {
                             <p className="mt-2 text-xs leading-relaxed text-[#557761] sm:text-sm">
                               {service.description}
                             </p>
-                            <div className="mt-4">
+                            {/* <div className="mt-4">
                               <span className="text-sm font-semibold text-[#1F9552]">
                                 {formatPrice(service.price)}
                               </span>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -468,5 +469,5 @@ export default function ServicesPage() {
         </DialogContent>
       </Dialog>
     </section>
-  )
+  );
 }
