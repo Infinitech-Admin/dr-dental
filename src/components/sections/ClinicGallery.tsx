@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { Sparkles, ArrowRight, MapPin } from "lucide-react"
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, MapPin, Sparkles, X } from "lucide-react";
 
-const clinicGalleryImages = [
+interface GalleryImage {
+  url: string;
+  alt: string;
+  branchName: string;
+}
+
+const clinicGalleryImages: GalleryImage[] = [
   {
     url: "/images/branches/sm-gensan/clinic/2.png",
     alt: "Reception Area",
@@ -16,40 +22,105 @@ const clinicGalleryImages = [
     alt: "Dental Chair",
     branchName: "Tagum",
   },
-
   {
     url: "/images/branches/ponciano/clinic/2.png",
     alt: "Exterior",
     branchName: "Ponciano",
   },
   {
-    url: "/images/branches/tagum/clinic/11.jpg",
-    alt: "Equipment",
+    url: "/images/branches/tagum/clinic/1.png",
+    alt: "Interior",
     branchName: "Tagum",
   },
-]
+  {
+    // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
+    url: "/images/branches/bajada/clinic/4.png",
+    alt: "Clinic Interior",
+    branchName: "Bajada",
+  },
+  {
+    // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
+    url: "/images/branches/panabo/clinic/4.png",
+    alt: "Clinic Interior",
+    branchName: "Panabo",
+  },
+];
+
+const ALL = "All";
 
 export default function ClinicGalleryHome() {
+  const [activeBranch, setActiveBranch] = useState<string>(ALL);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const branches = useMemo(
+    () => [
+      ALL,
+      ...Array.from(new Set(clinicGalleryImages.map((i) => i.branchName))),
+    ],
+    [],
+  );
+
+  const visible = useMemo(
+    () =>
+      activeBranch === ALL
+        ? clinicGalleryImages
+        : clinicGalleryImages.filter((i) => i.branchName === activeBranch),
+    [activeBranch],
+  );
+
+  const close = useCallback(() => setLightboxIndex(null), []);
+  const prev = useCallback(
+    () =>
+      setLightboxIndex((i) =>
+        i === null ? null : (i - 1 + visible.length) % visible.length,
+      ),
+    [visible.length],
+  );
+  const next = useCallback(
+    () =>
+      setLightboxIndex((i) => (i === null ? null : (i + 1) % visible.length)),
+    [visible.length],
+  );
+
+  // Keyboard controls + lock page scroll while lightbox is open.
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightboxIndex, close, prev, next]);
+
+  const current = lightboxIndex !== null ? visible[lightboxIndex] : null;
+
   return (
-    <section className="relative py-8 overflow-hidden px-4 sm:px-6 lg:px-8"
+    <section
+      className="relative py-16 overflow-hidden px-4 sm:px-6 lg:px-8"
       style={{
         background:
           "linear-gradient(135deg, #0F3D2E 0%, #14532D 55%, #1B6B45 100%)",
       }}
     >
-      {/* Background glow effects */}
+      {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px]" />
-        {/* faint scanline texture */}
-        <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(180deg,transparent_0%,transparent_50%,#10b981_50%,#10b981_51%,transparent_51%)] bg-[length:100%_4px]" />
       </div>
 
       <div className="relative max-w-7xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-10"
         >
           <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-xs uppercase tracking-[0.2em] mb-4">
             <Sparkles className="w-3.5 h-3.5" /> Clinic Atmosphere
@@ -63,72 +134,143 @@ export default function ClinicGalleryHome() {
           </p>
         </motion.div>
 
-        {/* HUD-style gallery grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-[220px]">
-          {clinicGalleryImages.map((img, index) => {
-            let spanClass = "md:col-span-1 md:row-span-1"
-            if (index === 0) spanClass = "md:col-span-2 md:row-span-2"
-            if (index === 3) spanClass = "md:col-span-2 md:row-span-1"
-
+        {/* Branch filter */}
+        <div className="mb-8 flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:justify-center sm:overflow-visible">
+          {branches.map((b) => {
+            const active = b === activeBranch;
             return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={`group relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#071f14] shadow-xl transition-colors hover:border-emerald-400/60 ${spanClass}`}
+              <button
+                key={b}
+                type="button"
+                onClick={() => setActiveBranch(b)}
+                className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  active
+                    ? "border-emerald-400 bg-emerald-400 text-[#06281a]"
+                    : "border-emerald-500/30 bg-black/20 text-emerald-300 hover:border-emerald-400/60 hover:bg-emerald-500/10"
+                }`}
               >
-                {/* corner brackets */}
-                <span className="pointer-events-none absolute top-3 left-3 h-4 w-4 border-t-2 border-l-2 border-emerald-400/0 group-hover:border-emerald-400/80 transition-all z-10" />
-                <span className="pointer-events-none absolute top-3 right-3 h-4 w-4 border-t-2 border-r-2 border-emerald-400/0 group-hover:border-emerald-400/80 transition-all z-10" />
-                <span className="pointer-events-none absolute bottom-3 left-3 h-4 w-4 border-b-2 border-l-2 border-emerald-400/0 group-hover:border-emerald-400/80 transition-all z-10" />
-                <span className="pointer-events-none absolute bottom-3 right-3 h-4 w-4 border-b-2 border-r-2 border-emerald-400/0 group-hover:border-emerald-400/80 transition-all z-10" />
-
-                {/* scan-line sweep on hover */}
-                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-emerald-400/10 to-transparent group-hover:translate-x-full transition-transform duration-1000 ease-in-out z-10" />
-
-                <Image
-                  src={img.url}
-                  alt={img.alt}
-                  fill
-                  unoptimized
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#03110a] via-[#03110a]/30 to-transparent opacity-90" />
-
-                <div className="absolute bottom-0 inset-x-0 p-5 flex flex-col justify-end">
-                  <span className="inline-flex items-center gap-1.5 w-fit text-[10px] uppercase tracking-wider font-semibold text-emerald-400 mb-1.5 rounded-full border border-emerald-500/30 bg-black/40 backdrop-blur-sm px-2.5 py-1">
-                    <MapPin className="h-3 w-3" />
-                    {img.branchName} Branch
-                  </span>
-                  <p className="text-sm font-medium text-white drop-shadow">
-                    {img.alt}
-                  </p>
-                </div>
-              </motion.div>
-            )
+                {b}
+              </button>
+            );
           })}
         </div>
 
-        {/* CTA to See All Branches */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-14 text-center px-4 sm:px-0"
-        >
-          <Link
-            href="/branches"
-            className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto px-6 sm:px-8 py-4 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium text-sm sm:text-base shadow-lg shadow-emerald-950/40 hover:from-emerald-400 hover:to-emerald-500 transition-all duration-300 group hover:scale-105 text-center"
-          >
-            <span className="whitespace-normal sm:whitespace-nowrap">
-              Explore All Branches & Locations
-            </span>
-            <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </motion.div>
+        {/* Gallery grid — uniform 4:3 cards, caption sits below the image */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {visible.map((img, index) => (
+              <motion.button
+                layout
+                key={img.url}
+                type="button"
+                onClick={() => setLightboxIndex(index)}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.3 }}
+                className="group overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#071f14] text-left shadow-xl transition-colors hover:border-emerald-400/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <Image
+                    src={img.url}
+                    alt={`${img.alt} — ${img.branchName} Branch`}
+                    fill
+                    unoptimized
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-3 px-4 py-3">
+                  <p className="text-sm font-medium text-white">{img.alt}</p>
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-500/30 bg-black/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+                    <MapPin className="h-3 w-3" />
+                    {img.branchName}
+                  </span>
+                </div>
+              </motion.button>
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
+
+      {/* Lightbox — full image, no cropping */}
+      <AnimatePresence>
+        {current && (
+          <motion.div
+            key="lightbox"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-8"
+            onClick={close}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${current.alt} — ${current.branchName} Branch`}
+          >
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Close"
+              className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {visible.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prev();
+                  }}
+                  aria-label="Previous image"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:left-6"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    next();
+                  }}
+                  aria-label="Next image"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:right-6"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </>
+            )}
+
+            <div
+              className="flex max-h-full w-full max-w-5xl flex-col items-center gap-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative h-[70vh] w-full">
+                <Image
+                  src={current.url}
+                  alt={`${current.alt} — ${current.branchName} Branch`}
+                  fill
+                  unoptimized
+                  sizes="100vw"
+                  className="object-contain"
+                />
+              </div>
+              <div className="flex items-center gap-3 text-white">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-black/40 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-400">
+                  <MapPin className="h-3 w-3" />
+                  {current.branchName} Branch
+                </span>
+                <span className="text-sm font-medium">{current.alt}</span>
+                <span className="text-xs text-white/50">
+                  {(lightboxIndex ?? 0) + 1} / {visible.length}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
-  )
+  );
 }
