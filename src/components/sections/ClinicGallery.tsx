@@ -1,9 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, MapPin, Sparkles, X } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Sparkles,
+  X,
+} from "lucide-react";
 
 interface GalleryImage {
   url: string;
@@ -13,60 +21,40 @@ interface GalleryImage {
 
 const clinicGalleryImages: GalleryImage[] = [
   {
-    url: "/images/branches/sm-gensan/clinic/2.png",
-    alt: "Reception Area",
+    url: "/images/branches/sm-gensan/clinic/5.png",
+    alt: "Clinic Entrance",
     branchName: "SM GenSan",
   },
   {
-    url: "/images/branches/tagum/clinic/5.jpg",
-    alt: "Dental Chair",
-    branchName: "Tagum",
-  },
-  {
     url: "/images/branches/ponciano/clinic/2.png",
-    alt: "Exterior",
+    alt: "Clinic Entrance",
     branchName: "Ponciano",
   },
   {
     url: "/images/branches/tagum/clinic/1.png",
-    alt: "Interior",
+    alt: "Clinic Entrance",
     branchName: "Tagum",
   },
   {
     // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
     url: "/images/branches/bajada/clinic/4.png",
-    alt: "Clinic Interior",
+    alt: "Clinic Entrance",
     branchName: "Bajada",
   },
   {
     // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
     url: "/images/branches/panabo/clinic/4.png",
-    alt: "Clinic Interior",
+    alt: "Clinic Entrance",
     branchName: "Panabo",
   },
 ];
 
-const ALL = "All";
+const BRANCHES_HREF = "/branches";
 
 export default function ClinicGalleryHome() {
-  const [activeBranch, setActiveBranch] = useState<string>(ALL);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const branches = useMemo(
-    () => [
-      ALL,
-      ...Array.from(new Set(clinicGalleryImages.map((i) => i.branchName))),
-    ],
-    [],
-  );
-
-  const visible = useMemo(
-    () =>
-      activeBranch === ALL
-        ? clinicGalleryImages
-        : clinicGalleryImages.filter((i) => i.branchName === activeBranch),
-    [activeBranch],
-  );
+  const visible = clinicGalleryImages;
 
   const close = useCallback(() => setLightboxIndex(null), []);
   const prev = useCallback(
@@ -134,62 +122,49 @@ export default function ClinicGalleryHome() {
           </p>
         </motion.div>
 
-        {/* Branch filter */}
-        <div className="mb-8 flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:justify-center sm:overflow-visible">
-          {branches.map((b) => {
-            const active = b === activeBranch;
-            return (
-              <button
-                key={b}
-                type="button"
-                onClick={() => setActiveBranch(b)}
-                className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${
-                  active
-                    ? "border-emerald-400 bg-emerald-400 text-[#06281a]"
-                    : "border-emerald-500/30 bg-black/20 text-emerald-300 hover:border-emerald-400/60 hover:bg-emerald-500/10"
-                }`}
-              >
-                {b}
-              </button>
-            );
-          })}
+        {/* Explore all branches CTA */}
+        <div className="mb-8 flex justify-center">
+          <Link
+            href={BRANCHES_HREF}
+            className="group inline-flex items-center gap-2 rounded-full border border-emerald-400 bg-emerald-400 px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#06281a] shadow-lg shadow-emerald-500/20 transition-colors hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F3D2E]"
+          >
+            Explore All Branches
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
 
         {/* Gallery grid — uniform 4:3 cards, caption sits below the image */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {visible.map((img, index) => (
-              <motion.button
-                layout
-                key={img.url}
-                type="button"
-                onClick={() => setLightboxIndex(index)}
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.3 }}
-                className="group overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#071f14] text-left shadow-xl transition-colors hover:border-emerald-400/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  <Image
-                    src={img.url}
-                    alt={`${img.alt} — ${img.branchName} Branch`}
-                    fill
-                    unoptimized
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <div className="flex items-center justify-between gap-3 px-4 py-3">
-                  <p className="text-sm font-medium text-white">{img.alt}</p>
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-500/30 bg-black/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
-                    <MapPin className="h-3 w-3" />
-                    {img.branchName}
-                  </span>
-                </div>
-              </motion.button>
-            ))}
-          </AnimatePresence>
+          {visible.map((img, index) => (
+            <motion.button
+              key={img.url}
+              type="button"
+              onClick={() => setLightboxIndex(index)}
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3 }}
+              className="group overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#071f14] text-left shadow-xl transition-colors hover:border-emerald-400/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            >
+              <div className="relative aspect-[4/3] w-full overflow-hidden">
+                <Image
+                  src={img.url}
+                  alt={`${img.alt} — ${img.branchName} Branch`}
+                  fill
+                  unoptimized
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+              <div className="flex items-center justify-between gap-3 px-4 py-3">
+                <p className="text-sm font-medium text-white">{img.alt}</p>
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-500/30 bg-black/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+                  <MapPin className="h-3 w-3" />
+                  {img.branchName}
+                </span>
+              </div>
+            </motion.button>
+          ))}
         </div>
       </div>
 
