@@ -47,11 +47,11 @@ const clinicGalleryImages: GalleryImage[] = [
     alt: "Clinic Entrance",
     branchName: "Panabo",
   },
-  {
-    url: "/images/branches/toril/1.png",
-    alt: "Clinic Entrance",
-    branchName: "Toril",
-  },
+  // {
+  //   url: "/images/branches/toril/1.png",
+  //   alt: "Dental Treatment Room",
+  //   branchName: "Toril",
+  // },
 ];
 
 const BRANCHES_HREF = "/branches";
