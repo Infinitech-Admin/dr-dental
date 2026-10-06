@@ -21,31 +21,36 @@ interface GalleryImage {
 
 const clinicGalleryImages: GalleryImage[] = [
   {
-    url: "/images/branches/sm-gensan/clinic/5.png",
+    url: "/images/branches/sm-gensan/clinic/6.png",
     alt: "Clinic Entrance",
     branchName: "SM GenSan",
   },
   {
-    url: "/images/branches/ponciano/clinic/2.png",
+    url: "/images/branches/ponciano/clinic/6.png",
     alt: "Clinic Entrance",
     branchName: "Ponciano",
   },
   {
-    url: "/images/branches/tagum/clinic/1.png",
+    url: "/images/branches/tagum/clinic/13.png",
     alt: "Clinic Entrance",
     branchName: "Tagum",
   },
   {
     // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
-    url: "/images/branches/bajada/clinic/4.png",
+    url: "/images/branches/bajada/clinic/6.png",
     alt: "Clinic Entrance",
     branchName: "Bajada",
   },
   {
     // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
-    url: "/images/branches/panabo/clinic/4.png",
+    url: "/images/branches/panabo/clinic/7.png",
     alt: "Clinic Entrance",
     branchName: "Panabo",
+  },
+  {
+    url: "/images/branches/toril/clinic/1.png",
+    alt: "Clinic Entrance",
+    branchName: "Toril",
   },
 ];
 
@@ -110,28 +115,16 @@ export default function ClinicGalleryHome() {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-10"
         >
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-xs uppercase tracking-[0.2em] mb-4">
-            <Sparkles className="w-3.5 h-3.5" /> Clinic Atmosphere
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight">
-            Designed for Your <span className="text-emerald-400">Comfort</span>
-          </h2>
-          <p className="mt-4 text-sm sm:text-base text-white/60 leading-relaxed">
-            Take a visual tour inside our modern, fully equipped dental clinics
-            built to provide a relaxing and safe environment.
-          </p>
+          {/* Explore all branches CTA (replaces the old heading) */}
+          <div className="flex justify-center">
+            <Link
+              href={BRANCHES_HREF}
+              className="group inline-flex items-center gap-2 rounded-full border border-emerald-400 bg-emerald-400 px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#06281a] shadow-lg shadow-emerald-500/20 transition-colors hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F3D2E]"
+            >
+              Explore All Branches
+            </Link>
+          </div>
         </motion.div>
-
-        {/* Explore all branches CTA */}
-        <div className="mb-8 flex justify-center">
-          <Link
-            href={BRANCHES_HREF}
-            className="group inline-flex items-center gap-2 rounded-full border border-emerald-400 bg-emerald-400 px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#06281a] shadow-lg shadow-emerald-500/20 transition-colors hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F3D2E]"
-          >
-            Explore All Branches
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
 
         {/* Gallery grid — uniform 4:3 cards, caption sits below the image */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
