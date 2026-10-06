@@ -48,7 +48,7 @@ const clinicGalleryImages: GalleryImage[] = [
     branchName: "Panabo",
   },
   {
-    url: "/images/branches/toril/clinic/1.png",
+    url: "/images/branches/toril/1.png",
     alt: "Clinic Entrance",
     branchName: "Toril",
   },
