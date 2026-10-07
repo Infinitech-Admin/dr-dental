@@ -1,52 +1,78 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
-  ChevronLeft,
-  ChevronRight,
+  Clock,
   MapPin,
-  Sparkles,
-  X,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface GalleryImage {
+  branchId: string;
   url: string;
   alt: string;
   Location: string;
+  branch?: {
+    address: string;
+    hours: string;
+  };
 }
 
 const clinicGalleryImages: GalleryImage[] = [
   {
+    branchId: "sm-gensan",
     url: "/images/branches/bajada/clinic/2.png",
     alt: "SM Gensan",
     Location: "General Santos City",
+    branch: {
+      address: "SK Complex, J.P. Laurel Ave, Bajada, Davao City, Philippines, 8000",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
   },
   {
+    branchId: "ponciano",
     url: "/images/branches/ponciano/clinic/6.png",
     alt: "Ponciano",
     Location: "Davao City",
+    branch: {
+      address: "Unit I-3 K.H Building cor. Ponciano and Bonifacio Street, Davao City, Philippines, 8000",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
   },
   {
+    branchId: "tagum",
     url: "/images/branches/tagum/clinic/13.png",
     alt: "Tagum",
     Location: "Tagum City",
+    branch: {
+      address: "Cris Inn Hotel Building, Unit Door 22-28, Magugpo East, Lower Apokon, Tagum City, Philippines, 8100",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
   },
   {
+    branchId: "bajada",
     // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
     url: "/images/branches/bajada/clinic/6.png",
     alt: "Bajada",
     Location: "Davao City",
+    branch: {
+      address: "SK Complex, J.P. Laurel Ave, Bajada, Davao City, Philippines, 8000",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
   },
   {
+    branchId: "panabo",
     // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
     url: "/images/branches/panabo/clinic/7.png",
     alt: "Panabo",
     Location: "Panabo City",
+    branch: {
+      address: "Ground Floor, Panabo Market Complex, Panabo City, Philippines, 8105",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
   },
   // {
   //   url: "/images/branches/toril/1.png",
@@ -58,42 +84,7 @@ const clinicGalleryImages: GalleryImage[] = [
 const BRANCHES_HREF = "/branches";
 
 export default function ClinicGalleryHome() {
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
   const visible = clinicGalleryImages;
-
-  const close = useCallback(() => setLightboxIndex(null), []);
-  const prev = useCallback(
-    () =>
-      setLightboxIndex((i) =>
-        i === null ? null : (i - 1 + visible.length) % visible.length,
-      ),
-    [visible.length],
-  );
-  const next = useCallback(
-    () =>
-      setLightboxIndex((i) => (i === null ? null : (i + 1) % visible.length)),
-    [visible.length],
-  );
-
-  // Keyboard controls + lock page scroll while lightbox is open.
-  useEffect(() => {
-    if (lightboxIndex === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
-    };
-    window.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [lightboxIndex, close, prev, next]);
-
-  const current = lightboxIndex !== null ? visible[lightboxIndex] : null;
 
   return (
     <section
@@ -129,17 +120,19 @@ export default function ClinicGalleryHome() {
 
         {/* Gallery grid — matches the branch cards styling for a consistent look */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((img, index) => (
-            <motion.button
+          {visible.map((img) => (
+            <motion.div
               key={img.url}
-              type="button"
-              onClick={() => setLightboxIndex(index)}
               initial={{ opacity: 0, scale: 0.96 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3 }}
-              className="group block w-full text-left"
             >
+              <Link
+                href={`/branches/${encodeURIComponent(img.branchId)}`}
+                aria-label={`View ${img.alt} branch`}
+                className="group block h-full w-full text-left"
+              >
               <Card className="gap-0 p-0 relative h-full bg-white border-0 rounded-2xl overflow-hidden shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_-12px_rgba(79,201,123,0.4)] flex flex-col">
                 <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-[#0A291A]">
                   <Image
@@ -208,91 +201,35 @@ export default function ClinicGalleryHome() {
                       every visit.
                     </p>
                   </div>
+
+                  <div className="relative space-y-2.5 border-t border-[#DCEFD6] pt-4 mt-5">
+                    <div className="flex gap-2 text-xs sm:text-sm text-[#2E4E38]">
+                      <MapPin
+                        size={15}
+                        className="text-[#1F9552] shrink-0 mt-0.5"
+                      />
+
+                      <span className="font-mono break-words">
+                        {img.branch?.address}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2 text-xs sm:text-sm text-[#2E4E38]">
+                      <Clock
+                        size={15}
+                        className="text-[#1F9552] shrink-0 mt-0.5"
+                      />
+
+                      <span className="font-mono">{img.branch?.hours}</span>
+                    </div>
+                  </div>
                 </div>
               </Card>
-            </motion.button>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>
-
-      {/* Lightbox — full image, no cropping */}
-      <AnimatePresence>
-        {current && (
-          <motion.div
-            key="lightbox"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 sm:p-8"
-            onClick={close}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${current.alt} — ${current.Location} Branch`}
-          >
-            <button
-              type="button"
-              onClick={close}
-              aria-label="Close"
-              className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            {visible.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    prev();
-                  }}
-                  aria-label="Previous image"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:left-6"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    next();
-                  }}
-                  aria-label="Next image"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 sm:right-6"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              </>
-            )}
-
-            <div
-              className="flex max-h-full w-full max-w-5xl flex-col items-center gap-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="relative h-[70vh] w-full">
-                <Image
-                  src={current.url}
-                  alt={`${current.alt} — ${current.Location} Branch`}
-                  fill
-                  unoptimized
-                  sizes="100vw"
-                  className="object-contain"
-                />
-              </div>
-              <div className="flex items-center gap-3 text-white">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-black/40 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-400">
-                  <MapPin className="h-3 w-3" />
-                  {current.Location} Branch
-                </span>
-                <span className="text-sm font-medium">{current.alt}</span>
-                <span className="text-xs text-white/50">
-                  {(lightboxIndex ?? 0) + 1} / {visible.length}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
