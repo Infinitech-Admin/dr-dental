@@ -21,7 +21,7 @@ interface GalleryImage {
 
 const clinicGalleryImages: GalleryImage[] = [
   {
-    url: "/images/branches/sm-gensan/clinic/6.png",
+    url: "/images/branches/bajada/clinic/2.png",
     alt: "Clinic Entrance",
     branchName: "SM GenSan",
   },

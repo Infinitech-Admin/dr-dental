@@ -444,7 +444,7 @@ export default function Home() {
                         alt={`${branch.name} branch of Dr. Dental Care Center`}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover"
+                        className="object-contain"
                       />
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-6 pb-6 pt-16">
                         <p className="text-lg font-semibold text-white">
@@ -481,7 +481,6 @@ export default function Home() {
                 onClick={() => setIsPlaying((playing) => !playing)}
                 className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/45 text-white transition hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A7E86B]"
               >
-                {isPlaying ? <Pause size={17} /> : <Play size={17} />}
               </button>
 
               <div className="absolute bottom-3 right-4 flex gap-1.5">
