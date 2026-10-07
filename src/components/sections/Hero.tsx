@@ -3,6 +3,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import dynamic from "next/dynamic"
+import { useEffect, useState } from "react"
+import useEmblaCarousel from "embla-carousel-react"
 import { motion } from "framer-motion"
 import {
   Shield,
@@ -11,13 +13,27 @@ import {
   Sparkles,
   MapPin,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 import heroBg from "@/assets/hero-bg.jpg"
 import branchBg from "@/assets/branch-bg.jpg"
-import exterior from "@/assets/exterior-2.jpg"
 import { HeroBackground } from "@/components/HeroBackground"
+import { BRANCHES } from "@/lib/branches-data"
+
+const branchPhotos: Record<string, string> = {
+  bajada: "/images/branches/bajada/clinic/6.png",
+  digos: "/images/branches/digos/1.png",
+  panabo: "/images/branches/panabo/clinic/7.png",
+  ponciano: "/images/branches/ponciano/clinic/6.png",
+  "sm-gensan": "/images/branches/sm-gensan/clinic/6.png",
+  tagum: "/images/branches/tagum/clinic/13.png",
+  toril: "/images/branches/toril/1.png",
+}
 
 const BranchesMap = dynamic(() => import("../BranchMap"), {
   ssr: false,
@@ -72,7 +88,42 @@ const whyChooseUsItems = [
   },
 ]
 
+
 export default function Home() {
+  const [carouselRef, api] = useEmblaCarousel({ loop: true })
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const slides = BRANCHES.map((branch) => ({
+    branch,
+    image: branchPhotos[branch.id],
+  })).filter(
+    (slide): slide is { branch: (typeof BRANCHES)[number]; image: string } =>
+      Boolean(slide.image),
+  )
+
+  useEffect(() => {
+    if (!api) return
+
+    const updateSelectedIndex = () =>
+      setSelectedIndex(api.selectedScrollSnap())
+
+    updateSelectedIndex()
+    api.on("select", updateSelectedIndex)
+    return () => {
+      api.off("select", updateSelectedIndex)
+    }
+  }, [api])
+
+  useEffect(() => {
+    if (!api || !isPlaying) return
+
+    const intervalId = window.setInterval(() => {
+      api.scrollNext()
+    }, 5000)
+
+    return () => window.clearInterval(intervalId)
+  }, [api, isPlaying])
+
   return (
     <div className="bg-[#0B3D26]">
       {/* ── Hero Section ── */}
@@ -371,14 +422,87 @@ export default function Home() {
                   "linear-gradient(135deg, #4FC97B, #A7E86B, #1F9552)",
               }}
             />
-            <div className="relative rounded-[1.75rem] overflow-hidden border-4 border-white/10 shadow-2xl">
-              <Image
-                src={exterior}
-                alt="Dr. Dental Care Center exterior"
-                width={600}
-                height={450}
-                className="w-full h-auto"
-              />
+
+            <div
+              className="relative rounded-[1.75rem] overflow-hidden border-4 border-white/10 shadow-2xl"
+              role="region"
+              aria-roledescription="carousel"
+              aria-label="Dr. Dental Care Center branches"
+            >
+              <div ref={carouselRef} className="overflow-hidden">
+                <div className="flex">
+                  {slides.map(({ branch, image }) => (
+                    <div
+                      key={branch.id}
+                      className="relative aspect-[4/3] min-w-0 flex-[0_0_100%]"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label={`${branch.name}, ${branch.area}`}
+                    >
+                      <Image
+                        src={image}
+                        alt={`${branch.name} branch of Dr. Dental Care Center`}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-6 pb-6 pt-16">
+                        <p className="text-lg font-semibold text-white">
+                          {branch.name} Branch
+                        </p>
+                        <p className="text-sm text-white/80">{branch.area}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                aria-label="Previous branch"
+                onClick={() => api?.scrollPrev()}
+                className="absolute left-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white transition hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A7E86B]"
+              >
+                <ChevronLeft size={22} />
+              </button>
+              <button
+                type="button"
+                aria-label="Next branch"
+                onClick={() => api?.scrollNext()}
+                className="absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white transition hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A7E86B]"
+              >
+                <ChevronRight size={22} />
+              </button>
+
+              <button
+                type="button"
+                aria-label={isPlaying ? "Pause branch carousel" : "Play branch carousel"}
+                aria-pressed={!isPlaying}
+                onClick={() => setIsPlaying((playing) => !playing)}
+                className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/45 text-white transition hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A7E86B]"
+              >
+                {isPlaying ? <Pause size={17} /> : <Play size={17} />}
+              </button>
+
+              <div className="absolute bottom-3 right-4 flex gap-1.5">
+                {slides.map(({ branch }, index) => (
+                  <button
+                    key={branch.id}
+                    type="button"
+                    aria-label={`Show ${branch.name} branch`}
+                    aria-current={selectedIndex === index ? "true" : undefined}
+                    onClick={() => api?.scrollTo(index)}
+                    className={`h-2 rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A7E86B] ${selectedIndex === index
+                        ? "w-5 bg-[#A7E86B]"
+                        : "w-2 bg-white/70 hover:bg-white"
+                      }`}
+                  />
+                ))}
+              </div>
+              <span className="sr-only" aria-live="polite">
+                {slides[selectedIndex]?.branch.name} branch, {selectedIndex + 1} of{" "}
+                {slides.length}
+              </span>
             </div>
           </motion.div>
 
