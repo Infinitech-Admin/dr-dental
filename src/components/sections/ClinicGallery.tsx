@@ -12,45 +12,46 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 interface GalleryImage {
   url: string;
   alt: string;
-  branchName: string;
+  Location: string;
 }
 
 const clinicGalleryImages: GalleryImage[] = [
   {
     url: "/images/branches/bajada/clinic/2.png",
-    alt: "Clinic Entrance",
-    branchName: "SM GenSan",
+    alt: "SM Gensan",
+    Location: "General Santos City",
   },
   {
     url: "/images/branches/ponciano/clinic/6.png",
-    alt: "Clinic Entrance",
-    branchName: "Ponciano",
+    alt: "Ponciano",
+    Location: "Davao City",
   },
   {
     url: "/images/branches/tagum/clinic/13.png",
-    alt: "Clinic Entrance",
-    branchName: "Tagum",
+    alt: "Tagum",
+    Location: "Tagum City",
   },
   {
     // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
     url: "/images/branches/bajada/clinic/6.png",
-    alt: "Clinic Entrance",
-    branchName: "Bajada",
+    alt: "Bajada",
+    Location: "Davao City",
   },
   {
     // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
     url: "/images/branches/panabo/clinic/7.png",
-    alt: "Clinic Entrance",
-    branchName: "Panabo",
+    alt: "Panabo",
+    Location: "Panabo City",
   },
   // {
   //   url: "/images/branches/toril/1.png",
   //   alt: "Dental Treatment Room",
-  //   branchName: "Toril",
+  //   Location: "Toril",
   // },
 ];
 
@@ -126,7 +127,7 @@ export default function ClinicGalleryHome() {
           </div>
         </motion.div>
 
-        {/* Gallery grid — uniform 4:3 cards, caption sits below the image */}
+        {/* Gallery grid — matches the branch cards styling for a consistent look */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((img, index) => (
             <motion.button
@@ -137,25 +138,78 @@ export default function ClinicGalleryHome() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3 }}
-              className="group overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#071f14] text-left shadow-xl transition-colors hover:border-emerald-400/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              className="group block w-full text-left"
             >
-              <div className="relative aspect-[4/3] w-full overflow-hidden">
-                <Image
-                  src={img.url}
-                  alt={`${img.alt} — ${img.branchName} Branch`}
-                  fill
-                  unoptimized
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-              <div className="flex items-center justify-between gap-3 px-4 py-3">
-                <p className="text-sm font-medium text-white">{img.alt}</p>
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-500/30 bg-black/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
-                  <MapPin className="h-3 w-3" />
-                  {img.branchName}
-                </span>
-              </div>
+              <Card className="gap-0 p-0 relative h-full bg-white border-0 rounded-2xl overflow-hidden shadow-[0_10px_40px_-12px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_-12px_rgba(79,201,123,0.4)] flex flex-col">
+                <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-[#0A291A]">
+                  <Image
+                    src={img.url}
+                    alt={`${img.alt} — ${img.Location} Branch`}
+                    fill
+                    unoptimized
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+                  <div
+                    className="absolute top-0 left-0 right-0 h-1 z-10"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, #1F9552, #4FC97B, #A7E86B)",
+                    }}
+                  />
+                </div>
+
+                <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
+                  <div>
+                    <div
+                      className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        background:
+                          "radial-gradient(circle, rgba(79,201,123,0.5), transparent 70%)",
+                      }}
+                    />
+
+                    <div className="relative flex items-start justify-between gap-3 mb-4">
+                      <div>
+                        <p
+                          className="text-xs uppercase tracking-[0.35em] font-semibold mb-3 bg-clip-text text-transparent"
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(100deg, #145C36, #4FC97B)",
+                          }}
+                        >
+                          {img.Location}
+                        </p>
+
+                        <h2 className="font-serif text-3xl leading-tight font-semibold text-[#0B2E1C]">
+                          {img.alt}
+                        </h2>
+                      </div>
+
+                      <div
+                        className="shrink-0 mt-1 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(135deg, #1F9552, #4FC97B)",
+                          boxShadow:
+                            "0 6px 16px -4px rgba(31,149,82,0.5)",
+                        }}
+                      >
+                        <ArrowRight
+                          size={15}
+                          className="text-white transition-transform group-hover:translate-x-0.5"
+                        />
+                      </div>
+                    </div>
+
+                    <p className="relative mt-5 text-base leading-8 text-[#4C6B4C]">
+                      Explore this clinic space and see how our team brings care to
+                      every visit.
+                    </p>
+                  </div>
+                </div>
+              </Card>
             </motion.button>
           ))}
         </div>
@@ -173,7 +227,7 @@ export default function ClinicGalleryHome() {
             onClick={close}
             role="dialog"
             aria-modal="true"
-            aria-label={`${current.alt} — ${current.branchName} Branch`}
+            aria-label={`${current.alt} — ${current.Location} Branch`}
           >
             <button
               type="button"
@@ -218,7 +272,7 @@ export default function ClinicGalleryHome() {
               <div className="relative h-[70vh] w-full">
                 <Image
                   src={current.url}
-                  alt={`${current.alt} — ${current.branchName} Branch`}
+                  alt={`${current.alt} — ${current.Location} Branch`}
                   fill
                   unoptimized
                   sizes="100vw"
@@ -228,7 +282,7 @@ export default function ClinicGalleryHome() {
               <div className="flex items-center gap-3 text-white">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-black/40 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-emerald-400">
                   <MapPin className="h-3 w-3" />
-                  {current.branchName} Branch
+                  {current.Location} Branch
                 </span>
                 <span className="text-sm font-medium">{current.alt}</span>
                 <span className="text-xs text-white/50">
