@@ -23,12 +23,35 @@ interface GalleryImage {
 
 const clinicGalleryImages: GalleryImage[] = [
   {
-    branchId: "sm-gensan",
-    url: "/images/branches/bajada/clinic/2.png",
-    alt: "SM Gensan",
-    Location: "General Santos City",
+    branchId: "bajada",
+    // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
+    url: "/images/branches/bajada/clinic/6.png",
+    alt: "Bajada",
+    Location: "Davao City",
     branch: {
       address: "SK Complex, J.P. Laurel Ave, Bajada, Davao City, Philippines, 8000",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
+  },
+  {
+    branchId: "digos",
+    // TODO: palitan ng totoong filename sa public/images/branches/digos/clinic/
+    url: "/images/branches/digos/1.png",
+    alt: "Digos",
+    Location: "Digos City",
+    branch: {
+      address: "3rd Floor, Gmall Digos, Tres De Mayo, Upper Digos, Digos City, Philippines, 8002",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
+  },
+  {
+    branchId: "panabo",
+    // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
+    url: "/images/branches/panabo/clinic/7.png",
+    alt: "Panabo",
+    Location: "Panabo City",
+    branch: {
+      address: "Ground Floor, Panabo Market Complex, Panabo City, Philippines, 8105",
       hours: "Mon-Fri: 8:00 AM - 5:00 PM",
     }
   },
@@ -43,6 +66,16 @@ const clinicGalleryImages: GalleryImage[] = [
     }
   },
   {
+    branchId: "sm-gensan",
+    url: "/images/branches/bajada/clinic/2.png",
+    alt: "SM Gensan",
+    Location: "General Santos City",
+    branch: {
+      address: "SK Complex, J.P. Laurel Ave, Bajada, Davao City, Philippines, 8000",
+      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
+    }
+  },
+  {
     branchId: "tagum",
     url: "/images/branches/tagum/clinic/13.png",
     alt: "Tagum",
@@ -53,24 +86,12 @@ const clinicGalleryImages: GalleryImage[] = [
     }
   },
   {
-    branchId: "bajada",
-    // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
-    url: "/images/branches/bajada/clinic/6.png",
-    alt: "Bajada",
+    branchId: "toril",
+    url: "/images/branches/toril/1.png",
+    alt: "Toril",
     Location: "Davao City",
     branch: {
-      address: "SK Complex, J.P. Laurel Ave, Bajada, Davao City, Philippines, 8000",
-      hours: "Mon-Fri: 8:00 AM - 5:00 PM",
-    }
-  },
-  {
-    branchId: "panabo",
-    // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
-    url: "/images/branches/panabo/clinic/7.png",
-    alt: "Panabo",
-    Location: "Panabo City",
-    branch: {
-      address: "Ground Floor, Panabo Market Complex, Panabo City, Philippines, 8105",
+      address: "Toril Branch, Davao City, Davao del Sur 8000",
       hours: "Mon-Fri: 8:00 AM - 5:00 PM",
     }
   },
