@@ -71,6 +71,7 @@ export default function CasesPage() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM)
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [saving, setSaving] = useState(false)
+  const [updateError, setUpdateError] = useState<string | null>(null)
 
   const fetchCases = useCallback(async () => {
     setLoading(true)
@@ -131,16 +132,29 @@ export default function CasesPage() {
     if (!selected) return
 
     setSaving(true)
-    const fd = buildFormData()
-    fd.append("_method", "PUT") 
+    setUpdateError(null)
 
-    await fetch(`/api/cases/${selected.id}`, {
-      method: "PUT",
-      body: fd,
-    })
-    setSaving(false)
-    closeModal()
-    fetchCases()
+    try {
+      const res = await fetch(`/api/cases/${selected.id}`, {
+        method: "POST",
+        body: buildFormData(),
+      })
+      const data = await res.json().catch(() => null)
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to update case.")
+      }
+
+      closeModal()
+      await fetchCases()
+    } catch (error) {
+      console.error("Failed to update dental case:", error)
+      setUpdateError(
+        error instanceof Error ? error.message : "Failed to update case.",
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleDelete = async () => {
@@ -159,6 +173,7 @@ export default function CasesPage() {
     setModal(null)
     setSelected(null)
     setForm(EMPTY_FORM)
+    setUpdateError(null)
   }
 
   const imgUrl = (path: string) => `${process.env.NEXT_PUBLIC_API_URL}${path}`
@@ -305,6 +320,7 @@ export default function CasesPage() {
                                 after: null,
                                 note: c.note || "",
                               })
+                              setUpdateError(null)
                               setModal("edit")
                             }}
                             className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-emerald-100 hover:text-emerald-700 transition flex items-center justify-center"
@@ -440,6 +456,12 @@ export default function CasesPage() {
               {/* FORM */}
               {(modal === "create" || modal === "edit") && (
                 <div className="space-y-5">
+                  {modal === "edit" && updateError && (
+                    <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+                      {updateError}
+                    </p>
+                  )}
+
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-slate-700">Title</label>
                     <input

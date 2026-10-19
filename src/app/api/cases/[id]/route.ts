@@ -7,6 +7,46 @@ type Params = {
   params: Promise<{ id: string }>
 }
 
+async function updateCase(request: NextRequest, { params }: Params) {
+  try {
+    const { id } = await params
+    const token = getAuthToken(request)
+    const formData = await request.formData()
+
+    formData.set("_method", "PUT")
+
+    const res = await fetch(`${API_URL}/api/cases/${encodeURIComponent(id)}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: formData,
+    })
+
+    const responseText = await res.text()
+    let data: unknown
+
+    try {
+      data = JSON.parse(responseText)
+    } catch {
+      data = { message: responseText || "Backend returned an invalid response." }
+    }
+
+    return NextResponse.json(data, { status: res.status })
+  } catch (err) {
+    console.error("Failed to update dental case:", err)
+    return NextResponse.json(
+      { message: "Failed to update case" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function POST(request: NextRequest, context: Params) {
+  return updateCase(request, context)
+}
+
 export async function GET(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params
@@ -37,10 +77,10 @@ export async function PUT(request: NextRequest, { params }: Params) {
     const token = getAuthToken(request)
     const formData = await request.formData()
 
-    formData.append("_method", "PUT")
+    formData.set("_method", "PUT")
 
     const res = await fetch(`${API_URL}/api/cases/${id}`, {
-      method: "PUT",
+      method: "POST",
       headers: {
         Accept: "application/json",
         Authorization: token ? `Bearer ${token}` : "",
