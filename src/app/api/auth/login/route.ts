@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
     console.log("=== LOGIN DEBUG START ===")
     console.log("Request body received:", { email: body.email, password: "[HIDDEN]" })
 
-    // Validate required fields
     if (!body.email || !body.password) {
       console.log("Validation failed - missing required fields")
       return NextResponse.json(
@@ -35,7 +34,6 @@ export async function POST(request: NextRequest) {
 
     console.log("Sending data to Laravel:", { email: requestData.email, password: "[HIDDEN]" })
 
-    // Send to Laravel backend
     const response = await fetch(fullUrl, {
       method: "POST",
       headers: {
@@ -77,7 +75,6 @@ export async function POST(request: NextRequest) {
 
     console.log("=== LOGIN DEBUG END ===")
 
-    // Return the Laravel response as-is with the same status code
     return NextResponse.json(data, {
       status: response.status,
       headers: {
@@ -96,7 +93,6 @@ export async function POST(request: NextRequest) {
       console.error("Non-Error thrown:", error)
     }
 
-    // Check if it's a network error
     if (error instanceof TypeError && error.message.includes("fetch")) {
       console.error("Network/Connection error detected")
       return NextResponse.json(

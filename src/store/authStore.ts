@@ -96,7 +96,6 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         token: state.token,
         isLoggedIn: state.isLoggedIn,
-        // _hasHydrated is intentionally excluded
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);

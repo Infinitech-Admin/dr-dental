@@ -356,7 +356,6 @@ export default function TeamsPage() {
                     <div className="flex items-center gap-3 sm:contents">
                       <div className="w-16 h-16 shrink-0 rounded-full overflow-hidden bg-emerald-50">
                         {team.image ? (
-                          // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={team.image}
                             alt={team.name}
@@ -429,7 +428,6 @@ export default function TeamsPage() {
                   <div className="flex items-center gap-4">
                     <div className="w-20 h-20 shrink-0 rounded-full overflow-hidden bg-emerald-50 border border-gray-200">
                       {previewUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={previewUrl}
                           alt="Preview"

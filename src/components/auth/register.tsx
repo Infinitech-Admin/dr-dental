@@ -84,7 +84,6 @@ export default function RegisterPage() {
       return
     }
 
-    // UPDATED: Phone validation — must be exactly 11 digits and start with "09"
     if (
       formData.phone &&
       (formData.phone.length !== 11 || !formData.phone.startsWith("09"))
@@ -335,8 +334,6 @@ export default function RegisterPage() {
   )
 }
 
-// ─── Reusable Field ───────────────────────────────────────────────────────────
-
 function Field({
   label,
   icon: Icon,
@@ -373,7 +370,6 @@ function Field({
   )
 }
 
-// ─── Phone Field with inline validation ──────────────────────────────────────
 
 function PhoneField({
   value,
@@ -382,7 +378,6 @@ function PhoneField({
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }) {
-  // Derive validation state from the current value
   const getValidationState = () => {
     if (value.length === 0) return null
     if (!value.startsWith("09"))

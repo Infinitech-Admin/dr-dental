@@ -16,7 +16,6 @@ export default function FloatingSocialMedia() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  // Hide on admin pages
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {
     return null;
   }

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-// GET ALL CASES
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams.toString()
@@ -27,7 +26,6 @@ export async function GET(request: NextRequest) {
 
     const data = await res.json()
     return NextResponse.json(data, { status: res.status })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("API Route Proxy Error:", err)
     return NextResponse.json(
@@ -37,7 +35,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// CREATE CASE
 export async function POST(request: NextRequest) {
   try {
     const token = getAuthToken(request)

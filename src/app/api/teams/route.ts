@@ -61,9 +61,6 @@ export async function POST(request: NextRequest) {
             headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`,
-                // Do NOT set Content-Type manually — fetch sets the
-                // correct multipart/form-data boundary automatically
-                // when body is a FormData instance.
             },
             body: formData,
         })

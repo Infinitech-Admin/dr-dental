@@ -13,7 +13,6 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-// Extend Window to avoid `any`
 interface WindowWithPWA extends Window {
   __pwaInstallPrompt?: BeforeInstallPromptEvent;
 }

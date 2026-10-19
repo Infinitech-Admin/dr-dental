@@ -15,9 +15,6 @@ import {
 
 import ProtectedNav from "@/components/layout/ProtectedNavbar"
 
-/* ─────────────────────────────────────────
-    TYPES — matches App\Models\DentalCase
-───────────────────────────────────────── */
 type Case = {
   id: number
   title: string
@@ -44,9 +41,6 @@ type Pagination = {
   total: number
 }
 
-/* ─────────────────────────────────────────
-    CONSTANTS
-───────────────────────────────────────── */
 const CATEGORIES = [
   "All",
   "Whitening",
@@ -65,9 +59,6 @@ const EMPTY_FORM: FormState = {
   note: "",
 }
 
-/* ─────────────────────────────────────────
-    PAGE
-───────────────────────────────────────── */
 export default function CasesPage() {
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(false)
@@ -81,7 +72,6 @@ export default function CasesPage() {
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [saving, setSaving] = useState(false)
 
-  /* ───────────────── fetch ───────────────── */
   const fetchCases = useCallback(async () => {
     setLoading(true)
 
@@ -91,7 +81,6 @@ export default function CasesPage() {
       page: String(page),
     })
 
-    // Proxy request via Next.js API route/rewrite
     const res = await fetch(`/api/cases?${params.toString()}`)
     const data = await res.json()
 
@@ -113,7 +102,6 @@ export default function CasesPage() {
     setPage(1)
   }, [search, category])
 
-  /* ───────────────── CRUD ───────────────── */
   const buildFormData = () => {
     const fd = new FormData()
 
@@ -144,7 +132,7 @@ export default function CasesPage() {
 
     setSaving(true)
     const fd = buildFormData()
-    fd.append("_method", "PUT") // Laravel form-data PUT workaround
+    fd.append("_method", "PUT") 
 
     await fetch(`/api/cases/${selected.id}`, {
       method: "PUT",
@@ -175,9 +163,8 @@ export default function CasesPage() {
 
   const imgUrl = (path: string) => `${process.env.NEXT_PUBLIC_API_URL}${path}`
 
-  /* ───────────────── UI ───────────────── */
   return (
-    <div className="min-h-screen"
+    <div className="min-h-screen text-slate-500"
       style={{
         background:
           "linear-gradient(135deg, #0F3D2E 0%, #14532D 55%, #1B6B45 100%)",
@@ -295,7 +282,7 @@ export default function CasesPage() {
 
                       {/* ACTIONS */}
                       <td className="py-4 px-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-2 text-slate-500">
                           <button
                             onClick={() => {
                               setSelected(c)

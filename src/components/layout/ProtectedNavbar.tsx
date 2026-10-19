@@ -45,21 +45,16 @@ export default function ProtectedNav({ userRole = "user" }: ProtectedNavProps) {
 
   const USER_NAV_ITEMS = [
     { path: "/", icon: Home, label: "Home" },
-    { path: "/book", icon: CalendarPlus, label: "Book" },
+    { path: "https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments", icon: CalendarPlus, label: "Book" },
     { path: "/appointments", icon: ClipboardList, label: "Appointments" },
-    { path: "/profile", icon: User, label: "Profile" },
+    { path: "https://members.drdentalcarecenter.com/", icon: User, label: "Membership" },
   ]
 
   const ADMIN_NAV_GROUPS = [
     {
-      title: "Overview",
+      title: "",
       items: [
         { path: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-        {
-          path: "/admin/appointments",
-          icon: CalendarPlus,
-          label: "Appointments",
-        },
       ],
     },
     {

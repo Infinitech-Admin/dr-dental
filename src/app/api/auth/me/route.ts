@@ -14,7 +14,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Send to Laravel backend
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`,
       {

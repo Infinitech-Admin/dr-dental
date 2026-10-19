@@ -18,6 +18,22 @@ export default function LoginPage() {
 
   const login = useAuthStore((state) => state.login)
 
+  const getRoleRedirect = (role?: string) => {
+    const normalized = role?.trim().toLowerCase().replace(/[\s_-]+/g, "_") ?? ""
+
+    switch (normalized) {
+      case "admin":
+        return "/admin/dashboard"
+      case "front_desk":
+      case "frontdesk":
+        return "https://appointments.drdentalcarecenter.com/"
+      case "customer":
+        return "https://members.drdentalcarecenter.com/"
+      default:
+        return "/"
+    }
+  }
+
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
@@ -44,7 +60,6 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (data.success) {
-        // Your Laravel response shape: { success, data: { token, user } }
         const token = data.data?.token ?? data.token ?? data.access_token
         const user = data.data?.user ?? data.user
 
@@ -55,14 +70,17 @@ export default function LoginPage() {
             description: "Welcome back to Dr. Dental Care Center!",
           })
 
-          // Respect ?redirect= param (e.g. coming from /book), then fall back to role-based route
           const redirectParam = searchParams.get("redirect")
 
           const userRole = user?.role?.toLowerCase?.() ?? ""
-          const defaultPath = userRole === "admin" ? "/admin/dashboard" : "/"
-          const redirectPath = redirectParam ?? defaultPath
+          const redirectPath = redirectParam || getRoleRedirect(userRole)
 
           setTimeout(() => {
+            if (redirectPath.startsWith("http")) {
+              window.location.assign(redirectPath)
+              return
+            }
+
             router.push(redirectPath)
           }, 1000)
         } else {

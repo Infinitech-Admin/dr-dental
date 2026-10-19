@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       page,
       per_page: perPage,
       role,
-      status, // Filter by status
+      status,
     })
 
     if (search) {

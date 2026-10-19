@@ -126,14 +126,14 @@ export default function Home() {
 
   return (
     <div className="bg-[#0B3D26]">
-      {/* ── Hero Section ── */}
+      {/* Hero Section */}
       <section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden px-4 sm:px-6 md:px-12 py-20">
         <HeroBackground
           videoSrc="/videos/sm-gensan-opening/hero.mp4"
           fallbackImage={heroBg}
         />
 
-        {/* ── Subtle green overlay for text legibility ── */}
+        {/* Subtle green overlay for text */}
         <div
           className="absolute inset-0 z-[1] pointer-events-none"
           style={{
@@ -150,7 +150,7 @@ export default function Home() {
           }}
         />
 
-        {/* ── Futuristic glowing accents (Hidden on very small screens to avoid overflow) ── */}
+        {/* Futuristic glowing accents */}
         <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden hidden sm:block">
           {/* Horizontal scan-line sweeping top to bottom */}
           <motion.div
@@ -164,7 +164,7 @@ export default function Home() {
             }}
           />
 
-          {/* Corner brackets, top-left — pushed below nav */}
+          {/* Corner brackets, top-left */}
           <div className="absolute top-28 left-6 w-12 h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-[#A7E86B]/40 rounded-tl-md" />
           {/* Corner brackets, bottom-left */}
           <div className="absolute bottom-10 left-6 w-12 h-12 md:w-16 md:h-16 border-b-2 border-l-2 border-[#A7E86B]/25 rounded-bl-md" />
@@ -264,7 +264,9 @@ export default function Home() {
                   boxShadow: "0 0 24px 2px rgba(167,232,107,0.45)",
                 }}
               >
-                <Link href="/book">Book Your Consultation</Link>
+                <Link href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments">
+                  Book Your Consultation
+                </Link>
               </Button>
 
               <Link
@@ -285,7 +287,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Trust Bar ── */}
+      {/* Trust Bar Section*/}
       <section className="relative overflow-hidden py-8 md:py-12">
         <div
           className="absolute inset-0"
@@ -295,7 +297,7 @@ export default function Home() {
           }}
         />
 
-        {/* ── glowing accents, matching hero ── */}
+        {/* glowing accents, matching hero */}
         <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden hidden sm:block">
           {/* scan-line sweep */}
           <motion.div
@@ -364,7 +366,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Branches ── */}
+      {/* Branches Section */}
       <section
         className="relative py-28 overflow-hidden"
         style={{ background: "#F1FAEE" }}
@@ -404,7 +406,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Why Choose ── */}
+      {/* Why Choose Us Section */}
       <section className="relative py-28 overflow-hidden">
         <div
           className="absolute inset-0"

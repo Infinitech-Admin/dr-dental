@@ -14,7 +14,7 @@ const links = [
   { href: "/services", label: "Services" },
   { href: "/smile-gallery", label: "Smile Gallery" },
   { href: "/branches", label: "Branches" },
-  { href: "/book", label: "Book Now" },
+  { href: "https://members.drdentalcarecenter.com/", label: "Membership" },
 ]
 
 export default function Navbar() {
@@ -33,7 +33,6 @@ export default function Navbar() {
   useEffect(() => {
     initializeAuth()
     setMounted(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -66,20 +65,19 @@ export default function Navbar() {
 
   const initials = user?.name
     ? user.name
-        .split(" ")
-        .map((n: string) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
+      .split(" ")
+      .map((n: string) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
     : "?"
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/80 backdrop-blur-xl border-b border-[#C8E6C9]"
-          : "bg-[#DCEFD6]"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+        ? "bg-white/80 backdrop-blur-xl border-b border-[#C8E6C9]"
+        : "bg-[#DCEFD6]"
+        }`}
     >
       <div className="max-w-7xl mx-auto h-16 sm:h-18 lg:h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Logo */}
@@ -102,11 +100,10 @@ export default function Navbar() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`relative py-2 text-sm tracking-wide transition-colors ${
-                  isActive
-                    ? "text-[#2F5C2F] font-semibold"
-                    : "text-[#4C6B4C] hover:text-[#1F3A1F]"
-                }`}
+                className={`relative py-2 text-sm tracking-wide transition-colors ${isActive
+                  ? "text-[#2F5C2F] font-semibold"
+                  : "text-[#4C6B4C] hover:text-[#1F3A1F]"
+                  }`}
               >
                 {l.label}
 
@@ -119,7 +116,7 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Full desktop right panel — 1024px and up only */}
+        {/* Full desktop right panel */}
         <div className="hidden lg:flex items-center gap-3">
           {canInstall && mounted && (
             <Button
@@ -190,16 +187,21 @@ export default function Navbar() {
               </div>
             ) : (
               <>
+                <Link href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments">
+                  <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-semibold text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
+                    Book an Appointment
+                  </Button>
+                </Link>
                 <Link href="/login">
-                  <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-medium text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
-                    Login
+                  <Button className="bg-transparent border border-[#6BB86B] text-[#1F3A1F] font-semibold text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
+                    Sign In
                   </Button>
                 </Link>
               </>
             ))}
         </div>
 
-        {/* Mobile + tablet toggle — anything under 1024px */}
+        {/* Mobile/tablet toggle */}
         <div className="flex lg:hidden items-center gap-2 sm:gap-3">
           <button
             onClick={() => setMobileOpen((v) => !v)}
@@ -219,9 +221,8 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className={`block py-3 text-sm border-b border-[#DCEFD6] ${
-                pathname === l.href ? "text-[#2F5C2F]" : "text-[#4C6B4C]"
-              }`}
+              className={`block py-3 text-sm border-b border-[#DCEFD6] ${pathname === l.href ? "text-[#2F5C2F]" : "text-[#4C6B4C]"
+                }`}
             >
               {l.label}
             </Link>
@@ -240,7 +241,13 @@ export default function Navbar() {
             </Button>
           )}
 
-          {mounted &&
+          <Link href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments">
+            <Button className="bg-[#7BC67B] text-[#1F3A1F] hover:bg-[#6BB86B] font-semibold text-sm px-6 hover:shadow-[0_0_20px_rgba(123,198,123,0.4)] transition-all">
+              Book an Appointment
+            </Button>
+          </Link>
+
+          {/* {mounted &&
             (isLoggedIn && user ? (
               <div className="mt-4 space-y-3">
                 <div className="flex items-center gap-3 px-1 py-2 bg-[#DCEFD6]/60 rounded-lg">
@@ -278,7 +285,8 @@ export default function Navbar() {
                   </Button>
                 </Link>
               </div>
-            ))}
+            ))
+          } */}
         </div>
       )}
     </nav>

@@ -7,7 +7,6 @@ type Params = {
   params: Promise<{ id: string }>
 }
 
-// GET ONE
 export async function GET(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params
@@ -32,14 +31,12 @@ export async function GET(request: NextRequest, { params }: Params) {
   }
 }
 
-// UPDATE
 export async function PUT(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params
     const token = getAuthToken(request)
     const formData = await request.formData()
 
-    // Laravel method spoofing (important)
     formData.append("_method", "PUT")
 
     const res = await fetch(`${API_URL}/api/cases/${id}`, {
@@ -61,7 +58,6 @@ export async function PUT(request: NextRequest, { params }: Params) {
   }
 }
 
-// DELETE
 export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params

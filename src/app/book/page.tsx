@@ -39,7 +39,6 @@ const fade = {
   transition: { duration: 0.6 },
 }
 
-// ── Bold mid-green token system (matches the About page) ──────────────────
 const GREEN_DEEP = "#0E7A3F"
 const GREEN_MID = "#189A4D"
 const GREEN_BRIGHT = "#2FBD63"
@@ -65,7 +64,6 @@ const timeSlots = [
   "4:00 PM",
 ]
 
-// ── Draft persistence so guests don't lose progress when sent to log in ────
 const DRAFT_KEY = "dr_dental_booking_draft"
 
 interface BookingDraft {
@@ -124,8 +122,6 @@ interface ApiService {
 function BookInner() {
   const router = useRouter()
   const { isLoggedIn, user, token, _hasHydrated } = useAuthStore()
-
-  // Read any saved draft once, synchronously, before first paint.
   const [draft] = useState<BookingDraft | null>(() => readBookingDraft())
 
   const [allServices, setAllServices] = useState<ApiService[]>([])
@@ -149,7 +145,6 @@ function BookInner() {
     () => draft?.selectedTime ?? "",
   )
 
-  // Pre-filled from draft (if any); otherwise synced from user after hydration
   const [name, setName] = useState(() => draft?.name ?? "")
   const [email, setEmail] = useState(() => draft?.email ?? "")
   const [phone, setPhone] = useState(() => draft?.phone ?? "")
@@ -159,21 +154,16 @@ function BookInner() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  // ── Once the draft has been read into state, clear it from storage ──
   useEffect(() => {
     if (draft && typeof window !== "undefined") {
       window.localStorage.removeItem(DRAFT_KEY)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // ── Auto-fill name & email/phone once user is available after hydration,
-  //     but never clobber values already restored from a draft ──
   useEffect(() => {
     if (user?.name && !name) setName(user.name)
     if (user?.email && !email) setEmail(user.email)
     if (user?.phone && !phone) setPhone(user.phone)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   useEffect(() => {
@@ -195,7 +185,6 @@ function BookInner() {
   }, [])
 
   useEffect(() => {
-    // Don't let a query param clobber a service already restored from draft
     if (selectedServiceId != null) return
     const params = new URLSearchParams(window.location.search)
     const qId = params.get("service_id")
@@ -203,7 +192,6 @@ function BookInner() {
       setSelectedServiceId(Number(qId))
       setLockedFromUrl(true)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -221,7 +209,6 @@ function BookInner() {
     allServices.find((s) => s.id === selectedServiceId) ?? null
   const activeBranch = BRANCHES.find((b) => b.id === selectedBranchId) ?? null
 
-  // Group services by category for the dropdown
   const groupedServices = useMemo(() => {
     const groups: Record<string, ApiService[]> = {}
     allServices.forEach((s) => {
@@ -240,7 +227,6 @@ function BookInner() {
     }
   }
 
-  // ── Save current form progress and send the user to log in ──
   function saveDraftAndRedirectToLogin() {
     if (typeof window !== "undefined") {
       const toSave: BookingDraft = {
@@ -256,7 +242,6 @@ function BookInner() {
       try {
         window.localStorage.setItem(DRAFT_KEY, JSON.stringify(toSave))
       } catch {
-        // storage unavailable — proceed anyway, just without persistence
       }
     }
     const currentPath =
@@ -287,7 +272,6 @@ function BookInner() {
       return
     }
 
-    // Form is complete — now make sure the user is logged in before booking.
     if (!isLoggedIn || !token) {
       saveDraftAndRedirectToLogin()
       return
@@ -322,7 +306,6 @@ function BookInner() {
       const data = (await response.json()) as Record<string, unknown>
 
       if (response.status === 401) {
-        // Session expired mid-submit — keep their progress and re-auth.
         saveDraftAndRedirectToLogin()
         return
       }
@@ -342,10 +325,8 @@ function BookInner() {
     }
   }
 
-  // Wait for auth store hydration only (form itself is public)
   if (!_hasHydrated) return null
 
-  // ── Success screen ────────────────────────────────────────────────────────
   if (submitted) {
     return (
       <div
@@ -430,7 +411,6 @@ function BookInner() {
     )
   }
 
-  // ── Booking form ──────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen flex flex-col" style={{ background: PAGE_BG }}>
       <Header />

@@ -51,7 +51,6 @@ export default function ServiceDetail() {
         if (!res.ok) throw new Error("Not found")
         const data = await res.json()
 
-        // Handle both flat object and { data: {...} } shapes
         const s: RawService = data?.data ? data.data : data
 
         setService({
@@ -79,7 +78,6 @@ export default function ServiceDetail() {
     fetchService()
   }, [id])
 
-  // Fetch related services once we know the current service's category
   useEffect(() => {
     if (!service) return
 
@@ -466,7 +464,7 @@ export default function ServiceDetail() {
               <button
                 onClick={() =>
                   router.push(
-                    `/book?service_id=${service.id}&service=${encodeURIComponent(service.title)}`,
+                    `https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments`,
                   )
                 }
                 className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"

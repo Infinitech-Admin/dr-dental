@@ -75,9 +75,6 @@ type AboutData = {
   tech: TechItem[]
 }
 
-/* ─────────────────────────────────────────
-   CONSTANTS
-───────────────────────────────────────── */
 const ICON_OPTIONS = [
   "GraduationCap",
   "Stethoscope",
@@ -126,9 +123,6 @@ const EMPTY_TECH: Omit<TechItem, "id"> = {
   sort_order: 0,
 }
 
-/* ─────────────────────────────────────────
-   AUTH HELPER
-───────────────────────────────────────── */
 function getToken(): string {
   return localStorage.getItem("auth_token") ?? ""
 }
@@ -137,9 +131,6 @@ function authHeader(): Record<string, string> {
   return { Authorization: `Bearer ${getToken()}` }
 }
 
-/* ─────────────────────────────────────────
-   TABS
-───────────────────────────────────────── */
 type Tab = "settings" | "doctor" | "timeline" | "tech"
 const TABS: { key: Tab; label: string }[] = [
   { key: "settings", label: "Page Settings" },
@@ -148,9 +139,6 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "tech", label: "Technology" },
 ]
 
-/* ─────────────────────────────────────────
-   PAGE
-───────────────────────────────────────── */
 export default function AdminAboutPage() {
   const [activeTab, setActiveTab] = useState<Tab>("settings")
   const [loading, setLoading] = useState(true)
@@ -191,7 +179,6 @@ export default function AdminAboutPage() {
     setTimeout(() => setToast(null), 3000)
   }
 
-  /* ── Fetch ── */
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
@@ -204,7 +191,6 @@ export default function AdminAboutPage() {
         stats: data.stats ?? EMPTY_SETTINGS.stats,
       })
 
-      // ✅ Guard against null doctor
       if (data.doctor) {
         setDoctor({
           name: data.doctor.name ?? "",
@@ -233,7 +219,6 @@ export default function AdminAboutPage() {
     fetchData()
   }, [fetchData])
 
-  /* ── Save settings + doctor ── */
   const handleSaveSettings = async () => {
     setSaving(true)
     try {
@@ -267,7 +252,6 @@ export default function AdminAboutPage() {
     }
   }
 
-  /* ── Timeline CRUD ── */
   const handleCreateTimeline = async () => {
     await fetch("/api/about/timeline", {
       method: "POST",
@@ -291,7 +275,6 @@ export default function AdminAboutPage() {
     showToast("Timeline item updated.")
   }
 
-  /* ── Tech CRUD ── */
   const handleCreateTech = async () => {
     await fetch("/api/about/tech", {
       method: "POST",
@@ -315,7 +298,6 @@ export default function AdminAboutPage() {
     showToast("Technology item updated.")
   }
 
-  /* ── Delete ── */
   const handleDelete = async () => {
     if (!deleteTarget) return
     const url =
@@ -328,7 +310,6 @@ export default function AdminAboutPage() {
     showToast("Item deleted.")
   }
 
-  /* ── Modal helpers ── */
   const closeModal = () => {
     setModal(null)
     setSelectedTimeline(null)
@@ -371,7 +352,6 @@ export default function AdminAboutPage() {
     setModal("delete")
   }
 
-  /* ── Credential helpers ── */
   const addCredential = () =>
     setDoctor((d) => ({
       ...d,
@@ -392,9 +372,6 @@ export default function AdminAboutPage() {
       return { ...d, credentials: creds }
     })
 
-  /* ─────────────────────────────────────────
-     RENDER
-  ───────────────────────────────────────── */
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50">
@@ -473,7 +450,7 @@ export default function AdminAboutPage() {
             ))}
           </div>
 
-          {/* ── Page Settings ── */}
+          {/* Page Settings */}
           {activeTab === "settings" && (
             <div className="space-y-5 max-w-3xl">
               <Card title="Stats (4 items)">
@@ -536,7 +513,7 @@ export default function AdminAboutPage() {
             </div>
           )}
 
-          {/* ── Doctor Profile ── */}
+          {/* Doctor Profile */}
           {activeTab === "doctor" && (
             <div className="space-y-5 max-w-3xl">
               <Card title="Photo">
@@ -725,7 +702,7 @@ export default function AdminAboutPage() {
             </div>
           )}
 
-          {/* ── Timeline ── */}
+          {/* Timeline */}
           {activeTab === "timeline" && (
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden max-w-3xl">
               {timeline.length === 0 ? (
@@ -792,7 +769,7 @@ export default function AdminAboutPage() {
             </div>
           )}
 
-          {/* ── Technology ── */}
+          {/* Technology */}
           {activeTab === "tech" && (
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden max-w-3xl">
               {tech.length === 0 ? (
@@ -921,9 +898,6 @@ export default function AdminAboutPage() {
   )
 }
 
-/* ─────────────────────────────────────────
-   FORM FIELDS
-───────────────────────────────────────── */
 const inputCls =
   "w-full h-10 rounded-lg border border-slate-200 px-3 text-sm text-slate-800 bg-white " +
   "focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
@@ -1069,7 +1043,6 @@ function TechFormFields({
   )
 }
 
-/* ── Shared UI ── */
 function Modal({
   title,
   children,

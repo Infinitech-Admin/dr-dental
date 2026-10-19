@@ -47,13 +47,13 @@ export default function Footer() {
             Navigation
           </h4>
           <div className="space-y-2">
-            {["/", "/about", "/services", "/book", "/contact"].map((p, i) => (
+            {["/", "/about", "/services", "https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments", "https://members.drdentalcarecenter.com/", "/contact"].map((p, i) => (
               <Link
                 key={p}
                 href={p}
                 className="block text-sm text-emerald-100/70 hover:text-emerald-300 transition-colors"
               >
-                {["Home", "About", "Services", "Book", "Contact"][i]}
+                {["Home", "About", "Services", "Book", "Membership", "Contact"][i]}
               </Link>
             ))}
           </div>

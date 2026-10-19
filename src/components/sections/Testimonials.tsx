@@ -55,7 +55,6 @@ export default function Testimonials() {
           cache: "no-store",
         })
         const data = await res.json()
-        // Laravel controller returns a plain array
         setTestimonials(Array.isArray(data) ? data : [])
       } catch {
         console.error("Failed to fetch testimonials")
@@ -95,7 +94,6 @@ export default function Testimonials() {
       const res = await fetch("/api/testimonials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Field names match Laravel controller validation rules exactly
         body: JSON.stringify({
           client_name: formData.client_name,
           client_email: formData.client_email,
@@ -128,14 +126,14 @@ export default function Testimonials() {
             "radial-gradient(100% 80% at 10% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(80% 70% at 90% 20%, #CFF3D6 0%, transparent 60%), linear-gradient(165deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
         }}
       />
-       <div className="absolute inset-0">
-          <Image
-            src={testimonialsBg}
-            alt=""
-            fill
-            className="object-cover opacity-50"
-          />
-        </div>
+      <div className="absolute inset-0">
+        <Image
+          src={testimonialsBg}
+          alt=""
+          fill
+          className="object-cover opacity-50"
+        />
+      </div>
       <motion.div
         animate={{ scale: [1, 1.15, 1], rotate: [0, 12, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
@@ -227,9 +225,8 @@ export default function Testimonials() {
                     {[...Array(3)].map((_, i) => (
                       <div
                         key={i}
-                        className={`h-2 rounded-full bg-[#DCEFD6] ${
-                          i === 0 ? "w-8" : "w-2"
-                        }`}
+                        className={`h-2 rounded-full bg-[#DCEFD6] ${i === 0 ? "w-8" : "w-2"
+                          }`}
                       />
                     ))}
                   </div>
@@ -341,17 +338,16 @@ export default function Testimonials() {
                         <button
                           key={i}
                           onClick={() => setCurrentIndex(i)}
-                          className={`h-2 rounded-full transition-all ${
-                            i === currentIndex
+                          className={`h-2 rounded-full transition-all ${i === currentIndex
                               ? "w-8"
                               : "bg-[#C8E6C9] hover:bg-[#A8D5A2] w-2"
-                          }`}
+                            }`}
                           style={
                             i === currentIndex
                               ? {
-                                  backgroundImage:
-                                    "linear-gradient(90deg, #1F9552, #4FC97B)",
-                                }
+                                backgroundImage:
+                                  "linear-gradient(90deg, #1F9552, #4FC97B)",
+                              }
                               : undefined
                           }
                           aria-label={`Go to ${i + 1}`}
@@ -535,10 +531,10 @@ export default function Testimonials() {
                         submitting || !isValid
                           ? undefined
                           : {
-                              backgroundImage:
-                                "linear-gradient(120deg, #1F9552, #2FAE63, #4FC97B)",
-                              boxShadow: "0 10px 28px -8px rgba(31,149,82,0.6)",
-                            }
+                            backgroundImage:
+                              "linear-gradient(120deg, #1F9552, #2FAE63, #4FC97B)",
+                            boxShadow: "0 10px 28px -8px rgba(31,149,82,0.6)",
+                          }
                       }
                     >
                       <Send size={16} />
@@ -552,7 +548,6 @@ export default function Testimonials() {
         </div>
       </div>
 
-      {/* ── Final CTA ── */}
       <section className="relative mt-24 overflow-hidden rounded-[2.5rem] max-w-7xl mx-auto">
         <div
           className="absolute inset-0"
@@ -589,7 +584,7 @@ export default function Testimonials() {
             Book your consultation today and take the first step toward clinical
             excellence.
           </p>
-          <Link href="/book">
+          <Link href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments">
             <Button
               size="lg"
               className="text-white font-medium px-10 border-0 hover:-translate-y-0.5 transition-all duration-300"

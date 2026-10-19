@@ -7,7 +7,6 @@ type Params = {
     params: Promise<{ id: string }>
 }
 
-// GET ONE EVENT
 export async function GET(
     request: NextRequest,
     { params }: Params
@@ -44,8 +43,6 @@ export async function GET(
     }
 }
 
-// UPDATE EVENT
-// Laravel route: POST /api/events/{eventId}
 export async function POST(
     request: NextRequest,
     { params }: Params
@@ -84,7 +81,6 @@ export async function POST(
     }
 }
 
-// DELETE EVENT
 export async function DELETE(
     request: NextRequest,
     { params }: Params

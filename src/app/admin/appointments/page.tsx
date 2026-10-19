@@ -32,8 +32,6 @@ function errMsg(err: unknown): string {
   return err instanceof Error ? err.message : String(err)
 }
 
-// Normalizes the various shapes the Laravel API returns (plain array,
-// { data: [...] }, or paginated { data: { data: [...] } }) into a flat list.
 function extractList<T>(data: unknown): T[] {
   const d = data as { data?: { data?: T[] } | T[] } | T[]
   if (Array.isArray(d)) return d
@@ -391,8 +389,6 @@ function NewBookingModal({
     setLoading(true)
     setError("")
     try {
-      // service_id is now a real relation coming from /api/services,
-      // instead of being crammed as free text into notes.
       const booking_date = `${form.date} ${form.time}:00`
 
       const res = await fetch(`${API_URL}/api/bookings`, {
@@ -606,7 +602,6 @@ function ViewModal({
 }) {
   if (!booking) return null
 
-  // Parse booking_date manually to avoid timezone shift
   const parseDateParts = (raw: string) => {
     const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/)
     if (!match) return null
@@ -729,9 +724,7 @@ function ViewModal({
   )
 }
 
-// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function AdminBookingsTable() {
-  // Get token directly from Zustand store — no localStorage guessing
   const { token } = useAuthStore()
 
   const authHeader = token
@@ -763,7 +756,6 @@ export default function AdminBookingsTable() {
     submitting: false,
   })
 
-  // Services list, shared by the filter bar and the New Booking form.
   const [services, setServices] = useState<Service[]>([])
   const [servicesLoading, setServicesLoading] = useState(true)
 
@@ -927,7 +919,6 @@ export default function AdminBookingsTable() {
     }
   }
 
-  // Parse booking_date manually to avoid UTC timezone shift
   const parseDateParts = (raw: string) => {
     const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/)
     if (!match) return null

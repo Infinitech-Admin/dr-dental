@@ -107,7 +107,6 @@ const goals = [
   },
 ]
 
-// Branch expansion milestones, from the company's development history
 const milestones = [
   {
     year: "December 2019",
@@ -146,8 +145,6 @@ const milestones = [
   },
 ]
 
-// Time elapsed between consecutive branches — small road-sign captions
-// along the route, one shorter than milestones.length.
 const gapLabels = [
   "4 years later",
   "8 months later",
@@ -157,14 +154,9 @@ const gapLabels = [
   "1 month later",
 ]
 
-// Shared accent — a vibrant green used for highlights, icons, and dividers
 const ACCENT = "#3D9A63"
 const ACCENT_LIGHT = "#7ED9A0"
 
-// Milestones are dated by month, so "is this open yet" is decided at
-// month granularity against the real current date — not hardcoded.
-// A branch is "upcoming" only once its month is strictly after the
-// current month; the same month as today counts as already open.
 function parseMonthYear(label: string): Date {
   const [monthName, yearStr] = label.split(" ")
   const month = new Date(`${monthName} 1, 2000`).getMonth()
@@ -178,8 +170,6 @@ function useMilestoneStatus() {
   })
 
   const upcoming = milestones.map((m) => parseMonthYear(m.year) > today)
-  // "Newest branch" = the most recent one that has actually opened,
-  // not just the last item in the array.
   let latestOpenIndex = -1
   upcoming.forEach((isUpcoming, i) => {
     if (!isUpcoming) latestOpenIndex = i
@@ -188,9 +178,6 @@ function useMilestoneStatus() {
   return { upcoming, latestOpenIndex }
 }
 
-// ── Road-journey timeline ────────────────────────────────────────────
-// Row height must stay fixed so the hand-authored road path lines up
-// exactly with each marker's row.
 const ROW_H = 240
 const ROAD_W = 220
 const X_LEFT = 60
@@ -212,9 +199,6 @@ function buildRoad(n: number) {
   return { d, pts, height: TOP_PAD * 2 + (n - 1) * ROW_H }
 }
 
-// Tracks which stop the traveling pin is currently nearest to. Shared
-// by the HUD readout and the road markers so both stay in lockstep —
-// a marker only lights up once the HUD agrees you've reached it.
 function useCurrentStopIndex(progress: MotionValue<number>) {
   const [index, setIndex] = useState(0)
   useMotionValueEvent(progress, "change", (v) => {
@@ -225,14 +209,6 @@ function useCurrentStopIndex(progress: MotionValue<number>) {
   return index
 }
 
-// Whether `ref`'s element currently has any part on screen. Drives the
-// HUD's visibility directly from scroll position rather than CSS
-// `position: sticky` — sticky is bounded by its own containing block,
-// so it inevitably runs out of room and detaches near the end of a
-// long section (and can silently break under an ancestor with a CSS
-// transform, which several Framer Motion elements on this page use).
-// A fixed-position element toggled by real scroll math has neither
-// problem: it can stay pinned for the section's entire length.
 function useIsSectionInView(ref: React.RefObject<HTMLElement | null>) {
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -246,9 +222,6 @@ function useIsSectionInView(ref: React.RefObject<HTMLElement | null>) {
   return active
 }
 
-// The pin that travels along the curve as the user scrolls — reads
-// getPointAtLength off the actual rendered path, so it always sits
-// exactly on the road rather than approximating with keyframes.
 function TravelingPin({
   pathRef,
   progress,
@@ -357,14 +330,6 @@ function MilestoneCard({
   )
 }
 
-// A small GPS-style readout that tracks scroll progress — "Stop 3 of 7,
-// Bajada, Davao City" — with a thin progress bar underneath. This is
-// the thing that makes the section read as a live journey rather than
-// a static illustration. NOTE: for the sticky positioning to actually
-// hold while scrolling, this must be rendered as a child of the same
-// tall scroll container as the road itself — not a short wrapper div
-// of its own (that was the earlier bug: a `sticky` element can only
-// stay pinned for as long as its own containing block is on screen).
 function TripHUD({
   index,
   progress,
@@ -427,8 +392,6 @@ function DesktopRoad() {
 
   return (
     <div ref={wrapRef} className="hidden lg:block relative">
-      {/* Fixed, not sticky — see useIsSectionInView for why. Stays on
-          screen for as long as any part of the road is in view. */}
       {isActive && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-30">
           <TripHUD index={currentIndex} progress={scrollYProgress} />
@@ -507,8 +470,6 @@ function DesktopRoad() {
           <TravelingPin pathRef={pathRef} progress={scrollYProgress} />
         </svg>
 
-        {/* interval captions — time elapsed between stops, like small
-          distance markers along a highway */}
         {gapLabels.map((label, i) => {
           const midY = (pts[i].y + pts[i + 1].y) / 2
           return (
@@ -631,12 +592,6 @@ function MobileRoad() {
     ? `M${roadX},${first} L${roadX},${last}`
     : `M${roadX},${topPad} L${roadX},${height - bottomPad}`
 
-  // NOTE: no horizontal padding on wrapRef anymore — the road (SVG)
-  // is positioned at the container's true left-0, and it's the card
-  // list (`listRef`) that gets pushed right with its own padding.
-  // Padding on wrapRef didn't reserve any space for the road, since
-  // the SVG's absolute-position ancestor is the child `pt-14` div,
-  // not wrapRef — so left-0 landed at the same x as the cards.
   return (
     <div ref={wrapRef} className="lg:hidden relative">
       {isActive && (
@@ -787,7 +742,6 @@ function MobileRoad() {
     </div>
   )
 }
-
 
 function OurStorySection() {
   return (
@@ -958,7 +912,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Mission — Light Green ── */}
+      {/* Mission */}
       <section
         className="py-16 sm:py-20 md:py-24"
         style={{
@@ -1027,7 +981,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Vision — White ── */}
+      {/* Vision */}
       <section
         className="py-16 sm:py-20 md:py-24"
         style={{ background: "#FFFFFF" }}
@@ -1086,13 +1040,13 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Team section ── */}
+      {/* Team section */}
       <TeamSection />
 
-      {/* ── Our Story / Milestones — Road Journey ── */}
+      {/* Our Story / Milestones */}
       <OurStorySection />
 
-      {/* ── Values — Green ── */}
+      {/* Values */}
       <section
         className="py-16 sm:py-20 md:py-24"
         style={{
@@ -1173,7 +1127,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Goals — White ── */}
+      {/* Goals */}
       <section
         className="py-16 sm:py-20 md:py-24"
         style={{ background: "#FFFFFF" }}
@@ -1248,7 +1202,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── CTA — Always Green ── */}
+      {/* CTA */}
       <section
         className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
         style={{
@@ -1316,7 +1270,7 @@ export default function About() {
           </p>
 
           <Link
-            href="/book"
+            href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments"
             className="inline-block w-full sm:w-auto px-4 sm:px-0"
           >
             <button

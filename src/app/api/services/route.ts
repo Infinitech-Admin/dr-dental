@@ -9,7 +9,6 @@ function getAuthToken(request: NextRequest): string | null {
     return authHeader?.replace("Bearer ", "") || cookieToken || null
 }
 
-// GET ALL
 export async function GET(req: NextRequest) {
     try {
         const query = req.nextUrl.searchParams.toString()
@@ -40,7 +39,6 @@ export async function GET(req: NextRequest) {
     }
 }
 
-// CREATE
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData()

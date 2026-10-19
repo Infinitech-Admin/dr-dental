@@ -152,12 +152,6 @@ export function TeamSection() {
             </p>
           </div>
         ) : (
-          /*
-           * Responsive grid:
-           * < 480px  : 1 column
-           * sm        : 2 columns
-           * lg        : 4 columns
-           */
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-7 xl:gap-8">
             {safeTeam.map((member, i) => (
               <motion.div

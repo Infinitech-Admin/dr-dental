@@ -11,7 +11,6 @@ type Context = {
   params: Promise<{ id: string }>
 }
 
-// GET /api/inventory/:id
 export async function GET(req: NextRequest, { params }: Context) {
   try {
     const token = getAuthToken(req)
@@ -64,7 +63,6 @@ export async function GET(req: NextRequest, { params }: Context) {
   }
 }
 
-// PUT /api/inventory/:id
 export async function PUT(req: NextRequest, { params }: Context) {
   try {
     const token = getAuthToken(req)
@@ -86,7 +84,6 @@ export async function PUT(req: NextRequest, { params }: Context) {
       )
     }
 
-    // Basic validation
     if (!body.item_name || body.item_name.trim() === "") {
       return NextResponse.json(
         { message: "Item name is required" },
@@ -151,7 +148,6 @@ export async function PUT(req: NextRequest, { params }: Context) {
   }
 }
 
-// DELETE /api/inventory/:id
 export async function DELETE(req: NextRequest, { params }: Context) {
   try {
     const token = getAuthToken(req)

@@ -10,7 +10,6 @@ type Params = {
     }>
 }
 
-// DELETE EVENT IMAGE
 export async function DELETE(
     request: NextRequest,
     { params }: Params

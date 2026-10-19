@@ -85,6 +85,8 @@ export default function UsersAdminPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [roleDraft, setRoleDraft] = useState<"customer" | "admin">("customer")
+  const [updatingRole, setUpdatingRole] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
 
@@ -155,6 +157,60 @@ export default function UsersAdminPage() {
     }, 500)
     return () => clearTimeout(t)
   }, [globalFilter, fetchUsers])
+
+  const updateUserRole = async (userId: number, nextRole: "customer" | "admin") => {
+    const token = localStorage.getItem("auth_token")
+    if (!token) {
+      router.push("/login")
+      return
+    }
+
+    setUpdatingRole(true)
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+      const response = await fetch(`${baseUrl}/api/users/${userId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ role: nextRole }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to update user role")
+      }
+
+      setUsers((prev) =>
+        prev.map((user) =>
+          user.id === userId ? { ...user, role: nextRole } : user,
+        ),
+      )
+
+      setSelectedUser((current) =>
+        current ? { ...current, role: nextRole } : current,
+      )
+      setRoleDraft(nextRole)
+
+      toast({
+        title: "Role updated",
+        description: `${result.data?.name || "User"} is now a ${nextRole}.`,
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        variant: "destructive",
+        title: "Update failed",
+        description: "Could not update the user's role.",
+      })
+    } finally {
+      setUpdatingRole(false)
+    }
+  }
 
   const columns: ColumnDef<User>[] = [
     {
@@ -230,6 +286,19 @@ export default function UsersAdminPage() {
       ),
     },
     {
+      accessorKey: "role",
+      header: () => (
+        <span className="font-semibold text-slate-500 text-xs uppercase tracking-wide hidden lg:block">
+          Role
+        </span>
+      ),
+      cell: ({ row }) => (
+        <div className="text-sm text-slate-600 hidden lg:block">
+          {row.original.role || <span className="text-slate-300">—</span>}
+        </div>
+      ),
+    },
+    {
       accessorKey: "created_at",
       header: ({ column }) => (
         <Button
@@ -263,7 +332,10 @@ export default function UsersAdminPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setSelectedUser(user)}
+                  onClick={() => {
+                    setSelectedUser(user)
+                    setRoleDraft(user.role === "admin" ? "admin" : "customer")
+                  }}
                   className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg"
                 >
                   <Eye className="h-4 w-4" />
@@ -372,10 +444,38 @@ export default function UsersAdminPage() {
                         </div>
                       </div>
 
+                      <div className="rounded-xl border border-slate-200 bg-white p-4">
+                        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                          Account Role
+                        </p>
+                        <div className="mt-3 flex gap-2">
+                          <select
+                            value={roleDraft}
+                            onChange={(event) =>
+                              setRoleDraft(event.target.value as "customer" | "admin")
+                            }
+                            className="h-10 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+                          >
+                            <option value="customer">Customer</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                          <Button
+                            className="h-10 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700"
+                            onClick={() => updateUserRole(selectedUser.id, roleDraft)}
+                            disabled={updatingRole || roleDraft === selectedUser.role}
+                          >
+                            {updatingRole ? "Saving..." : "Save"}
+                          </Button>
+                        </div>
+                      </div>
+
                       <Button
                         variant="outline"
                         className="w-full border-slate-200 text-slate-600 hover:bg-slate-100 rounded-xl h-10"
-                        onClick={() => setSelectedUser(null)}
+                        onClick={() => {
+                          setSelectedUser(null)
+                          setRoleDraft("customer")
+                        }}
                       >
                         Close
                       </Button>

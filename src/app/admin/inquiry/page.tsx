@@ -25,13 +25,8 @@ interface ContactInquiry {
   created_at: string;
 }
 
-// interface ContactsApiResponse {
-//   data: ContactInquiry[];
-// }
-
 const ITEMS_PER_PAGE = 10;
 
-// FIX: Helper that always returns a ContactInquiry[] regardless of API shape
 function normalizeContacts(raw: unknown): ContactInquiry[] {
   if (Array.isArray(raw)) return raw as ContactInquiry[];
   if (raw && typeof raw === "object") {
@@ -43,7 +38,6 @@ function normalizeContacts(raw: unknown): ContactInquiry[] {
 }
 
 export default function ContactsAdmin() {
-  // FIX: Explicit initial state is [], so contacts is always an array
   const [contacts, setContacts] = useState<ContactInquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewOpen, setViewOpen] = useState(false);
@@ -71,11 +65,10 @@ export default function ContactsAdmin() {
       if (!res.ok) throw new Error("Failed to fetch contacts");
 
       const raw: unknown = await res.json();
-      // FIX: Always resolves to ContactInquiry[] no matter what shape the API returns
       setContacts(normalizeContacts(raw));
     } catch (error) {
       console.error(error);
-      setContacts([]); // FIX: Ensure contacts stays an array even on error
+      setContacts([]);
     } finally {
       setLoading(false);
     }
@@ -86,7 +79,6 @@ export default function ContactsAdmin() {
     setViewOpen(true);
   }
 
-  // FIX: contacts is guaranteed to be an array, so .filter() is always safe
   const filtered = contacts.filter(
     (c) =>
       c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

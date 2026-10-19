@@ -25,7 +25,6 @@ interface AdminDashboardProps {
   user: User
 }
 
-// Shape returned by DashboardController@index
 interface RecentBooking {
   name: string | null
   service: string | null
@@ -141,7 +140,6 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
   useEffect(() => {
     if (!_hasHydrated) return
     fetchDashboard()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, _hasHydrated, selectedMonth, selectedYear])
 
   const revenueNumber = Number(data?.monthly_revenue ?? 0)

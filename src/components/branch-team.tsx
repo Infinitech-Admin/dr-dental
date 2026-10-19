@@ -22,7 +22,6 @@ interface BranchTeamProps {
 export function BranchTeam({ team }: BranchTeamProps) {
   const [selectedMember, setSelectedMember] = useState<Team | null>(null)
 
-  // Prevent background scrolling while modal is open
   useEffect(() => {
     if (selectedMember) {
       document.body.style.overflow = "hidden"

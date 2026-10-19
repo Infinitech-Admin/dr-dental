@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
     console.log('=== REGISTRATION DEBUG START ===')
     console.log('Request body received:', body)
 
-    // Validate required fields
     if (!body.name || !body.email || !body.password || !body.password_confirmation) {
       return NextResponse.json(
         {
@@ -18,7 +17,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Password match
     if (body.password !== body.password_confirmation) {
       return NextResponse.json(
         {
@@ -29,7 +27,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Password length
     if (typeof body.password === 'string' && body.password.length < 8) {
       return NextResponse.json(
         {
@@ -40,7 +37,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Phone validation
     if (body.phone && typeof body.phone === 'string' && body.phone.length !== 11) {
       return NextResponse.json(
         {
@@ -57,7 +53,6 @@ export async function POST(request: NextRequest) {
 
     console.log('Connecting to Laravel:', fullUrl)
 
-    // ✅ ONLY REQUIRED FIELDS
     const requestData = {
       name: typeof body.name === 'string' ? body.name.trim() : '',
       email: typeof body.email === 'string' ? body.email.trim().toLowerCase() : '',

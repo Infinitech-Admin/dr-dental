@@ -181,7 +181,7 @@ export default function Facilities() {
     <div className="bg-[#020617] text-white">
       <ImageModal modal={modal} onClose={closeModal} />
 
-      {/* ── Header ── */}
+      {/* Header */}
       <header className="border-b border-white/5 px-6 py-8 pt-20">
         <div className="max-w-6xl mx-auto">
           <motion.div {...fade}>
@@ -199,7 +199,7 @@ export default function Facilities() {
         </div>
       </header>
 
-      {/* ── Tab Bar ── */}
+      {/* Tab Bar */}
       <div className="border-b border-white/5 sticky top-0 z-30 bg-[#020617]/95 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex overflow-x-auto">
@@ -223,7 +223,7 @@ export default function Facilities() {
         </div>
       </div>
 
-      {/* ── Facility Rows ── */}
+      {/* Facility Rows */}
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-4">
         {facilities.map((f, i) => {
           const Icon = f.icon
@@ -238,12 +238,12 @@ export default function Facilities() {
               {...fade}
               className="relative flex flex-col lg:flex-row gap-0 rounded-2xl overflow-hidden border border-white/8 bg-white/[0.02] hover:border-white/15 transition-colors scroll-mt-20"
             >
-              {/* Index number watermark — scan anchor */}
+              {/* Index number watermark */}
               <span className="hidden lg:block absolute top-4 right-5 text-4xl font-bold text-white/[0.04] select-none pointer-events-none leading-none">
                 {String(i + 1).padStart(2, "0")}
               </span>
 
-              {/* Image — fixed height, fixed width on desktop */}
+              {/* Image */}
               <div
                 className={`relative shrink-0 w-full lg:w-72 xl:w-80 h-48 lg:h-auto ${
                   isEven ? "lg:order-1" : "lg:order-2"
@@ -317,7 +317,6 @@ export default function Facilities() {
                   </p>
                 </div>
 
-                {/* Bullets — always 2 columns, clearer scan targets */}
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-1 border-t border-white/5 mt-1">
                   {f.bullets.map((bullet, j) => (
                     <li key={j} className="flex gap-2 items-start pt-2">
@@ -342,7 +341,7 @@ export default function Facilities() {
         })}
       </div>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <motion.section {...fade} className="border-t border-white/5">
         <div className="max-w-xl mx-auto px-6 py-14 text-center">
           <h2 className="text-2xl font-bold mb-2">Experience Excellence</h2>
@@ -350,7 +349,7 @@ export default function Facilities() {
             Our commitment to safety, innovation, and patient care is evident in
             every aspect of our clinic
           </p>
-          <Link href="/book">
+          <Link href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments">
             <Button
               size="lg"
               className="group bg-emerald-500 hover:bg-emerald-400 text-slate-950"

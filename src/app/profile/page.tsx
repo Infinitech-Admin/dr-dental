@@ -23,7 +23,6 @@ const fade = {
   transition: { duration: 0.5 },
 }
 
-// ── Bold mid-green token system (matches Book & About pages) ──────────────
 const GREEN_DEEP = "#0E7A3F"
 const GREEN_MID = "#189A4D"
 const GREEN_BRIGHT = "#2FBD63"
@@ -115,8 +114,6 @@ export default function ProfilePage() {
         const list = data.bookings ?? data.data ?? data ?? []
         setBookings(Array.isArray(list) ? list : [])
       } catch (err: unknown) {
-        // FIX: Use `unknown` instead of `any` and narrow with instanceof before
-        // accessing `.message`, which is the correct TS-safe pattern for caught errors.
         setError(
           err instanceof Error ? err.message : "Could not load your bookings.",
         )
@@ -248,7 +245,7 @@ export default function ProfilePage() {
                 </div>
                 <p className="text-[#5C8F6D] text-sm">No appointments yet.</p>
                 <button
-                  onClick={() => router.push("/book")}
+                  onClick={() => router.push("https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments")}
                   className="mt-5 px-6 py-2.5 text-white text-sm font-medium rounded-full transition-all"
                   style={{ background: ACCENT_GRADIENT, boxShadow: GLOW }}
                   onMouseEnter={(e) => {

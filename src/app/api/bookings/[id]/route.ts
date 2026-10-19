@@ -6,13 +6,10 @@ type Params = {
   params: Promise<{ id: string }>;
 };
 
-/** Read token from Authorization header OR cookie — whichever is present */
 function extractToken(request: NextRequest): string {
-  // 1. Authorization: Bearer <token> header (sent by frontend fetch calls)
   const authHeader = request.headers.get("authorization") || "";
   if (authHeader.startsWith("Bearer ")) return authHeader;
 
-  // 2. Fallback: cookie named "token" or "auth_token"
   const cookie =
     request.cookies.get("token")?.value ||
     request.cookies.get("auth_token")?.value ||

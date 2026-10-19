@@ -39,7 +39,6 @@ const getClinicImageUrl = (images?: BranchImage[]): string => {
 
   if (!images || images.length === 0) return fallbackImage
 
-  // Find the first clinic type image or sort by sort_order
   const clinicImages = images
     .filter((img) => img.type === "clinic")
     .sort((a, b) => a.sort_order - b.sort_order)

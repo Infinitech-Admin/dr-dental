@@ -220,8 +220,6 @@ export default function InventoryPage() {
     return true
   }
 
-  // FIX 1: Wrap fetchItems in useCallback so it has a stable reference
-  // and can be safely listed as a useEffect dependency.
   const fetchItems = useCallback(async () => {
     setLoading(true)
     try {

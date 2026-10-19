@@ -15,6 +15,22 @@ export default function Home() {
   const { isLoggedIn, user, initializeAuth } = useAuthStore()
   const router = useRouter()
 
+  const getRoleRedirect = (role?: string) => {
+    const normalized = role?.trim().toLowerCase().replace(/[\s_-]+/g, "_") ?? ""
+
+    switch (normalized) {
+      case "admin":
+        return "/admin/dashboard"
+      case "front_desk":
+      case "frontdesk":
+        return "https://appointments.drdentalcarecenter.com/"
+      case "customer":
+        return "https://members.drdentalcarecenter.com/"
+      default:
+        return "/"
+    }
+  }
+
   useEffect(() => {
     initializeAuth()
     const timer = setTimeout(() => setLoading(false), 800)
@@ -22,10 +38,19 @@ export default function Home() {
   }, [initializeAuth])
 
   useEffect(() => {
-    if (!loading && isLoggedIn && user?.role?.toLowerCase() === "admin") {
-      router.replace("/admin/dashboard")
+    if (!loading || !isLoggedIn) return
+
+    const redirectPath = getRoleRedirect(user?.role)
+
+    if (redirectPath === "/") return
+
+    if (redirectPath.startsWith("http")) {
+      window.location.assign(redirectPath)
+      return
     }
-  }, [loading, isLoggedIn, user, router])
+
+    router.replace(redirectPath)
+  }, [loading, isLoggedIn, user?.role, router])
 
   if (loading) {
     return (
@@ -40,7 +65,9 @@ export default function Home() {
     )
   }
 
-  if (isLoggedIn && user?.role?.toLowerCase() === "admin") {
+  const redirectPath = isLoggedIn ? getRoleRedirect(user?.role) : "/"
+
+  if (isLoggedIn && redirectPath !== "/") {
     return null
   }
 

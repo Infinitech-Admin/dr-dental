@@ -12,9 +12,6 @@ import L from "leaflet"
 import { useMemo, useEffect, useRef } from "react"
 import { BRANCHES, type Branch } from "@/lib/branches-data"
 
-// ---------------------------------------------------------------------------
-// Green theme tokens (matches the rest of the site)
-// ---------------------------------------------------------------------------
 const GREEN_DEEP = "#0E7A3F"
 const GREEN_MID = "#189A4D"
 const GREEN_BRIGHT = "#2FBD63"
@@ -22,12 +19,6 @@ const GREEN_LIME = "#5CD97A"
 const ACCENT_GRADIENT = `linear-gradient(135deg, ${GREEN_MID} 0%, ${GREEN_BRIGHT} 55%, ${GREEN_LIME} 100%)`
 const ACCENT_GRADIENT_ACTIVE = `linear-gradient(135deg, ${GREEN_DEEP} 0%, ${GREEN_MID} 55%, ${GREEN_BRIGHT} 100%)`
 
-// ---------------------------------------------------------------------------
-// Branch coordinates
-// NOTE: Ponciano and Bajada are nudged further apart than their real
-// addresses so both pins stay visually distinguishable at the map's
-// default region-wide zoom. Not precise geolocation — display only.
-// ---------------------------------------------------------------------------
 const BRANCH_COORDS: Record<string, [number, number]> = {
   "sm-gensan": [6.1, 125.15],
   digos: [6.72, 125.3],
@@ -52,9 +43,6 @@ function getLabelOffset(direction: "left" | "right"): [number, number] {
   return direction === "left" ? [-20, -10] : [20, -10]
 }
 
-// ---------------------------------------------------------------------------
-// Custom branch pin (green gradient)
-// ---------------------------------------------------------------------------
 function createBranchIcon(isActive: boolean) {
   return L.divIcon({
     className: "",
@@ -85,32 +73,22 @@ function createBranchIcon(isActive: boolean) {
   })
 }
 
-// ---------------------------------------------------------------------------
-// Recenter / fly-to map (only used when activeBranchId is passed in)
-// ---------------------------------------------------------------------------
 function FlyTo({ position }: { position: [number, number] | null }) {
   const map = useMap()
   useEffect(() => {
     if (position) {
       map.setView(position, map.getZoom())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [position?.[0], position?.[1]])
   return null
 }
 
-// ---------------------------------------------------------------------------
-// Fit all markers into view on first render
-// ---------------------------------------------------------------------------
 function FitAllMarkers({ positions }: { positions: [number, number][] }) {
   const map = useMap()
   useEffect(() => {
     if (positions.length === 0) return
     const bounds = L.latLngBounds(positions)
-    // Cap how far out it zooms so branches don't shrink to near-overlap
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 9 })
-    // Only run once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return null
 }
@@ -133,12 +111,8 @@ export default function BranchesMap({
 
   const allPositions = useMemo(() => markers.map((m) => m.position), [markers])
 
-  // Keep a handle to each Leaflet marker instance so the tooltip label
-  // can trigger that marker's popup on click.
   const markerRefs = useRef<Record<string, L.Marker | null>>({})
 
-  // Position we've explicitly been told to focus on (from the parent/route) —
-  // no zoom change, just recenters on the same zoom level.
   const activePosition = activeBranchId
     ? (BRANCH_COORDS[activeBranchId] ?? null)
     : null
@@ -153,7 +127,6 @@ export default function BranchesMap({
 
   return (
     <>
-      {/* Green-themed tooltip & popup chrome for react-leaflet */}
       <style jsx global>{`
         .branch-tooltip {
           background: #ffffff !important;
@@ -216,10 +189,7 @@ export default function BranchesMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Fit all branches into view on initial load (only if nothing is pre-selected) */}
         {!activeBranchId && <FitAllMarkers positions={allPositions} />}
-
-        {/* Recenter (no zoom change) on a pre-selected branch, if passed in via props */}
         <FlyTo position={activePosition} />
 
         {markers.map(({ branch, position }) => {

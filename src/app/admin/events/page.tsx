@@ -373,7 +373,6 @@ export default function EventsAdmin() {
                           className="relative block w-full aspect-[4/3] bg-emerald-50 overflow-hidden"
                         >
                           {event.images.length > 0 ? (
-                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={event.images[0].url}
                               alt={event.images[0].alt}

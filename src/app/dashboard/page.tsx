@@ -6,7 +6,6 @@ import { useAuthStore } from "@/store/authStore"
 export default function DashboardPage() {
   const { user } = useAuthStore()
 
-  // Only allow admins
   if (!user || user.role !== "client") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">

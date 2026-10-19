@@ -3,7 +3,6 @@ import { getAuthToken } from "@/lib/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// GET /api/inventory
 export async function GET(req: NextRequest) {
   if (!API_URL) {
     console.error("[inventory] NEXT_PUBLIC_API_URL is not set");
@@ -45,7 +44,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/inventory
 export async function POST(req: NextRequest) {
   if (!API_URL) {
     console.error("[inventory] NEXT_PUBLIC_API_URL is not set");

@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("Request body:", body)
 
-    // Validate required fields
     if (!body.name || !body.email || !body.message) {
       console.warn("Validation failed:", body)
       return NextResponse.json(

@@ -1,5 +1,3 @@
-// app/api/facilities/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -8,7 +6,6 @@ function getToken(req: NextRequest): string | null {
   return req.headers.get("authorization")?.replace("Bearer ", "") ?? null;
 }
 
-/* ── GET /api/facilities ── */
 export async function GET() {
   try {
     const res = await fetch(`${API_URL}/api/facilities`, {
@@ -26,7 +23,6 @@ export async function GET() {
   }
 }
 
-/* ── POST /api/facilities ── (create) */
 export async function POST(req: NextRequest) {
   try {
     const token = getToken(req);

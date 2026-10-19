@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// Helper to get auth token
 function getAuthToken(request: NextRequest): string | null {
   const authHeader = request.headers.get("authorization")
   const cookieToken = request.cookies.get("auth_token")?.value

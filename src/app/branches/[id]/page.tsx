@@ -115,12 +115,6 @@ async function getBranchImages(
   }
 }
 
-/**
- * Fetch team members for a specific branch.
- *
- * API:
- * GET /api/teams?branch_id=sm-gensan
- */
 async function getBranchTeam(branchId: string): Promise<Team[]> {
   try {
     if (!branchId) {
@@ -159,20 +153,12 @@ export default async function BranchDetailPage({
 }) {
   const { id: slug } = await params
 
-  // Fetch branch first because we need branch.branch_id
-  // to fetch the team members.
   const branch = await getBranch(slug)
 
   if (!branch) {
     notFound()
   }
 
-  /**
-   * Fetch clinic gallery and team members.
-   *
-   * branch.id       = numeric database ID
-   * branch.branch_id = branch slug, e.g. "sm-gensan"
-   */
   const [clinicImages, team] = await Promise.all([
     getBranchImages(branch.id, "clinic"),
     getBranchTeam(branch.branch_id),

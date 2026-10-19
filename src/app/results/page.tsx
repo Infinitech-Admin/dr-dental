@@ -391,7 +391,7 @@ export default function BeforeAfter() {
                     </div>
 
                     <a
-                      href="/book"
+                      href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments"
                       onClick={(e) => e.stopPropagation()}
                       className="flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-900 text-white text-xs rounded-xl hover:bg-slate-700 transition-colors font-medium"
                     >
@@ -433,7 +433,7 @@ export default function BeforeAfter() {
           </p>
 
           <a
-            href="/book"
+            href="https://members.drdentalcarecenter.com/login?return_to=%2F%3Fsection%3Dappointments"
             className="inline-flex items-center gap-2 px-8 py-4 bg-sky-400 text-slate-900 font-semibold rounded-2xl hover:bg-sky-300 transition-colors text-sm"
           >
             Book free consultation

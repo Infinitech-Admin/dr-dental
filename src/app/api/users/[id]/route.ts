@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Helper to get auth token
 function getAuthToken(request: NextRequest): string | null {
   const authHeader = request.headers.get("authorization")
   const cookieToken = request.cookies.get("auth_token")?.value
@@ -9,7 +8,6 @@ function getAuthToken(request: NextRequest): string | null {
 
 export async function PUT(request: NextRequest, {params}: { params: Promise<{ id: string }> }) {
   try {
-    // Access params inside the function
     const resolvedParams = await params
     const { id } = resolvedParams
 

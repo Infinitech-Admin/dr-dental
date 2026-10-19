@@ -29,7 +29,6 @@ class ApiClient {
     return response.json()
   }
 
-  // Orders
   async getOrders(params?: Record<string, string>): Promise<ApiResponse<PaginatedResponse<Order>>> {
     const searchParams = new URLSearchParams(params)
     const query = searchParams.toString() ? `?${searchParams.toString()}` : ''
@@ -68,7 +67,6 @@ class ApiClient {
     })
   }
 
-  // Order Items
   async getOrderItems(params?: Record<string, string>): Promise<ApiResponse<PaginatedResponse<OrderItem>>> {
     const searchParams = new URLSearchParams(params)
     const query = searchParams.toString() ? `?${searchParams.toString()}` : ''

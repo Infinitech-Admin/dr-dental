@@ -20,7 +20,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // ✅ Hits the ADMIN endpoint — returns ALL bookings, not just the current user's
     const response = await fetch(`${API_URL}/api/bookings`, {
       method: "GET",
       headers: {

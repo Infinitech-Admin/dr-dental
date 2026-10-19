@@ -569,7 +569,6 @@ export default function BranchesPage() {
                       <div className="flex items-center gap-3 sm:contents">
                         <div className="w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-emerald-50">
                           {thumbnail ? (
-                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={thumbnail}
                               alt={branch.name}

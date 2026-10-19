@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import Image, { type StaticImageData } from "next/image"
 import { MoveHorizontal, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
 
-// ── Data ──────────────────────────────────────────────────────────────
 type Case = {
   id: number
   title: string
@@ -18,7 +17,6 @@ type Case = {
 
 const categories = ["All", "Whitening", "Veneers", "Orthodontics", "Implants", "Restorative"] as const
 
-// ── Before/After slider ─────────────────────────────────────────────
 function BeforeAfterSlider({
   before,
   after,
@@ -53,7 +51,6 @@ function BeforeAfterSlider({
   }
   const onPointerUp = () => setDragging(false)
 
-  // Prepend NEXT_PUBLIC_API_URL if the image path starts with /storage or a relative path
   const formatImagePath = (img: string | StaticImageData) => {
     if (typeof img === "string" && img.startsWith("/")) {
       return `${process.env.NEXT_PUBLIC_API_URL}${img}`
@@ -79,7 +76,6 @@ function BeforeAfterSlider({
           }
       }
     >
-      {/* After Layer  */}
       <div className="absolute inset-0">
         <Image src={formatImagePath(after)} alt={`${title} before treatment`} fill className="object-cover" draggable={false} unoptimized />
         <span className="absolute bottom-3 left-3 text-[10px] font-medium uppercase tracking-[0.2em] text-white/80 bg-black/40 backdrop-blur-sm rounded-full px-2.5 py-1 pointer-events-none z-10">
@@ -87,17 +83,14 @@ function BeforeAfterSlider({
         </span>
       </div>
 
-      {/* Before Layer (Clipped dynamically by the handle position) */}
       <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
         <Image src={formatImagePath(before)} alt={`${title} after treatment`} fill className="object-cover" draggable={false} unoptimized />
       </div>
 
-      {/* After Label (Detached from clipping so it displays no matter what) */}
       <span className="absolute bottom-3 right-3 text-[10px] font-medium uppercase tracking-[0.2em] text-[#0B3D26] bg-[#A7E86B] rounded-full px-2.5 py-1 pointer-events-none z-10 shadow-md">
         After
       </span>
 
-      {/* Divider line + handle */}
       <div
         className="absolute top-0 bottom-0 w-[2px] pointer-events-none z-20"
         style={{ left: `${pos}%`, background: "#A7E86B", boxShadow: "0 0 12px 1px rgba(167,232,107,0.7)" }}
@@ -118,7 +111,6 @@ function BeforeAfterSlider({
   )
 }
 
-// ── Case card ───────────────────────────────────────────────────────
 function CaseCard({ c, onExpand, index }: { c: Case; onExpand: () => void; index: number }) {
   return (
     <motion.div
@@ -134,8 +126,6 @@ function CaseCard({ c, onExpand, index }: { c: Case; onExpand: () => void; index
     >
       <div className="relative">
         <BeforeAfterSlider before={c.before} after={c.after} title={c.title} compact />
-
-        {/* Expand affordance */}
         <button
           onClick={onExpand}
           aria-label={`View ${c.title} full size`}
@@ -161,7 +151,6 @@ function CaseCard({ c, onExpand, index }: { c: Case; onExpand: () => void; index
   )
 }
 
-// ── Focused view (modal-style) ─────────────────────────────────────
 function FocusedCase({
   c,
   onClose,
@@ -232,14 +221,12 @@ function FocusedCase({
   )
 }
 
-// ── Page ─────────────────────────────────────────────────────────────
 export default function SmileGalleryPage() {
   const [filter, setFilter] = useState<(typeof categories)[number]>("All")
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(true)
   const [focusedId, setFocusedId] = useState<number | null>(null)
 
-  // Direct fetch from Laravel backend using NEXT_PUBLIC_API_URL
   useEffect(() => {
     async function fetchCases() {
       try {
@@ -285,7 +272,7 @@ export default function SmileGalleryPage() {
           "radial-gradient(110% 90% at 15% 0%, #E9FBE8 0%, transparent 55%), radial-gradient(90% 80% at 85% 10%, #CFF3D6 0%, transparent 60%), linear-gradient(160deg, #F4FDF4 0%, #E4F7E6 45%, #CDEED2 100%)",
       }}
     >
-      {/* ── Header ── */}
+      {/* Header */}
       <section className="relative pt-28 sm:pt-32 pb-12 overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none bg-clip-text text-transparent"
@@ -322,7 +309,7 @@ export default function SmileGalleryPage() {
         </div>
       </section>
 
-      {/* ── Filter chips ── */}
+      {/* Filter chips */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="flex flex-wrap justify-center gap-2 py-10">
           {categories.map((cat) => {
@@ -356,7 +343,7 @@ export default function SmileGalleryPage() {
         </div>
       </div>
 
-      {/* ── Grid ── */}
+      {/* Grid */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
         {loading ? (
           <div className="text-center text-[#7FA78C] py-16 text-sm">Loading cases...</div>

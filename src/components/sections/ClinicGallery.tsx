@@ -24,7 +24,6 @@ interface GalleryImage {
 const clinicGalleryImages: GalleryImage[] = [
   {
     branchId: "bajada",
-    // TODO: palitan ng totoong filename sa public/images/branches/bajada/clinic/
     url: "/images/branches/bajada/clinic/6.png",
     alt: "Bajada",
     Location: "Davao City",
@@ -35,7 +34,6 @@ const clinicGalleryImages: GalleryImage[] = [
   },
   {
     branchId: "digos",
-    // TODO: palitan ng totoong filename sa public/images/branches/digos/clinic/
     url: "/images/branches/digos/1.png",
     alt: "Digos",
     Location: "Digos City",
@@ -46,7 +44,6 @@ const clinicGalleryImages: GalleryImage[] = [
   },
   {
     branchId: "panabo",
-    // TODO: palitan ng totoong filename sa public/images/branches/panabo/clinic/
     url: "/images/branches/panabo/clinic/7.png",
     alt: "Panabo",
     Location: "Panabo City",
@@ -95,11 +92,6 @@ const clinicGalleryImages: GalleryImage[] = [
       hours: "Mon-Fri: 8:00 AM - 5:00 PM",
     }
   },
-  // {
-  //   url: "/images/branches/toril/1.png",
-  //   alt: "Dental Treatment Room",
-  //   Location: "Toril",
-  // },
 ];
 
 const BRANCHES_HREF = "/branches";
@@ -128,7 +120,7 @@ export default function ClinicGalleryHome() {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-10"
         >
-          {/* Explore all branches CTA (replaces the old heading) */}
+          {/* Explore all branches CTA */}
           <div className="flex justify-center">
             <Link
               href={BRANCHES_HREF}
@@ -139,7 +131,7 @@ export default function ClinicGalleryHome() {
           </div>
         </motion.div>
 
-        {/* Gallery grid — matches the branch cards styling for a consistent look */}
+        {/* Gallery grid */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((img) => (
             <motion.div

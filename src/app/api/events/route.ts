@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-// GET ALL EVENTS
 export async function GET(request: NextRequest) {
     try {
         const token = getAuthToken(request)
@@ -33,7 +32,6 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// CREATE EVENT
 export async function POST(request: NextRequest) {
     try {
         const token = getAuthToken(request)
